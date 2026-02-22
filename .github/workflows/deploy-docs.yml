@@ -1,0 +1,53 @@
+name: Deploy Course Website
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create docs symlinks
+        run: |
+          mkdir -p docs
+          ln -sf ../README.md docs/README.md
+          ln -sf ../week-01-terminal-git docs/week-01-terminal-git
+          ln -sf ../week-02-git-apis-curl docs/week-02-git-apis-curl
+          ln -sf ../week-03-dart-fundamentals docs/week-03-dart-fundamentals
+          ln -sf ../week-04-flutter-fundamentals docs/week-04-flutter-fundamentals
+          ln -sf ../week-05-layouts-forms-sprints docs/week-05-layouts-forms-sprints
+          ln -sf ../week-06-state-management docs/week-06-state-management
+          ln -sf ../week-07-local-data docs/week-07-local-data
+          ln -sf ../week-08-networking-api docs/week-08-networking-api
+          ln -sf ../week-09-authentication docs/week-09-authentication
+          ln -sf ../resources docs/resources
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements-docs.txt
+      - run: mkdocs build --site-dir _site
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
