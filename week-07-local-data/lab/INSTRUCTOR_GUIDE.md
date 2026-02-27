@@ -14,6 +14,8 @@
 Complete these **before students arrive**:
 
 - [ ] Verify Flutter is installed on all lab machines (`flutter doctor`)
+- [ ] Verify `sqlite3` is available on all lab machines (`sqlite3 --version`). On Windows, this may need to be installed via `winget install SQLite.SQLite` or downloaded from [sqlite.org](https://www.sqlite.org/download.html) and added to PATH.
+- [ ] (Optional but recommended) Install [DB Browser for SQLite](https://sqlitebrowser.org/) on the instructor machine for Part 0.5 demo
 - [ ] Open the **starter** project in an IDE and run `flutter pub get` -- confirm all dependencies resolve
 - [ ] Build and launch the starter app on an emulator/simulator -- confirm it compiles and runs (it should show an empty mood list since the MoodNotifier starts with `super([])`)
 - [ ] Open the **finished** project and confirm it builds and runs correctly -- add a mood entry, fully close and reopen the app, and verify data persists across restarts (this is your reference)
@@ -26,6 +28,7 @@ Complete these **before students arrive**:
 ### Room Setup
 
 - Projector showing your IDE with the starter project open
+- A terminal window ready for the sqlite3 demo (Part 0)
 - Students should have the starter project loaded and running before you begin
 - If students do not have the starter project, they can clone or copy it from the course repository
 
@@ -44,66 +47,162 @@ If `flutter pub get` fails:
 
 | Time | Duration | Activity | Type |
 |------|----------|----------|------|
-| 0:00--0:10 | 10 min | Welcome, context setting, verify setup | Instructor talk |
-| 0:10--0:25 | 15 min | Part 1: Understanding Local Data Persistence | Instructor talk + discussion |
-| 0:25--0:40 | 15 min | Part 2: Data Serialization (TODO 1) | Live coding + student work |
-| 0:40--0:45 | 5 min | Break / catch-up buffer | --- |
-| 0:45--1:15 | 30 min | Part 3: Database Setup and CRUD (TODOs 2--4) | Live coding + student work |
-| 1:15--1:30 | 15 min | Part 4: Repository Pattern (TODO 5) | Live coding + student work |
-| 1:30--1:35 | 5 min | Break / catch-up buffer | --- |
-| 1:35--1:50 | 15 min | Part 5: Integrating Persistence with State (TODO 6) | Live coding + student work |
-| 1:50--2:00 | 10 min | Part 6: Loading Data on Startup (TODO 7) + Wrap-up | Follow-along + verification |
+| 0:00--0:05 | 5 min | Welcome, context setting, verify setup | Instructor talk |
+| 0:05--0:25 | 20 min | Part 0: Hands-on SQL Console | Demo + student follow-along |
+| 0:25--0:35 | 10 min | Part 1: Understanding Local Data Persistence | Instructor talk + discussion |
+| 0:35--0:47 | 12 min | Part 2: Data Serialization (TODO 1) | Live coding + student work |
+| 0:47--0:50 | 3 min | Break / catch-up buffer | --- |
+| 0:50--1:15 | 25 min | Part 3: Database Setup and CRUD (TODOs 2--4) | Live coding + student work |
+| 1:15--1:27 | 12 min | Part 4: Repository Pattern (TODO 5) | Live coding + student work |
+| 1:27--1:30 | 3 min | Break / catch-up buffer | --- |
+| 1:30--1:45 | 15 min | Part 5: Integrating Persistence with State (TODO 6) | Live coding + student work |
+| 1:45--2:00 | 15 min | Part 6: Loading Data on Startup (TODO 7) + Wrap-up | Follow-along + verification |
 
 **Total:** 120 minutes (2 hours)
 
-> **Pacing note:** TODOs 2--4 are all in the same file (`database_helper.dart`) and are the core of the lab. If students struggle there, use the first buffer. TODOs 5--6 follow logically from the database layer. TODO 7 is small but conceptually important -- it introduces `ConsumerStatefulWidget` and `initState` for async loading.
+> **Pacing note:** Part 0 (SQL Console) significantly reduces friction in Parts 3--4 because students will already recognize the SQL syntax. TODOs 2--4 are all in the same file (`database_helper.dart`) and are the core of the lab. If students struggle there, use the first buffer. TODOs 5--6 follow logically from the database layer. TODO 7 is small but conceptually important -- it introduces `ConsumerStatefulWidget` and `initState` for async loading.
 
 ---
 
 ## Detailed Facilitation Guide
 
-### 0:00--0:10 --- Welcome & Context Setting (10 min)
+### 0:00--0:05 --- Welcome & Context Setting (5 min)
 
 **Type:** Instructor talk
 
 **What to say (talking points, not a script):**
 
 - "Last week you built a Mood Tracker with Riverpod state management. The app works perfectly during a single session, but try this: close the app completely, reopen it, and... all your mood entries are gone."
-- "In healthcare, losing patient data is not just an inconvenience -- it is a regulatory violation and a clinical risk. Imagine a psychiatrist reviewing a patient's mood log and finding gaps because the app lost data."
-- "Today we fix this. You will add SQLite persistence so mood entries survive app restarts. There are 7 TODOs across 5 files."
-- "The architecture we are building is the same used in production mHealth apps: a database layer for raw SQL operations, a repository layer for abstraction, and a state management layer that ties it all together."
+- "In healthcare, losing patient data is not just an inconvenience -- it is a regulatory violation and a clinical risk."
+- "Today we fix this. First, we will spend 20 minutes learning SQL in a terminal -- no Flutter, no Dart, just you and a database. Then you will add SQLite persistence to the Mood Tracker through 7 TODOs across 5 files."
 - "By the end of today, you will close the app, reopen it, and your mood entries will still be there."
 
 **What students should be doing:**
 
 - Opening the starter project in their IDE
 - Running `flutter pub get`
-- Launching the app and seeing the empty mood list (MoodNotifier starts with an empty list since there is no sample data in this week's starter)
+- Opening a terminal window (for Part 0)
 
-**Checkpoint:** Before moving on, verify that **every student has the starter app running** and can see the empty home screen with the "No mood entries yet" message.
-
-**Common pitfall:** Students who did not finish Week 6 may have a non-functional starter project. Pair them with a neighbor or provide the clean starter folder. The Week 7 starter already includes all Week 6 solutions plus new stub files for persistence.
+**Checkpoint:** Before moving on, verify that **every student has a terminal open** and can run `sqlite3 --version` successfully. On Windows, if sqlite3 is not in PATH, help students download it or point them to the instructor demo.
 
 ---
 
-### 0:10--0:25 --- Part 1: Understanding Local Data Persistence (15 min)
+### 0:05--0:25 --- Part 0: Hands-on SQL Console (20 min)
+
+**Type:** Instructor demo on projector + students type along
+
+**Goal:** Students experience SQL independently from Flutter. By the end, they will have created a table, inserted data, run queries, updated, and deleted rows -- all in a terminal. This establishes SQL fluency before wrapping it in Dart.
+
+#### Setup (2 min)
+
+**Demo on projector.** Open a terminal and run:
+
+```bash
+sqlite3 mood_practice.db
+```
+
+**Say:** "This command created a file called `mood_practice.db`. That file IS the database. No server, no configuration, no Docker containers, no passwords. This is what makes SQLite perfect for mobile apps -- your Flutter app will create a file just like this one."
+
+Configure readable output:
+
+```sql
+.mode column
+.headers on
+```
+
+**Say:** "These are sqlite3 shell commands (they start with a dot). They make the output look like a table instead of raw text."
+
+#### Create Table + Insert Data (5 min)
+
+**Demo on projector.** Type the CREATE TABLE statement:
+
+```sql
+CREATE TABLE mood_entries (
+  id TEXT PRIMARY KEY,
+  score INTEGER NOT NULL,
+  note TEXT,
+  created_at TEXT NOT NULL
+);
+```
+
+**Explain while typing:**
+- "This is the same table schema you will use in the Flutter lab."
+- "`id TEXT PRIMARY KEY` -- every row needs a unique identifier."
+- "`score INTEGER NOT NULL` -- cannot be null, every mood entry must have a score."
+- "`note TEXT` -- nullable, the patient might not write a note."
+- "`created_at TEXT NOT NULL` -- dates stored as text in ISO 8601 format because SQLite has no native date type."
+
+**Verify:** Run `.tables` and `.schema mood_entries`.
+
+**Insert the sample data.** Type (or paste) the six INSERT statements from the README. Have students type along.
+
+**Say:** "Notice the INSERT syntax: table name, column list, then VALUES. The `NULL` for entry-4's note means no note was written."
+
+**Windows troubleshooting:** If a student's terminal does not recognize `sqlite3`, they can:
+1. Download `sqlite-tools-win-x64` from sqlite.org/download.html
+2. Extract to a folder (e.g., `C:\sqlite`)
+3. Run `C:\sqlite\sqlite3.exe mood_practice.db`
+4. Or simply follow along on the projector
+
+#### Query the Data (7 min)
+
+**Demo each query on the projector.** Pause after each for students to type it:
+
+1. `SELECT * FROM mood_entries;` -- "See everything."
+2. `SELECT * FROM mood_entries ORDER BY created_at DESC;` -- "Newest first. This is exactly what your Flutter `getMoods()` will do."
+3. `SELECT * FROM mood_entries WHERE score >= 4;` -- "Filtering. Only happy moods."
+4. `SELECT * FROM mood_entries WHERE note IS NOT NULL;` -- "NULL handling. In SQL, you use `IS NOT NULL`, not `!= NULL`."
+5. `SELECT COUNT(*) as total_entries FROM mood_entries;` -- "How many rows total?"
+6. `SELECT AVG(score) as average_score FROM mood_entries;` -- "Average mood score."
+7. `SELECT score, COUNT(*) as count FROM mood_entries GROUP BY score;` -- "How many entries for each score?"
+
+**Say after GROUP BY:** "This is like doing a Python `Counter()` or grouping a list by a key. SQL does it in one line."
+
+**Challenge query:** `SELECT MAX(score) as highest, MIN(score) as lowest FROM mood_entries;` -- "For students who finished early."
+
+#### Update and Delete (3 min)
+
+**Demo on projector:**
+
+```sql
+UPDATE mood_entries SET score = 3, note = 'Exam went OK actually' WHERE id = 'entry-3';
+SELECT * FROM mood_entries WHERE id = 'entry-3';
+```
+
+**Say:** "Always use WHERE with UPDATE. Without it, you change every row. Same for DELETE."
+
+```sql
+DELETE FROM mood_entries WHERE id = 'entry-5';
+SELECT COUNT(*) FROM mood_entries;
+```
+
+#### (Optional) DB Browser Demo (2 min)
+
+If DB Browser for SQLite is installed on the instructor machine, open `mood_practice.db` in it. Show the "Browse Data" tab. **Say:** "Same data, visual representation. Useful for debugging when your Flutter app's database seems wrong."
+
+#### Bridge to Flutter (1 min)
+
+**Show the mapping table** from the README (terminal command → sqflite equivalent). **Say:** "The SQL is identical. The delivery mechanism is different. Every query you just wrote will appear inside a Dart string in the Flutter app."
+
+**Have students exit sqlite3:** `.quit`
+
+**Checkpoint:** "Raise your hand if you successfully queried data in the terminal. Great -- you now know SQL. The rest of the lab is wrapping these same operations in Dart."
+
+---
+
+### 0:25--0:35 --- Part 1: Understanding Local Data Persistence (10 min)
 
 **Type:** Instructor talk + discussion
+
+**Note:** This section is shorter than the original because Part 0 already established SQL context and the concept of SQLite as a file-based database. Focus on the architecture layers rather than explaining what SQL is.
 
 **Demo on projector:**
 
 Open the starter project and walk through the problem:
 
 1. Open `mood_provider.dart`. Point to `MoodNotifier(this._repository) : super([])`. Say: "The notifier starts with an empty list. In Week 6, it started with sample data. Now we need to load real data from a database."
-2. Open `database_helper.dart`. Point to the placeholder `_initDatabase()` at line 51 (the one without `onCreate`). Say: "This placeholder lets the app compile, but it creates a database without any tables. The `onCreate` callback is missing."
+2. Open `database_helper.dart`. Point to the placeholder `_initDatabase()`. Say: "This placeholder lets the app compile, but it creates a database without any tables. The `onCreate` callback is missing."
 3. Open `mood_repository.dart`. Point to the commented-out method stubs. Say: "The repository is the bridge between the database and the notifier. Right now it does nothing."
-
-**Key concepts to explain:**
-
-- SQLite is an embedded relational database -- it runs inside your app, no server needed
-- The `sqflite` package provides a Dart API for SQLite operations
-- Data flows through layers: **UI --> StateNotifier --> Repository --> DatabaseHelper --> SQLite file on disk**
-- The repository pattern means you can swap SQLite for any other storage later without touching the UI or notifier
 
 **Draw on the whiteboard:**
 
@@ -119,19 +218,17 @@ Open the starter project and walk through the problem:
         mood_tracker.db (file on device)
 ```
 
-**Talking point:** "When a patient adds a mood entry, the data flows down through all these layers to reach the SQLite file. When the app starts, it flows back up -- from the database through the repository to the notifier, and the UI rebuilds."
+**Talking point:** "You just created `mood_practice.db` in the terminal. The Flutter app will create `mood_tracker.db` in the same way -- a single file on the device's filesystem."
 
 **Discussion question:** "In a real mHealth app, what are the consequences if local data is lost between sessions?" Expected answers: patients lose trust, clinical data is incomplete, regulatory compliance issues (HIPAA), research datasets have gaps, treatment decisions based on incomplete information.
 
-> **Healthcare connection:** Emphasize that local persistence is not optional in healthcare apps. Even with server synchronization (coming in Week 8), local storage ensures the app works offline and data is never lost in transit.
-
 ---
 
-### 0:25--0:40 --- Part 2: Data Serialization -- TODO 1 (15 min)
+### 0:35--0:47 --- Part 2: Data Serialization -- TODO 1 (12 min)
 
 **Type:** Live coding (first half) + student work (second half)
 
-#### 0:25--0:32 --- Live Demo of TODO 1 (7 min)
+#### 0:35--0:40 --- Live Demo of TODO 1 (5 min)
 
 **Demo on projector.** Open `lib/models/mood_entry.dart`. Walk through the existing class:
 
@@ -172,9 +269,9 @@ factory MoodEntry.fromMap(Map<String, dynamic> map) {
 - "`DateTime.parse()` reverses the ISO 8601 string back to a DateTime object."
 - "The `note` field uses `as String?` because it may be null in the database."
 
-#### 0:32--0:40 --- Student Work (8 min)
+#### 0:40--0:47 --- Student Work (7 min)
 
-**Say:** "Now complete TODO 1 in your own project. Uncomment the method scaffolds and fill them in. You have 8 minutes. The hints in the TODO comment tell you exactly what to do."
+**Say:** "Now complete TODO 1 in your own project. Uncomment the method scaffolds and fill them in. You have 7 minutes. The hints in the TODO comment tell you exactly what to do."
 
 **Walk around the room.** This should be straightforward for most students.
 
@@ -184,7 +281,7 @@ factory MoodEntry.fromMap(Map<String, dynamic> map) {
 
 ---
 
-### 0:40--0:45 --- Break / Catch-Up Buffer (5 min)
+### 0:47--0:50 --- Break / Catch-Up Buffer (3 min)
 
 - Students who finished TODO 1: take a real break
 - Students who are behind: use this time to finish
@@ -193,21 +290,21 @@ factory MoodEntry.fromMap(Map<String, dynamic> map) {
 
 ---
 
-### 0:45--1:15 --- Part 3: Database Setup and CRUD -- TODOs 2--4 (30 min)
+### 0:50--1:15 --- Part 3: Database Setup and CRUD -- TODOs 2--4 (25 min)
 
 **Type:** Live coding + student work
 
-**This is the core of the lab.** Students are writing SQL and using the `sqflite` API for the first time. All three TODOs are in `database_helper.dart`.
+**This is the core of the lab.** Students are writing SQL and using the `sqflite` API for the first time in Dart. All three TODOs are in `database_helper.dart`. However, students who completed Part 0 will find the SQL syntax familiar -- the focus here should be on the sqflite API wrapper, not the SQL itself.
 
-#### 0:45--0:55 --- Live Demo of TODO 2 (10 min)
+#### 0:50--0:58 --- Live Demo of TODO 2 (8 min)
 
 **Demo on projector.** Open `lib/data/database_helper.dart`. Walk through the existing code:
 
 1. Point to the singleton pattern: `static final DatabaseHelper instance = DatabaseHelper._init()`. Say: "Only one instance of DatabaseHelper exists. This ensures one database connection for the entire app -- multiple connections to the same SQLite file can cause corruption."
 2. Point to the `database` getter. Say: "This is lazy initialization. The database is created only when first accessed."
-3. Point to the placeholder `_initDatabase()` at line 51. Say: "This placeholder opens the database but does NOT create any tables. We need to replace it."
+3. Point to the placeholder `_initDatabase()`. Say: "This placeholder opens the database but does NOT create any tables. We need to replace it."
 
-**Important:** Say: "You need to DELETE this placeholder `_initDatabase()` method (lines 51--55) and replace it with the real version. If you leave both, you will get a compilation error about duplicate method definitions."
+**Important:** Say: "You need to DELETE this placeholder `_initDatabase()` method and replace it with the real version. If you leave both, you will get a compilation error about duplicate method definitions."
 
 Write the replacement live:
 
@@ -239,25 +336,21 @@ Future<void> _onCreate(Database db, int version) async {
 
 **Pause after `_onCreate()`.** Explain:
 
-- "This is standard SQL. `CREATE TABLE mood_entries` defines four columns."
-- "`id TEXT PRIMARY KEY` -- the unique identifier, stored as text (UUID strings)"
-- "`score INTEGER NOT NULL` -- cannot be null, every mood entry must have a score"
-- "`note TEXT` -- nullable, the patient might not add a note"
-- "`created_at TEXT NOT NULL` -- the ISO 8601 timestamp string from `toMap()`"
+- "This is exactly the same `CREATE TABLE` you typed in the sqlite3 console 30 minutes ago."
 - "The column names here MUST match the keys in `toMap()`. If `toMap()` uses `'created_at'`, the column must be `created_at`."
 
 **Have every student delete the placeholder `_initDatabase()` and write the replacement.**
 
-#### 0:55--1:02 --- Live Demo of TODO 3 (7 min)
+#### 0:58--1:03 --- Live Demo of TODO 3 (5 min)
 
 **Demo on projector.** Stay in `database_helper.dart`. Write `insertMood()`:
 
 ```dart
-Future<void> insertMood(Map<String, dynamic> mood) async {
+Future<void> insertMood(MoodEntry mood) async {
   final db = await database;
   await db.insert(
     'mood_entries',
-    mood,
+    mood.toMap(),
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
 }
@@ -272,9 +365,11 @@ Future<void> insertMood(Map<String, dynamic> mood) async {
 
 **Have students implement TODO 3.**
 
-#### 1:02--1:15 --- Student Work on TODO 4 (13 min)
+#### 1:03--1:15 --- Student Work on TODO 4 (12 min)
 
-**Say:** "Now implement TODO 4 -- three more database methods: `getMoods()`, `deleteMood()`, and `updateMood()`. The TODO comments have hints. You have 13 minutes."
+**Say:** "Now implement TODO 4 -- three more database methods: `getMoods()`, `deleteMood()`, and `updateMood()`. The TODO comments have hints. You have 12 minutes."
+
+**Say:** "Remember the queries you typed in the sqlite3 console -- `SELECT * ... ORDER BY`, `DELETE ... WHERE`, `UPDATE ... WHERE`. The sqflite methods do the same thing, just with Dart method calls instead of raw SQL strings."
 
 **Walk around the room.** This is where students practice the `sqflite` API.
 
@@ -287,9 +382,10 @@ Future<void> insertMood(Map<String, dynamic> mood) async {
 #### Complete TODO 4 Solution
 
 ```dart
-Future<List<Map<String, dynamic>>> getMoods() async {
+Future<List<MoodEntry>> getMoods() async {
   final db = await database;
-  return await db.query('mood_entries', orderBy: 'created_at DESC');
+  final maps = await db.query('mood_entries', orderBy: 'created_at DESC');
+  return maps.map((map) => MoodEntry.fromMap(map)).toList();
 }
 
 Future<void> deleteMood(String id) async {
@@ -297,13 +393,13 @@ Future<void> deleteMood(String id) async {
   await db.delete('mood_entries', where: 'id = ?', whereArgs: [id]);
 }
 
-Future<void> updateMood(String id, Map<String, dynamic> mood) async {
+Future<void> updateMood(MoodEntry mood) async {
   final db = await database;
   await db.update(
     'mood_entries',
-    mood,
+    mood.toMap(),
     where: 'id = ?',
-    whereArgs: [id],
+    whereArgs: [mood.id],
   );
 }
 ```
@@ -312,21 +408,21 @@ Future<void> updateMood(String id, Map<String, dynamic> mood) async {
 
 - Students who forget `orderBy: 'created_at DESC'` in `getMoods()` -- the list will appear in insertion order instead of newest-first
 - Students who write `where: 'id = $id'` instead of using `whereArgs` -- this is a SQL injection vulnerability. Correct them immediately and explain why parameterized queries are essential, especially in healthcare apps handling patient data.
-- Students who forget that `updateMood()` takes both `id` and the mood map as parameters
+- Students who forget that `updateMood()` takes a `MoodEntry` and needs to call `.toMap()` and use `.id` for the where clause
 
 **Checkpoint:** "All three TODOs in `database_helper.dart` are done? The app should still compile. We cannot test the database yet because nothing calls these methods -- that is the repository's job."
 
-**Common pitfall:** Students who did not delete the placeholder `_initDatabase()`. They will see a compilation error about a duplicate method definition. Have them remove lines 51--55 (the placeholder without `onCreate`).
+**Common pitfall:** Students who did not delete the placeholder `_initDatabase()`. They will see a compilation error about a duplicate method definition. Have them remove the placeholder (the one without `onCreate`).
 
 > **Healthcare connection:** "In a real mHealth app, the database schema would be more complex -- multiple tables for different data types (medications, vitals, appointments), foreign key relationships, and version migrations. But the pattern is exactly the same."
 
 ---
 
-### 1:15--1:30 --- Part 4: Repository Pattern -- TODO 5 (15 min)
+### 1:15--1:27 --- Part 4: Repository Pattern -- TODO 5 (12 min)
 
 **Type:** Live coding (first half) + student work (second half)
 
-#### 1:15--1:22 --- Live Demo of TODO 5 (7 min)
+#### 1:15--1:20 --- Live Demo of TODO 5 (5 min)
 
 **Demo on projector.** Open `lib/data/mood_repository.dart`. Walk through the existing code:
 
@@ -336,55 +432,44 @@ Future<void> updateMood(String id, Map<String, dynamic> mood) async {
 
 ```dart
 Future<List<MoodEntry>> getAllMoods() async {
-  final maps = await _dbHelper.getMoods();
-  return maps.map((m) => MoodEntry.fromMap(m)).toList();
+  return await DatabaseHelper.instance.getMoods();
 }
 ```
 
 **Explain:**
 
-- "`_dbHelper.getMoods()` returns raw maps from the database"
-- "`.map((m) => MoodEntry.fromMap(m))` converts each map back to a MoodEntry object"
-- "The repository is where the conversion happens -- the notifier only deals with MoodEntry objects, never raw maps"
+- "`DatabaseHelper.instance.getMoods()` returns MoodEntry objects from the database"
+- "The repository is a thin translation layer between the notifier and the database"
 
 4. Write the remaining methods:
 
 ```dart
 Future<void> addMood(MoodEntry entry) async {
-  await _dbHelper.insertMood(entry.toMap());
+  await DatabaseHelper.instance.insertMood(entry);
 }
 
 Future<void> deleteMood(String id) async {
-  await _dbHelper.deleteMood(id);
+  await DatabaseHelper.instance.deleteMood(id);
 }
 
 Future<void> updateMood(MoodEntry entry) async {
-  await _dbHelper.updateMood(entry.id, entry.toMap());
+  await DatabaseHelper.instance.updateMood(entry);
 }
 ```
 
-**Explain:**
-
-- "`addMood()` takes a MoodEntry, converts it to a map with `toMap()`, and passes it to the database"
-- "`deleteMood()` just passes the id through -- no conversion needed"
-- "`updateMood()` extracts the id and converts the entry to a map"
-- "Notice the pattern: the repository converts between MoodEntry objects (used by the notifier) and maps (used by the database). It is a thin translation layer."
-
 **Talking point:** "Why not call DatabaseHelper directly from the MoodNotifier? Because the repository gives you a clean abstraction boundary. Today it delegates to SQLite. In Week 8, you could add a remote API behind the same interface. The notifier would not need to change at all."
 
-#### 1:22--1:30 --- Student Work (8 min)
+#### 1:20--1:27 --- Student Work (7 min)
 
-**Say:** "Complete TODO 5 now. Uncomment the scaffolds and fill in the four methods. You have 8 minutes."
+**Say:** "Complete TODO 5 now. Uncomment the scaffolds and fill in the four methods. You have 7 minutes."
 
 **Walk around the room.** This is relatively straightforward -- students are mostly wiring up calls between layers.
-
-**Common pitfall:** Students who forget `.toMap()` when calling `_dbHelper.insertMood()` -- they pass a MoodEntry object instead of a map, which will cause a runtime error.
 
 **Checkpoint:** "TODO 5 is done? The app should still compile. Now we have the full persistence stack: MoodEntry --> toMap/fromMap --> DatabaseHelper --> SQLite, with the Repository bridging the layers."
 
 ---
 
-### 1:30--1:35 --- Break / Catch-Up Buffer (5 min)
+### 1:27--1:30 --- Break / Catch-Up Buffer (3 min)
 
 - Priority: make sure every student has TODOs 1--5 completed
 - Students who are ahead can start reading TODO 6 independently
@@ -394,13 +479,13 @@ Future<void> updateMood(MoodEntry entry) async {
 
 ---
 
-### 1:35--1:50 --- Part 5: Integrating Persistence with State -- TODO 6 (15 min)
+### 1:30--1:45 --- Part 5: Integrating Persistence with State -- TODO 6 (15 min)
 
 **Type:** Live coding (first half) + student work (second half)
 
 **This is where all the layers connect.** The MoodNotifier will now persist every state change to the database.
 
-#### 1:35--1:43 --- Live Demo of TODO 6 (8 min)
+#### 1:30--1:38 --- Live Demo of TODO 6 (8 min)
 
 **Demo on projector.** Open `lib/providers/mood_provider.dart`. Walk through the existing code:
 
@@ -445,19 +530,9 @@ Future<void> updateMood(String id, int score, String? note) async {
 - "We create the MoodEntry first, then save it to the database, then add it to the in-memory list."
 - "The `await` ensures the database write completes before we update the UI state. This guarantees data integrity."
 
-**Pause after `deleteMood()`.** Explain:
-
-- "Same pattern: call the repository first, then update the in-memory state."
-- "If the database delete fails (throws an exception), the in-memory state is not changed. This is safer than updating state and then trying to delete."
-
-**Pause after `updateMood()`.** Explain:
-
-- "We first find the existing entry with `state.firstWhere()`, create an updated copy with `copyWith()`, save it to the database, then replace it in the state list."
-- "The `copyWith()` is essential -- it creates a new object rather than mutating the existing one. StateNotifier requires immutable state updates."
-
 **Key teaching point:** "Notice the methods changed from `void` to `Future<void>`. This means they are now asynchronous. The calling code (from the UI) should `await` these calls or handle them appropriately."
 
-#### 1:43--1:50 --- Student Work (7 min)
+#### 1:38--1:45 --- Student Work (7 min)
 
 **Say:** "Delete the existing three methods (addMood, deleteMood, updateMood) and replace them with the async versions that use the repository. Also add the new `loadMoods()` method. You have 7 minutes."
 
@@ -471,11 +546,11 @@ Future<void> updateMood(String id, int score, String? note) async {
 
 ---
 
-### 1:50--2:00 --- Part 6: Loading Data on Startup -- TODO 7 + Wrap-up (10 min)
+### 1:45--2:00 --- Part 6: Loading Data on Startup -- TODO 7 + Wrap-up (15 min)
 
 **Type:** Follow-along (first half) + verification (second half)
 
-#### 1:50--1:55 --- Follow-along for TODO 7 (5 min)
+#### 1:45--1:50 --- Follow-along for TODO 7 (5 min)
 
 **Demo on projector.** Open `lib/screens/home_screen.dart`:
 
@@ -535,7 +610,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
 **Have every student make these changes.**
 
-#### 1:55--2:00 --- End-to-End Verification + Summary (5 min)
+#### 1:50--2:00 --- End-to-End Verification + Summary (10 min)
 
 **Say:** "Hot restart the app. Let us verify the full persistence flow together."
 
@@ -556,6 +631,7 @@ Walk students through the verification steps:
 - "The key pattern: data flows through layers. MoodEntry objects at the top, maps in the middle, SQL at the bottom. Each layer has a single responsibility."
 - "The repository pattern is the critical abstraction. It shields the notifier from database details."
 - "The `ConsumerStatefulWidget` + `initState` pattern is how you trigger async loading when a screen first appears."
+- "And remember -- the SQL you wrote in Part 0 is the same SQL running inside your Flutter app. The sqlite3 console is a great debugging tool if your queries are not returning what you expect."
 
 **Preview Week 8:**
 
@@ -573,7 +649,7 @@ Walk students through the verification steps:
 
 ### Where Students Typically Get Stuck
 
-1. **Placeholder `_initDatabase()` (TODO 2).** Students uncomment the new `_initDatabase()` but forget to delete the placeholder at lines 51--55. This causes a duplicate method error. Remind them loudly: "Delete the placeholder before writing the replacement."
+1. **Placeholder `_initDatabase()` (TODO 2).** Students uncomment the new `_initDatabase()` but forget to delete the placeholder. This causes a duplicate method error. Remind them loudly: "Delete the placeholder before writing the replacement."
 
 2. **Column name mismatch (TODOs 1--2).** If `toMap()` uses `'created_at'` but the `CREATE TABLE` uses `createdAt` (or vice versa), data will silently fail to load. Column names must match map keys exactly. This is the single most common source of "data does not persist" bugs.
 
@@ -589,7 +665,7 @@ Walk students through the verification steps:
 
 ### Where to Slow Down
 
-- The `CREATE TABLE` statement in TODO 2. Many students have never written SQL. Walk through each column, its type, and its constraints.
+- The `CREATE TABLE` statement in TODO 2. Even though students practiced SQL in Part 0, connecting it to the sqflite API is a new step. Walk through each column, its type, and its constraints.
 - The `where: 'id = ?', whereArgs: [id]` pattern in TODO 4. Explain parameterized queries and SQL injection prevention.
 - The transition from synchronous (`void`) to asynchronous (`Future<void>`) methods in TODO 6. This is a conceptual shift.
 
@@ -598,6 +674,7 @@ Walk students through the verification steps:
 - TODO 1 (toMap/fromMap) -- the pattern is well-documented in the TODO comments, and most students pick it up quickly.
 - TODO 5 (repository) -- it is thin delegation. Once students see the first method, the other three follow the same pattern.
 - TODO 7 -- it is a small change. Show it once on the projector and have everyone follow along.
+- **Part 3 SQL explanations** -- students who completed Part 0 will find SQL syntax familiar. Focus the demo on the sqflite API wrapper, not the SQL itself.
 
 ### If You Are Running Out of Time
 
@@ -609,9 +686,10 @@ Priority order (must complete):
 4. **TODO 7** -- Load on startup. Without this, data is saved but not loaded.
 
 Can be shortened:
-- Part 1 explanation (reduce from 15 to 10 min if students are comfortable with the motivation)
-- TODO 5 can be shown on the projector and copied (5 min instead of 15)
-- TODO 7 can be done as a quick follow-along (3 min instead of 10)
+- Part 0 can be reduced to 12 min (demo only, skip student typing along for INSERT/query steps)
+- Part 1 explanation (reduce from 10 to 5 min if students are comfortable with the motivation)
+- TODO 5 can be shown on the projector and copied (5 min instead of 12)
+- TODO 7 can be done as a quick follow-along (3 min instead of 15)
 
 ### If You Have Extra Time
 
@@ -681,11 +759,11 @@ Future<void> _onCreate(Database db, int version) async {
 **File:** `lib/data/database_helper.dart`
 
 ```dart
-Future<void> insertMood(Map<String, dynamic> mood) async {
+Future<void> insertMood(MoodEntry mood) async {
   final db = await database;
   await db.insert(
     'mood_entries',
-    mood,
+    mood.toMap(),
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
 }
@@ -696,9 +774,10 @@ Future<void> insertMood(Map<String, dynamic> mood) async {
 **File:** `lib/data/database_helper.dart`
 
 ```dart
-Future<List<Map<String, dynamic>>> getMoods() async {
+Future<List<MoodEntry>> getMoods() async {
   final db = await database;
-  return await db.query('mood_entries', orderBy: 'created_at DESC');
+  final maps = await db.query('mood_entries', orderBy: 'created_at DESC');
+  return maps.map((map) => MoodEntry.fromMap(map)).toList();
 }
 
 Future<void> deleteMood(String id) async {
@@ -706,13 +785,13 @@ Future<void> deleteMood(String id) async {
   await db.delete('mood_entries', where: 'id = ?', whereArgs: [id]);
 }
 
-Future<void> updateMood(String id, Map<String, dynamic> mood) async {
+Future<void> updateMood(MoodEntry mood) async {
   final db = await database;
   await db.update(
     'mood_entries',
-    mood,
+    mood.toMap(),
     where: 'id = ?',
-    whereArgs: [id],
+    whereArgs: [mood.id],
   );
 }
 ```
@@ -723,20 +802,19 @@ Future<void> updateMood(String id, Map<String, dynamic> mood) async {
 
 ```dart
 Future<List<MoodEntry>> getAllMoods() async {
-  final maps = await _dbHelper.getMoods();
-  return maps.map((m) => MoodEntry.fromMap(m)).toList();
+  return await DatabaseHelper.instance.getMoods();
 }
 
 Future<void> addMood(MoodEntry entry) async {
-  await _dbHelper.insertMood(entry.toMap());
+  await DatabaseHelper.instance.insertMood(entry);
 }
 
 Future<void> deleteMood(String id) async {
-  await _dbHelper.deleteMood(id);
+  await DatabaseHelper.instance.deleteMood(id);
 }
 
 Future<void> updateMood(MoodEntry entry) async {
-  await _dbHelper.updateMood(entry.id, entry.toMap());
+  await DatabaseHelper.instance.updateMood(entry);
 }
 ```
 
@@ -900,6 +978,7 @@ Students who complete all 8 steps have a fully working implementation.
 
 At minimum, every student should leave the lab with:
 
+- [ ] Part 0 -- Practiced SQL in the sqlite3 console (CREATE, INSERT, SELECT, UPDATE, DELETE)
 - [ ] TODO 1 -- `toMap()` and `fromMap()` implemented in `mood_entry.dart`
 - [ ] TODOs 2--4 -- All database operations implemented in `database_helper.dart`
 - [ ] TODO 5 -- Repository methods implemented in `mood_repository.dart`

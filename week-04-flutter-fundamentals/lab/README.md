@@ -4,6 +4,9 @@
 > **Duration:** 2 hours
 > **Prerequisites:** Dart fundamentals (Week 3)
 
+!!! success "AI tools now allowed"
+    Starting this week, you may use AI tools (ChatGPT, Copilot, etc.) to assist your work. However, you must **understand every line of code you submit**. AI is a productivity tool, not a replacement for learning. If you cannot explain what a piece of code does, rewrite it yourself.
+
 ---
 
 ## Learning Objectives
@@ -121,7 +124,21 @@ MaterialApp
 | `Container` | A convenience widget for padding, margins, decoration | `Container(color: Colors.blue, child: ...)` |
 | `ElevatedButton` | A Material Design raised button | `ElevatedButton(onPressed: ..., child: Text('Tap'))` |
 
-### 2.3 Exercise 1: Modify the Default Counter App
+### 2.3 Exercise files
+
+The exercise projects are provided in the course materials at:
+
+```
+week-04-flutter-fundamentals/lab/exercises/
+├── exercise_1_hello_flutter/    # Exercise 1: Modify the counter app
+├── exercise_2_patient_card/     # Exercise 2: PatientInfoCard
+├── exercise_3_mood_selector/    # Exercise 3: Mood Selector
+└── exercise_4_health_checkin/   # Exercise 4: Health Check-In Screen
+```
+
+Each exercise is a complete Flutter project. Find them in the course materials repository you cloned in Week 0 (see [Getting Ready](../../resources/GETTING_READY.md#step-8-clone-the-course-materials-repository)). Copy the exercise folder to a working directory, open it in your IDE, and run `flutter pub get` before starting.
+
+### 2.4 Exercise 1: Modify the Default Counter App
 
 Open the starter code in **`exercises/exercise_1_hello_flutter/lib/main.dart`**.
 
@@ -133,6 +150,13 @@ Follow the `TODO` comments in the code to:
 4. Change the floating action button so it **decrements** the counter.
 
 > **Time:** ~10 minutes. Run the app and use hot reload (`r`) after each change to see the results immediately.
+
+### Self-Check: Parts 1–2
+
+- [ ] You created a Flutter project with `flutter create` and can run it on an emulator or device.
+- [ ] You can explain what `runApp()` does and why `main()` is the entry point.
+- [ ] You understand that **everything on screen is a widget** arranged in a tree.
+- [ ] You modified the default counter app and saw changes via hot reload.
 
 ---
 
@@ -183,6 +207,12 @@ Your task: create a `PatientInfoCard` StatelessWidget that displays:
 Follow the `TODO` comments in the file. When done, the app should display a card with patient information styled in a clean, readable format.
 
 > **Time:** ~15 minutes.
+
+### Self-Check: Part 3
+
+- [ ] You created a `StatelessWidget` with `final` fields passed via the constructor.
+- [ ] You can explain why StatelessWidget properties must be `final`.
+- [ ] Your PatientInfoCard displays patient data in a Card widget.
 
 ---
 
@@ -244,6 +274,12 @@ Your task: build a mood selector with buttons for different moods and a display 
 
 > **Time:** ~15 minutes.
 
+### Self-Check: Part 4
+
+- [ ] You created a `StatefulWidget` with the two-class pattern (widget + state).
+- [ ] You used `setState()` to update the UI and can explain why it's necessary.
+- [ ] You understand that changing a variable **without** `setState()` updates memory but NOT the screen.
+
 ### 4.5 Bonus: Counter with Increment and Decrement
 
 If you finish early, add decrement functionality to your mood selector file or modify the Exercise 1 counter to support both increment and decrement buttons.
@@ -277,6 +313,11 @@ Try the following in any of your exercise files:
 1. Change a `Text` widget's string and press `r`. Observe the instant update.
 2. Change the initial value of a state variable and press `r`. Notice it does NOT take effect.
 3. Press `R` and observe the state variable now uses the new initial value.
+
+### Self-Check: Part 5
+
+- [ ] You know when to use hot reload (`r`) vs hot restart (`R`).
+- [ ] You tested: changing a Text string → hot reload works; changing a state variable's initial value → requires hot restart.
 
 ---
 
@@ -314,6 +355,13 @@ Follow the `TODO` comments in the starter file.
 
 > **Time:** ~20 minutes.
 
+### Self-Check: Part 6
+
+- [ ] Your Health Check-In screen has a `TextField`, a `Slider`, and an `ElevatedButton`.
+- [ ] You used `Column`, `Padding`, and `SizedBox` for layout.
+- [ ] Tapping the button prints collected data to the console.
+- [ ] You can combine `StatelessWidget` and `StatefulWidget` in the same app.
+
 ---
 
 ## Team Formation
@@ -327,7 +375,73 @@ At the end of this lab session, form teams of **3-4 students** for the semester 
 3. **Create a team communication channel.** Use whatever platform your team prefers (Discord, Slack, MS Teams, WhatsApp, etc.).
 4. **Review the AI tools policy.** A handout is available at [`resources/ai-tools-policy.md`](../../resources/ai-tools-policy.md). Read it together as a team and make sure everyone understands the rules. AI tools are allowed in this course, but specific guidelines apply.
 
-> **Reminder:** Your project proposal is due in Week 5. Start discussing project ideas with your team this week.
+> **Reminder:** Your project proposal is due at the end of Week 5. Start discussing project ideas with your team this week so you arrive at the sprint planning workshop with a clear direction.
+
+---
+
+## Part 7: Team Setup (Homework)
+
+!!! warning "Complete before the Week 5 lab session"
+    The following tasks must be done **before** next week's sprint planning workshop. They take ~30 minutes and require all team members to participate.
+
+### 7.1 Create Your Team Repository
+
+One team member creates the repository on GitHub:
+
+1. Click **"New repository"** on GitHub
+2. Name it something descriptive (e.g., `mhealth-diabetes-tracker`)
+3. Set visibility to **Public** (so the instructor can see it)
+4. Initialize with a README
+5. Select **Flutter** from the `.gitignore` dropdown
+
+### 7.2 Add Team Members as Collaborators
+
+```
+GitHub repo → Settings → Collaborators → Add people
+```
+
+Add all team members with **"Write"** access.
+
+### 7.3 Set Up Branch Protection Rules
+
+This is **critical** — it enforces the PR workflow you'll use all semester:
+
+```
+GitHub repo → Settings → Branches → Add branch protection rule
+```
+
+Configure:
+
+- **Branch name pattern:** `main`
+- **Require a pull request before merging:** ✅
+- **Require approvals:** 1
+- **Do not allow bypassing the above settings:** ✅
+
+### 7.4 Everyone Clones the Repo
+
+Every team member clones and verifies access:
+
+```bash
+git clone git@github.com:your-team/your-repo.git
+cd your-repo
+git remote -v
+```
+
+### 7.5 Create a GitHub Projects Board
+
+```
+GitHub repo → Projects → New project → Board
+```
+
+Create these 5 columns:
+
+1. **Backlog** — all planned work
+2. **Sprint Backlog** — work selected for current sprint
+3. **In Progress** — actively being worked on
+4. **In Review** — PR submitted, waiting for review
+5. **Done** — merged to main
+
+> **Verification:** Before Week 5, every team member should be able to push a branch, open a PR, and see the project board. If something doesn't work, fix it now — not during the workshop.
 
 ---
 
@@ -343,6 +457,25 @@ Today you learned:
 | `StatefulWidget` | Mutable UI — uses `setState()` to trigger rebuilds when state changes. |
 | Hot reload / restart | `r` for quick UI tweaks; `R` when state definitions change. |
 | Basic layout | `Column`, `Padding`, `SizedBox` for vertical arrangement and spacing. |
+
+---
+
+## Troubleshooting
+
+??? question "`flutter run` says 'No connected devices'"
+    Make sure your emulator is running (launch from Android Studio → AVD Manager) or your physical device has USB debugging enabled. Run `flutter devices` to see what Flutter detects. On macOS, you can also try `open -a Simulator` for the iOS simulator.
+
+??? question "The app builds but shows a blank white screen"
+    This usually means there is an error in your widget tree. Check the terminal for error messages (red text). Common causes: missing `const` keyword, incorrect constructor parameters, or a `null` value where a widget is expected.
+
+??? question "`setState()` is called but the UI doesn't update"
+    Make sure you are modifying the state variable **inside** the `setState()` callback, not outside it. Also verify you are modifying the correct variable — the one used in the `build()` method.
+
+??? question "Hot reload doesn't apply my changes"
+    Some changes require a **hot restart** (`R`) instead of hot reload (`r`). This includes: changes to `main()`, adding/removing state variables, changing initializers, or modifying `const` constructors. When in doubt, press `R`.
+
+??? question "`The method 'setState' isn't defined for the type...`"
+    You are calling `setState()` inside a `StatelessWidget`. Only `StatefulWidget` (specifically its `State` class) has `setState()`. Convert your widget to a `StatefulWidget` using the two-class pattern from Part 4.
 
 ---
 

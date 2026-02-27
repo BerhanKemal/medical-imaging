@@ -71,26 +71,51 @@ Write your code in Dart, and the framework compiles it to native machine code. C
 
 Here is what that looks like architecturally:
 
-```
-Native                Cross-Platform (Bridge)     Cross-Platform (Compiled)
-┌──────────┐         ┌──────────┐                ┌──────────┐
-│ Swift /  │         │ JS/React │                │ Dart /   │
-│ Kotlin   │         │ Native   │                │ Flutter  │
-├──────────┤         ├──────────┤                ├──────────┤
-│ Platform │         │ Bridge   │                │ Skia/    │
-│ UI (UIKit│         │ Layer    │                │ Impeller │
-│ /Android │         ├──────────┤                │ (own     │
-│ Views)   │         │ Platform │                │ rendering│
-├──────────┤         │ UI       │                │ engine)  │
-│ OS       │         ├──────────┤                ├──────────┤
-└──────────┘         │ OS       │                │ OS       │
-                     └──────────┘                └──────────┘
+```d2
+direction: right
 
-Native: Best            Bridge: Good               Compiled: Good
-performance,            performance,               performance,
-one platform only.      two platforms, but         two platforms,
-Two codebases           bridge is a bottleneck.    pixel-perfect control.
-for two platforms.      Uses native UI.            Draws its own UI.
+native: "Native" {
+  style.fill: "#E3F2FD"
+  lang: "Swift / Kotlin"
+  ui: "Platform UI\n(UIKit / Android Views)"
+  os: "OS"
+  lang -> ui -> os
+}
+
+bridge: "Cross-Platform (Bridge)" {
+  style.fill: "#FFF9C4"
+  lang: "JS / React Native"
+  br: "Bridge Layer"
+  ui: "Platform UI"
+  os: "OS"
+  lang -> br -> ui -> os
+}
+
+compiled: "Cross-Platform (Compiled)" {
+  style.fill: "#E8F5E9"
+  lang: "Dart / Flutter"
+  engine: "Skia / Impeller\n(own rendering engine)"
+  os: "OS"
+  lang -> engine -> os
+}
+
+native_note: |md
+  **Native:** Best performance,
+  one platform only. Two codebases
+  for two platforms.
+| {style.fill: "transparent"; style.stroke: "transparent"}
+
+bridge_note: |md
+  **Bridge:** Good performance,
+  two platforms, but bridge
+  is a bottleneck. Uses native UI.
+| {style.fill: "transparent"; style.stroke: "transparent"}
+
+compiled_note: |md
+  **Compiled:** Good performance,
+  two platforms, pixel-perfect control.
+  Draws its own UI.
+| {style.fill: "transparent"; style.stroke: "transparent"}
 ```
 
 > PRESENTER NOTE: Ask students what mobile apps they use daily. Then ask which ones
@@ -198,17 +223,48 @@ In C++, dereferencing a null pointer is a **segfault** -- your program crashes w
 
 Dart's null safety catches these errors **at compile time**. If a variable can be `null`, the type system knows, and the compiler forces you to handle the null case before the code can even run.
 
-```
-The Null Safety Spectrum:
+```d2
+direction: right
 
-C/C++        Python         Java           Dart
-  |             |              |              |
-  v             v              v              v
-No safety    Runtime only   Optional        Sound null safety
-(segfault)   (exceptions)   annotations     (compiler-enforced)
+cpp: "C/C++" {
+  style.fill: "#FFCDD2"
+  label: |md
+    **C/C++**
+    No safety (segfault)
+    "It crashes"
+  |
+}
 
-"It crashes"  "It crashes    "It might       "It won't compile
-              later"         warn you"       until you handle it"
+python: "Python" {
+  style.fill: "#FFE0B2"
+  label: |md
+    **Python**
+    Runtime only (exceptions)
+    "It crashes later"
+  |
+}
+
+java: "Java" {
+  style.fill: "#FFF9C4"
+  label: |md
+    **Java**
+    Optional annotations
+    "It might warn you"
+  |
+}
+
+dart: "Dart" {
+  style.fill: "#C8E6C9"
+  label: |md
+    **Dart**
+    Sound null safety
+    (compiler-enforced)
+    "It won't compile
+    until you handle it"
+  |
+}
+
+cpp -> python -> java -> dart: "" {style.stroke-dash: 3}
 ```
 
 For healthcare applications, this is not academic. A null pointer exception in a medication dosage calculator is not "just a bug" -- it is a patient safety issue. The earlier you catch errors, the safer the software.
@@ -249,29 +305,41 @@ Future<List<Medication>> fetchMedications(String patientId) async {
 
 Behind the scenes, Dart uses an **event loop** (similar to JavaScript's) to manage concurrency. When you `await` something, Dart pauses that function, handles other work (like keeping the UI responsive), and resumes the function when the awaited result is ready.
 
-```
-The Dart Event Loop:
+```d2
+direction: down
 
-   ┌─────────────────────────────────────────┐
-   │              Event Loop                  │
-   │                                          │
-   │  ┌──────────┐   ┌──────────────────┐     │
-   │  │ Event    │   │ Microtask Queue  │     │
-   │  │ Queue    │   │ (high priority)  │     │
-   │  │          │   └──────────────────┘     │
-   │  │ - UI     │                            │
-   │  │ - Input  │   Process one event at     │
-   │  │ - Timer  │   a time. If an event      │
-   │  │ - Future │   awaits, move to the      │
-   │  │   result │   next event. Come back    │
-   │  │ - I/O    │   when the await resolves. │
-   │  │          │                            │
-   │  └──────────┘                            │
-   │                                          │
-   │  Single-threaded, but non-blocking.      │
-   │  The UI never freezes because rendering  │
-   │  events are always processed.            │
-   └─────────────────────────────────────────┘
+event_loop: "Event Loop" {
+  style.fill: "#E3F2FD"
+  style.font-size: 20
+
+  direction: right
+
+  event_queue: "Event Queue" {
+    style.fill: "#BBDEFB"
+    ui: "UI events"
+    input: "Input events"
+    timer: "Timer events"
+    future: "Future results"
+    io: "I/O completions"
+  }
+
+  microtask: "Microtask Queue\n(high priority)" {
+    style.fill: "#FFF9C4"
+  }
+
+  desc: |md
+    Process one event at a time.
+    If an event awaits, move to the
+    next event. Come back when the
+    await resolves.
+  |
+
+  note: |md
+    **Single-threaded, but non-blocking.**
+    The UI never freezes because rendering
+    events are always processed.
+  |
+}
 ```
 
 ### AOT + JIT: Two Compilers, Two Purposes
@@ -307,28 +375,38 @@ Most languages pick one. JavaScript is JIT only. C++ is AOT only. Dart gives you
 
 Flutter's architecture is a layered system. Understanding these layers helps you know where to look when something goes wrong and gives you a mental model for how your Dart code becomes pixels on a screen.
 
-```
-┌─────────────────────────────────────────────┐
-│  FRAMEWORK (Dart)                           │
-│  ┌──────┐ ┌────────┐ ┌──────────┐          │
-│  │Widget│ │Material│ │Cupertino │ ...       │
-│  │  s   │ │Design  │ │ Widgets  │           │
-│  └──────┘ └────────┘ └──────────┘          │
-├─────────────────────────────────────────────┤
-│  ENGINE (C/C++)                             │
-│  ┌──────────┐ ┌──────┐ ┌──────────┐        │
-│  │Skia/     │ │Dart  │ │Text      │        │
-│  │Impeller  │ │ VM   │ │Layout    │        │
-│  │(rendering│ │      │ │(libtext) │        │
-│  └──────────┘ └──────┘ └──────────┘        │
-├─────────────────────────────────────────────┤
-│  EMBEDDER (Platform-specific)               │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐    │
-│  │ Android  │ │   iOS    │ │   Web    │    │
-│  │ (Java/   │ │ (ObjC/   │ │ (JS/    │    │
-│  │  Kotlin) │ │  Swift)  │ │  WASM)  │    │
-│  └──────────┘ └──────────┘ └──────────┘    │
-└─────────────────────────────────────────────┘
+```d2
+direction: down
+
+framework: "FRAMEWORK (Dart)" {
+  style.fill: "#E3F2FD"
+  style.font-size: 18
+  direction: right
+  widgets: "Widgets"
+  material: "Material Design"
+  cupertino: "Cupertino Widgets"
+  etc: "..."
+}
+
+engine: "ENGINE (C/C++)" {
+  style.fill: "#FFF9C4"
+  style.font-size: 18
+  direction: right
+  skia: "Skia /\nImpeller\n(rendering)"
+  vm: "Dart VM"
+  text: "Text Layout\n(libtext)"
+}
+
+embedder: "EMBEDDER (Platform-specific)" {
+  style.fill: "#E8F5E9"
+  style.font-size: 18
+  direction: right
+  android: "Android\n(Java/Kotlin)"
+  ios: "iOS\n(ObjC/Swift)"
+  web: "Web\n(JS/WASM)"
+}
+
+framework -> engine -> embedder
 ```
 
 Let's walk through each layer.
@@ -379,16 +457,22 @@ This is the phrase you will hear most often in Flutter. Everything visible on sc
 
 Widgets compose. You build complex UIs by nesting simple widgets:
 
-```
-        MaterialApp
-            |
-          Scaffold
-          /     \
-     AppBar     Body
-       |          |
-     Text      Column
-              /    \
-          Text    Button
+```d2
+direction: down
+
+MaterialApp -> Scaffold
+
+Scaffold -> AppBar
+Scaffold -> Body
+
+AppBar -> Text
+
+Body -> Column
+
+Column -> Text_2: "" {style.stroke: "#666"}
+Column -> Button: "" {style.stroke: "#666"}
+
+Text_2: "Text"
 ```
 
 You will explore this hands-on in next week's lab. For now, the key insight is: Flutter's UI is a **tree of widgets**, and the framework's job is to efficiently turn that tree into pixels.
@@ -397,20 +481,39 @@ You will explore this hands-on in next week's lab. For now, the key insight is: 
 
 When Flutter renders a frame, your widget descriptions go through a pipeline:
 
-```
-Widget Tree           Element Tree         RenderObject Tree
-(your code)           (framework managed)  (layout + paint)
+```d2
+direction: right
 
-┌────────────┐       ┌──────────────┐     ┌──────────────────┐
-│ Describes  │       │ Manages      │     │ Calculates       │
-│ what the   │ ───>  │ lifecycle,   │ ──> │ sizes, positions,│
-│ UI should  │       │ maps widgets │     │ and paints       │
-│ look like  │       │ to render    │     │ to the canvas    │
-│            │       │ objects      │     │                  │
-└────────────┘       └──────────────┘     └──────────────────┘
+widget: "Widget Tree\n(your code)" {
+  style.fill: "#E3F2FD"
+  desc: |md
+    Describes what the
+    UI should look like
+  |
+  note: "Rebuilt often\n(on state change)"
+}
 
-Rebuilt often         Persists across      Updated only when
-(on state change)     rebuilds             layout changes
+element: "Element Tree\n(framework managed)" {
+  style.fill: "#FFF9C4"
+  desc: |md
+    Manages lifecycle,
+    maps widgets to
+    render objects
+  |
+  note: "Persists across\nrebuilds"
+}
+
+render: "RenderObject Tree\n(layout + paint)" {
+  style.fill: "#E8F5E9"
+  desc: |md
+    Calculates sizes,
+    positions, and paints
+    to the canvas
+  |
+  note: "Updated only when\nlayout changes"
+}
+
+widget -> element -> render
 ```
 
 - **Widget tree:** Lightweight descriptions. Cheap to create and throw away. When state changes, Flutter rebuilds the widget tree (or parts of it).
@@ -465,35 +568,33 @@ mHealth -- short for **mobile health** -- is the use of mobile devices for healt
 
 Your smartphone is arguably the most sophisticated sensor platform most people carry:
 
-```
-Sensors in a modern smartphone:
+```d2
+direction: down
 
-  ┌─────────────────────────────────────┐
-  │           SMARTPHONE                │
-  │                                     │
-  │  Accelerometer   - movement,        │
-  │                    fall detection    │
-  │  Gyroscope       - orientation,     │
-  │                    balance           │
-  │  Camera          - wound imaging,   │
-  │                    dermatology       │
-  │  Microphone      - cough detection, │
-  │                    voice biomarkers  │
-  │  GPS             - geofencing,      │
-  │                    activity tracking │
-  │  Barometer       - altitude,        │
-  │                    stair climbing    │
-  │  Ambient light   - sleep            │
-  │                    environment       │
-  │  Proximity       - phone usage      │
-  │                    patterns          │
-  │  Bluetooth LE    - medical device   │
-  │                    connectivity      │
-  │                                     │
-  └─────────────────────────────────────┘
+phone: "SMARTPHONE" {
+  style.fill: "#F5F5F5"
+  style.font-size: 22
+  style.bold: true
 
-Every patient already carries a medical-grade
-sensor platform in their pocket.
+  direction: down
+
+  accel: "Accelerometer — movement, fall detection"
+  gyro: "Gyroscope — orientation, balance"
+  camera: "Camera — wound imaging, dermatology"
+  mic: "Microphone — cough detection, voice biomarkers"
+  gps: "GPS — geofencing, activity tracking"
+  baro: "Barometer — altitude, stair climbing"
+  light: "Ambient light — sleep environment"
+  prox: "Proximity — phone usage patterns"
+  ble: "Bluetooth LE — medical device connectivity"
+}
+
+note: "Every patient already carries a medical-grade\nsensor platform in their pocket." {
+  style.fill: "transparent"
+  style.stroke: "transparent"
+  style.font-size: 16
+  style.italic: true
+}
 ```
 
 A decade ago, collecting continuous health data from patients required expensive, specialized hardware. Today, a smartphone and a $30 Bluetooth pulse oximeter can do remote patient monitoring that would have cost thousands of dollars per patient in 2010.

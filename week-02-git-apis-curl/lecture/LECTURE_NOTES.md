@@ -32,16 +32,23 @@ Let's trace the journey of a single request.
 
 The web runs on a simple idea: one machine **asks** for something (the client) and another machine **responds** (the server). That is it. Every app on your phone, every website you visit, every API call you make -- it all comes down to this pattern.
 
-```
-Client (Flutter app)          Server (FastAPI)
-+----------------+             +----------------+
-|                |   HTTP      |                |
-|  Request:      | ----------> |  Process       |
-|  GET /moods    |             |  request       |
-|                |   HTTP      |                |
-|  Response:     | <---------- |  Send data     |
-|  [mood list]   |             |  back          |
-+----------------+             +----------------+
+```d2
+direction: right
+
+client: "Client (Flutter app)" {
+  style.fill: "#E3F2FD"
+  req: "Request:\nGET /moods"
+  resp: "Response:\n[mood list]"
+}
+
+server: "Server (FastAPI)" {
+  style.fill: "#E8F5E9"
+  process: "Process request"
+  send: "Send data back"
+}
+
+client -> server: "HTTP Request" {style.stroke: "#1565C0"}
+server -> client: "HTTP Response" {style.stroke: "#2E7D32"}
 ```
 
 In the lab, you played **both roles** on one machine -- `curl` was the client and FastAPI was the server. In production, these two live on completely different computers, connected over the internet.
@@ -79,23 +86,33 @@ The internet uses a layered system of protocols. Think of it like sending a pack
 
 HTTP -- the protocol you used in the lab -- runs **on top of** TCP. HTTP does not worry about how bytes get from point A to point B. It trusts TCP to handle that.
 
-```
-Layer model (simplified):
+```d2
+direction: down
 
-+----------------------------------+
-|  HTTP (your API requests)        |   <-- "What to say"
-+----------------------------------+
-|  TCP (reliable delivery)         |   <-- "Make sure it arrives"
-+----------------------------------+
-|  IP (addressing and routing)     |   <-- "Where to send it"
-+----------------------------------+
-|  Network hardware (WiFi, cables) |   <-- "Physical transport"
-+----------------------------------+
+http: "HTTP (your API requests)" {
+  style.fill: "#E3F2FD"
+  label: "HTTP (your API requests) — \"What to say\""
+}
 
-Each layer relies on the one below it.
-HTTP does not care about packets or routing --
-it just sends a request and gets a response.
+tcp: "TCP (reliable delivery)" {
+  style.fill: "#FFF9C4"
+  label: "TCP (reliable delivery) — \"Make sure it arrives\""
+}
+
+ip: "IP (addressing and routing)" {
+  style.fill: "#FFE0B2"
+  label: "IP (addressing and routing) — \"Where to send it\""
+}
+
+hw: "Network hardware (WiFi, cables)" {
+  style.fill: "#F5F5F5"
+  label: "Network hardware (WiFi, cables) — \"Physical transport\""
+}
+
+http -> tcp -> ip -> hw: "relies on"
 ```
+
+Each layer relies on the one below it. HTTP does not care about packets or routing -- it just sends a request and gets a response.
 
 ### Ports: Apartment Numbers for Your Computer
 
@@ -145,22 +162,42 @@ curl -X POST -H "Content-Type: application/json" -d '{"score": 7, "note": "good 
 
 Each flag was setting a different part of the HTTP request. Let's break it apart:
 
-```
-HTTP Request:
-+---------------------------------------------+
-| POST /mood HTTP/1.1                         |  <-- Method + Path + Version
-| Host: localhost:8000                        |  <-- Headers
-| Content-Type: application/json              |
-| Accept: */*                                 |
-|                                             |
-| {"score": 7, "note": "good day"}           |  <-- Body
-+---------------------------------------------+
+```d2
+direction: down
 
--X POST              -->  sets the METHOD (POST)
-/mood                 -->  sets the PATH (resource)
--H "Content-Type..."  -->  sets a HEADER
--d '{...}'            -->  sets the BODY
-localhost:8000        -->  sets the HOST
+request: "HTTP Request" {
+  style.fill: "#E3F2FD"
+  style.font-size: 20
+
+  request_line: "POST /mood HTTP/1.1" {
+    style.fill: "#BBDEFB"
+    style.bold: true
+    label: "POST /mood HTTP/1.1  ← Method + Path + Version"
+  }
+
+  headers: "Headers" {
+    style.fill: "#C8E6C9"
+    h1: "Host: localhost:8000"
+    h2: "Content-Type: application/json"
+    h3: "Accept: */*"
+  }
+
+  body: "Body" {
+    style.fill: "#FFF9C4"
+    content: '{"score": 7, "note": "good day"}'
+  }
+
+  request_line -> headers -> body
+}
+
+mapping: "curl flag mapping" {
+  style.fill: "#F5F5F5"
+  m1: "-X POST → sets the METHOD"
+  m2: "/mood → sets the PATH"
+  m3: '-H "Content-Type..." → sets a HEADER'
+  m4: "-d '{...}' → sets the BODY"
+  m5: "localhost:8000 → sets the HOST"
+}
 ```
 
 An HTTP request has four key parts:
@@ -180,15 +217,32 @@ An HTTP request has four key parts:
 
 When the server responded to your `curl` request, it sent back something like this:
 
-```
-HTTP Response:
-+---------------------------------------------+
-| HTTP/1.1 200 OK                             |  <-- Version + Status Code + Reason
-| content-type: application/json              |  <-- Headers
-| content-length: 52                          |
-|                                             |
-| {"id": 1, "score": 7, "note": "good day"}  |  <-- Body
-+---------------------------------------------+
+```d2
+direction: down
+
+response: "HTTP Response" {
+  style.fill: "#E8F5E9"
+  style.font-size: 20
+
+  status_line: "HTTP/1.1 200 OK" {
+    style.fill: "#C8E6C9"
+    style.bold: true
+    label: "HTTP/1.1 200 OK  ← Version + Status Code + Reason"
+  }
+
+  headers: "Headers" {
+    style.fill: "#BBDEFB"
+    h1: "content-type: application/json"
+    h2: "content-length: 52"
+  }
+
+  body: "Body" {
+    style.fill: "#FFF9C4"
+    content: '{"id": 1, "score": 7, "note": "good day"}'
+  }
+
+  status_line -> headers -> body
+}
 ```
 
 A response also has key parts:
@@ -224,21 +278,13 @@ In the lab, you used GET to read moods and POST to create them. You were doing C
 
 Status codes are three-digit numbers grouped into categories. You do not need to memorize every code, but you need to know the categories:
 
-```
-Status Code Categories:
-+-------+------------------------------+---------------------------+
-| Range | Meaning                      | You'll see these often    |
-+-------+------------------------------+---------------------------+
-| 1xx   | Informational                | Rarely used directly      |
-| 2xx   | Success                      | 200 OK, 201 Created       |
-| 3xx   | Redirection                  | 301 Moved Permanently     |
-| 4xx   | Client error (YOUR fault)    | 400 Bad Request           |
-|       |                              | 401 Unauthorized          |
-|       |                              | 404 Not Found             |
-|       |                              | 422 Unprocessable Entity  |
-| 5xx   | Server error (SERVER's fault) | 500 Internal Server Error |
-+-------+------------------------------+---------------------------+
-```
+| Range | Meaning | Common Codes |
+|-------|---------|-------------|
+| 1xx | Informational | Rarely used directly |
+| 2xx | Success | 200 OK, 201 Created |
+| 3xx | Redirection | 301 Moved Permanently |
+| 4xx | Client error (YOUR fault) | 400 Bad Request, 401 Unauthorized, 404 Not Found, 422 Unprocessable Entity |
+| 5xx | Server error (SERVER's fault) | 500 Internal Server Error |
 
 **Key codes to remember:**
 
@@ -547,19 +593,36 @@ HTTP sends data in **plain text**. Anyone between your device and the server (yo
 
 HTTPS adds **TLS encryption** on top of HTTP. The data is encrypted before it leaves your device and decrypted only at the server. Anyone intercepting the traffic sees only gibberish.
 
-```
-HTTP (unencrypted):
-Client ---[ {"patient": "Jan", "diagnosis": "..."} ]---> Server
-              ^
-              |
-         Anyone on the network can read this
+```d2
+direction: down
 
+http: "HTTP (unencrypted)" {
+  style.fill: "#FFCDD2"
+  direction: right
+  client1: "Client"
+  data1: '{"patient": "Jan", "diagnosis": "..."}' {style.fill: "#FFF"}
+  server1: "Server"
+  client1 -> data1 -> server1
+  warning: "Anyone on the network can read this!" {
+    style.fill: "#F44336"
+    style.font-color: "#FFF"
+    style.bold: true
+  }
+}
 
-HTTPS (encrypted):
-Client ---[ a7$#kQ!x9&mP2... ]---> Server
-              ^
-              |
-         Encrypted. Unreadable without the key.
+https: "HTTPS (encrypted)" {
+  style.fill: "#C8E6C9"
+  direction: right
+  client2: "Client"
+  data2: 'a7#kQ!x9&mP2...' {style.fill: "#FFF"}
+  server2: "Server"
+  client2 -> data2 -> server2
+  safe: "Encrypted. Unreadable without the key." {
+    style.fill: "#4CAF50"
+    style.font-color: "#FFF"
+    style.bold: true
+  }
+}
 ```
 
 In the lab, you used `http://localhost:8000` (no encryption) because you were talking to your own machine. Nobody else was on the network path. In production, you **always** use HTTPS.

@@ -5,6 +5,37 @@
 
 ---
 
+## Purpose
+
+The final presentation is your opportunity to demonstrate what you've learned — not just the app you built, but how you built it, why you made the decisions you made, and what you'd do differently. This mirrors how real teams present their work to stakeholders.
+
+## Task
+
+Your team delivers a 15-minute presentation:
+
+- **10 minutes:** present the problem, show the app (live demo), explain key technical decisions, discuss mHealth considerations
+- **5 minutes:** Q&A from the instructor and peers
+
+Before the presentation, ensure your GitHub repository is clean: README updated, no hardcoded secrets, meaningful commit history visible.
+
+---
+
+## Minimum Specification
+
+!!! warning "Pass/Fail Gate"
+    To be eligible for grading, the project must meet **ALL** of these:
+
+    - App launches on a device/emulator without crashing
+    - At least 3 distinct screens implemented
+    - Backend API connection functional
+    - Authentication flow present
+    - Git history shows PR-based workflow
+    - All team members present (or excused in advance)
+
+    Projects that do not meet these minimums receive a maximum of **40/100**.
+
+---
+
 ## Evaluation Criteria
 
 ### 1. Functionality — 20 points

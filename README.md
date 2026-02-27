@@ -38,7 +38,7 @@ A 14-week project-based course combining mobile development (Flutter), backend A
 
 | Sprint | Weeks | Focus | Ceremony |
 |--------|-------|-------|----------|
-| Sprint 1 | 5–7 | Core screens, navigation, basic state | Review at Week 7 |
+| Sprint 1 | 6–7 | Core screens, navigation, basic state | Review at Week 7 |
 | Sprint 2 | 8–10 | API integration, auth, data persistence | Review at Week 10 |
 | Sprint 3 | 11–13 | Polish, testing, advanced features | Review at Week 13 |
 | — | 14 | Final presentations | Final demo |
@@ -52,7 +52,7 @@ The teacher builds a mood tracker app live during lectures, one feature per week
 | 4 | Main screen, basic widget tree |
 | 5 | Form UI with validation, layout |
 | 6 | State management with Riverpod |
-| 7 | Local storage (Hive/SQLite) |
+| 7 | Local storage (SQLite) |
 | 8 | API connection to FastAPI backend |
 | 9 | Login/register with JWT auth |
 | 10 | Unit tests and widget tests |
@@ -91,7 +91,7 @@ Student teams (3-4 people) build a health-related mobile app. Minimum requiremen
 - Git workflow with PRs (no direct push to main)
 - 1-page proposal submitted by Week 5
 
-Proposal template: [`templates/project-proposal/PROPOSAL_TEMPLATE.md`](templates/project-proposal/PROPOSAL_TEMPLATE.md)
+Proposal template: `templates/project-proposal/PROPOSAL_TEMPLATE.md` (in the course materials repository)
 
 ## Repository Structure
 
@@ -109,34 +109,40 @@ Proposal template: [`templates/project-proposal/PROPOSAL_TEMPLATE.md`](templates
 │   └── lab/                           # Flutter widget exercises
 ├── week-05-layouts-forms-sprints/
 │   └── lab/                           # Sprint planning workshop
-├── week-06-state-management/          # Lecture materials
-├── week-07-local-data/                # Lecture materials
-├── week-08-networking-api/            # Lecture materials
-├── week-09-authentication/            # Lecture materials
-├── week-10-testing-quality/           # Lecture materials
-├── week-11-advanced-flutter/          # Lecture materials
-├── week-12-deployment-regulations/    # Lecture materials
-├── week-13-final-sprint/              # Lecture materials
-├── week-14-presentations/             # Presentation schedule
+├── week-06-state-management/          # Lab (Riverpod) + starter project + lecture
+├── week-07-local-data/                # Lab (SQLite) + starter project + lecture
+├── week-08-networking-api/            # Lab (HTTP/API) + starter project + lecture
+├── week-09-authentication/            # Lab (JWT/auth) + starter project + lecture
+├── week-10-testing-quality/           # (coming soon)
+├── week-11-advanced-flutter/          # (coming soon)
+├── week-12-deployment-regulations/    # (coming soon)
+├── week-13-final-sprint/              # (coming soon)
+├── week-14-presentations/             # (coming soon)
 ├── mood-tracker-api/                  # Complete FastAPI backend (reference)
 ├── templates/
 │   ├── project-proposal/              # 1-page proposal template
 │   ├── rubrics/                       # Sprint review & final presentation rubrics
 │   └── forms/                         # Peer evaluation form
 └── resources/
-    └── ai-tools-policy.md             # AI tools policy handout
+    ├── ai-tools-policy.md             # AI tools policy handout
+    ├── ACCESSIBILITY_GUIDE.md         # Accessibility quick reference for Flutter
+    ├── MHEALTH_REGULATIONS.md         # mHealth regulations overview (GDPR, HIPAA, MDR)
+    └── PROJECT_GRADING.md             # Grading rubrics and timeline
 ```
 
-## Grading Rubrics
+## Grading & Resources
 
-- Sprint review rubric: [`templates/rubrics/sprint-review-rubric.md`](templates/rubrics/sprint-review-rubric.md)
-- Final presentation rubric: [`templates/rubrics/final-presentation-rubric.md`](templates/rubrics/final-presentation-rubric.md)
-- Peer evaluation form: [`templates/forms/peer-evaluation.md`](templates/forms/peer-evaluation.md)
+- **Full grading guide:** [`resources/PROJECT_GRADING.md`](resources/PROJECT_GRADING.md) — rubrics, timeline, and grade descriptors
+- **Accessibility guide:** [`resources/ACCESSIBILITY_GUIDE.md`](resources/ACCESSIBILITY_GUIDE.md) — Flutter accessibility quick reference
+- **mHealth regulations:** [`resources/MHEALTH_REGULATIONS.md`](resources/MHEALTH_REGULATIONS.md) — GDPR, HIPAA, MDR overview
+- Sprint review rubric: `templates/rubrics/sprint-review-rubric.md` (in the course materials repository)
+- Final presentation rubric: `templates/rubrics/final-presentation-rubric.md` (in the course materials repository)
+- Peer evaluation form: `templates/forms/peer-evaluation.md` (in the course materials repository)
 
 ## Prerequisites
 
 Students should have:
-- Basic programming experience (C/C++ and Python)
+- Basic programming experience (Python, C/C++, or similar)
 - A laptop capable of running Flutter (macOS, Windows, or Linux)
 - Willingness to learn new tools and workflows
 

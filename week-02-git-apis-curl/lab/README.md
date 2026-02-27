@@ -1,10 +1,14 @@
 # Week 2 Lab: Git Branching, REST APIs & curl
 
-**Course:** Mobile Apps for Healthcare
-**Duration:** ~2 hours
-**Prerequisites:** Week 1 (terminal basics, `git init/add/commit/push/pull`, GitHub account)
+> **Course:** Mobile Apps for Healthcare
+> **Duration:** ~2 hours
+> **Prerequisites:** Week 1 (terminal basics, `git init/add/commit/push`, GitHub account with SSH)
 
-> **Important:** AI tools (ChatGPT, Copilot, etc.) are **not allowed** in Weeks 1-3. Type every command yourself. If you get stuck, ask your instructor or a classmate.
+!!! warning "No AI tools in Weeks 1–3"
+    AI tools (ChatGPT, Copilot, etc.) are **not allowed** in Weeks 1–3. Type every command yourself. If you get stuck, ask your instructor or a classmate.
+
+!!! tip "Pacing"
+    This lab covers a lot of ground. If you don't finish Part 4 (FastAPI) during the session, it can be completed as homework. Focus on mastering Parts 1-3 (git branching, REST concepts, curl) during the lab.
 
 ---
 
@@ -18,6 +22,9 @@ By the end of this lab you will be able to:
 4. Set up a Python virtual environment and install packages.
 5. Build a minimal REST API with FastAPI.
 6. Test API endpoints with `curl`.
+
+!!! example "Healthcare context"
+    REST APIs are the backbone of modern health systems. When your phone syncs fitness data to the cloud, when a hospital system queries a patient's lab results, or when a telemedicine app connects to a video service — they all use HTTP APIs following the patterns you'll learn today. The HL7 FHIR standard (Fast Healthcare Interoperability Resources) is built entirely on RESTful API principles.
 
 ---
 
@@ -102,14 +109,72 @@ A **merge conflict** happens when two branches change the **same lines** in the 
 
 #### Setup
 
-Your instructor has prepared a repository with two branches that conflict. Clone it:
+You will create a merge conflict yourself by simulating two branches that edit the same file differently.
 
 ```bash
-git clone <URL-provided-by-instructor> conflict-exercise
-cd conflict-exercise
+# Create a new practice repo
+mkdir conflict-exercise && cd conflict-exercise
+git init
+
+# Create a patient file on main
+cat > patient_info.txt << 'EOF'
+Patient: Jane Doe
+Age: 45
+Blood pressure: 118/76 mmHg
+Heart rate: 72 bpm
+Notes: Regular checkup
+EOF
+
+git add patient_info.txt
+git commit -m "Add patient info file"
 ```
 
-> **Instructor note:** The repo should contain a file (e.g., `patient_info.txt`) that has been modified on both `branch-a` and `branch-b` in conflicting ways. For example, `branch-a` changes line 3 to "Blood pressure: 120/80 mmHg" while `branch-b` changes the same line to "Blood pressure: 130/85 mmHg".
+Now create two branches that change the **same line** differently:
+
+```bash
+# Branch A: doctor updates blood pressure
+git switch -c branch-a
+```
+
+Open `patient_info.txt` in your text editor and change the blood pressure line to:
+
+```
+Blood pressure: 120/80 mmHg
+```
+
+Save the file, then commit:
+
+```bash
+git add patient_info.txt
+git commit -m "Update BP reading (branch-a)"
+```
+
+Now go back to main, create branch B, and make a **different** change to the same line:
+
+```bash
+git switch main
+git switch -c branch-b
+```
+
+Open `patient_info.txt` again and change the blood pressure line to:
+
+```
+Blood pressure: 130/85 mmHg
+```
+
+Save the file, then commit:
+
+```bash
+git add patient_info.txt
+git commit -m "Update BP reading (branch-b)"
+```
+
+!!! tip "Automation shortcut (optional)"
+    If you prefer the command line, you can use `sed` instead of a text editor:
+    ```bash
+    sed -i.bak 's/Blood pressure: 118\/76 mmHg/Blood pressure: 120\/80 mmHg/' patient_info.txt && rm -f patient_info.txt.bak
+    ```
+    But learning to edit files manually is more important at this stage — you'll need that skill for resolving real conflicts.
 
 #### Steps
 
@@ -118,7 +183,7 @@ cd conflict-exercise
 ```bash
 git switch branch-a
 cat patient_info.txt
-# Note the content on this branch
+# Shows: Blood pressure: 120/80 mmHg
 ```
 
 2. **Explore branch-b:**
@@ -126,7 +191,7 @@ cat patient_info.txt
 ```bash
 git switch branch-b
 cat patient_info.txt
-# Note the different content on this branch
+# Shows: Blood pressure: 130/85 mmHg
 ```
 
 3. **Merge branch-a into branch-b** (you are currently on `branch-b`):
@@ -181,6 +246,15 @@ git commit -m "Resolve merge conflict in patient_info.txt"
 - Conflicts are normal. They are not errors.
 - Always read both versions carefully before deciding what to keep.
 - Never leave conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`) in committed files.
+
+### Self-Check: Part 1
+
+Before continuing, make sure you can answer these questions:
+
+- [ ] You can create a new branch and switch to it.
+- [ ] You understand that changes on a branch are isolated from `main` until merged.
+- [ ] You have resolved a merge conflict by editing a file and removing the conflict markers.
+- [ ] You can explain what `<<<<<<<`, `=======`, and `>>>>>>>` mean in a conflict file.
 
 ---
 
@@ -250,6 +324,13 @@ git pull origin main
 
 Now your local `main` contains the merged changes.
 
+### Self-Check: Part 2
+
+- [ ] You have pushed a branch to GitHub and opened a Pull Request.
+- [ ] You have reviewed a classmate's PR (or at least know how to: Files changed tab → line comments → Submit review).
+- [ ] You have merged a PR and pulled the updated `main` locally.
+- [ ] You can explain the difference between merging locally (`git merge`) and merging on GitHub (via a PR).
+
 ---
 
 ## Part 3: Python Virtual Environment & FastAPI (~40 min)
@@ -263,25 +344,35 @@ A **virtual environment** is an isolated Python installation. Packages you insta
 ```bash
 # Navigate to a new project folder
 mkdir mood-api && cd mood-api
-
-# Create a virtual environment called "venv"
-python -m venv venv
 ```
 
-> **Note:** On some systems you may need to use `python3` instead of `python`.
+Create a virtual environment:
+
+=== "macOS / Linux"
+
+    ```bash
+    python3 -m venv venv
+    ```
+
+=== "Windows (Git Bash)"
+
+    ```bash
+    python -m venv venv
+    ```
 
 Activate it:
 
-```bash
-# macOS / Linux
-source venv/bin/activate
+=== "macOS / Linux"
 
-# Windows (Command Prompt)
-venv\Scripts\activate
+    ```bash
+    source venv/bin/activate
+    ```
 
-# Windows (PowerShell)
-venv\Scripts\Activate.ps1
-```
+=== "Windows (Git Bash)"
+
+    ```bash
+    source venv/Scripts/activate
+    ```
 
 When activated, you will see `(venv)` at the beginning of your terminal prompt. To deactivate later, simply type `deactivate`.
 
@@ -406,6 +497,13 @@ FastAPI automatically generates an **interactive API documentation** page (Swagg
 
 There is also an alternative documentation page at `http://localhost:8000/redoc`.
 
+### Self-Check: Part 3
+
+- [ ] You created and activated a Python virtual environment (you see `(venv)` in your prompt).
+- [ ] Your FastAPI server is running — `http://localhost:8000/docs` shows the Swagger UI in your browser.
+- [ ] You can explain what `@app.get("/health")` does.
+- [ ] You understand that Pydantic validates request data and returns `422` for invalid input.
+
 ---
 
 ## Part 4: Testing with curl (~15 min)
@@ -414,7 +512,11 @@ There is also an alternative documentation page at `http://localhost:8000/redoc`
 
 `curl` (short for "Client URL") is a command-line tool for making HTTP requests. It is installed by default on macOS, Linux, and modern Windows. It lets you test APIs without a browser or GUI tool.
 
-Keep your FastAPI server running in one terminal and open a **second terminal** for the curl commands below.
+!!! info "Two terminals needed"
+    Your FastAPI server must stay running while you test with `curl`. Open a **second terminal window** (or tab) for the `curl` commands below. Keep the server terminal visible so you can see incoming request logs.
+
+    - **Terminal 1:** Running `uvicorn main:app --reload` (do not close this)
+    - **Terminal 2:** Where you type `curl` commands
 
 ### 4.2 Test the health endpoint
 
@@ -428,19 +530,29 @@ Expected response:
 {"status":"healthy"}
 ```
 
-To get nicely formatted (pretty-printed) output, pipe through `python -m json.tool`:
+To get nicely formatted (pretty-printed) output, pipe through `python3 -m json.tool`:
 
 ```bash
-curl -s http://localhost:8000/health | python -m json.tool
+curl -s http://localhost:8000/health | python3 -m json.tool
 ```
 
 ### 4.3 Create a mood entry
 
-```bash
-curl -X POST http://localhost:8000/mood \
-  -H "Content-Type: application/json" \
-  -d '{"score": 7, "note": "good day"}'
-```
+=== "macOS / Linux / Git Bash"
+
+    ```bash
+    curl -X POST http://localhost:8000/mood \
+      -H "Content-Type: application/json" \
+      -d '{"score": 7, "note": "good day"}'
+    ```
+
+=== "Windows (PowerShell)"
+
+    ```powershell
+    curl -X POST http://localhost:8000/mood `
+      -H "Content-Type: application/json" `
+      -d '{"score": 7, "note": "good day"}'
+    ```
 
 Let us break this command down:
 
@@ -458,15 +570,29 @@ Expected response:
 
 Add a few more entries:
 
-```bash
-curl -X POST http://localhost:8000/mood \
-  -H "Content-Type: application/json" \
-  -d '{"score": 4, "note": "stressful morning"}'
+=== "macOS / Linux / Git Bash"
 
-curl -X POST http://localhost:8000/mood \
-  -H "Content-Type: application/json" \
-  -d '{"score": 9, "note": "great workout"}'
-```
+    ```bash
+    curl -X POST http://localhost:8000/mood \
+      -H "Content-Type: application/json" \
+      -d '{"score": 4, "note": "stressful morning"}'
+
+    curl -X POST http://localhost:8000/mood \
+      -H "Content-Type: application/json" \
+      -d '{"score": 9, "note": "great workout"}'
+    ```
+
+=== "Windows (PowerShell)"
+
+    ```powershell
+    curl -X POST http://localhost:8000/mood `
+      -H "Content-Type: application/json" `
+      -d '{"score": 4, "note": "stressful morning"}'
+
+    curl -X POST http://localhost:8000/mood `
+      -H "Content-Type: application/json" `
+      -d '{"score": 9, "note": "great workout"}'
+    ```
 
 ### 4.4 Retrieve all mood entries
 
@@ -483,18 +609,28 @@ Expected response:
 Pretty-printed:
 
 ```bash
-curl -s http://localhost:8000/moods | python -m json.tool
+curl -s http://localhost:8000/moods | python3 -m json.tool
 ```
 
 ### 4.5 What happens with invalid data?
 
 Try sending an entry with a missing field:
 
-```bash
-curl -X POST http://localhost:8000/mood \
-  -H "Content-Type: application/json" \
-  -d '{"score": 5}'
-```
+=== "macOS / Linux / Git Bash"
+
+    ```bash
+    curl -X POST http://localhost:8000/mood \
+      -H "Content-Type: application/json" \
+      -d '{"score": 5}'
+    ```
+
+=== "Windows (PowerShell)"
+
+    ```powershell
+    curl -X POST http://localhost:8000/mood `
+      -H "Content-Type: application/json" `
+      -d '{"score": 5}'
+    ```
 
 FastAPI will return a `422 Unprocessable Entity` error with details about what went wrong. This automatic validation is one of FastAPI's key strengths.
 
@@ -509,6 +645,13 @@ FastAPI will return a `422 Unprocessable Entity` error with details about what w
 | `-v` | Verbose (show full request/response headers) | `curl -v http://...` |
 | `-i` | Include response headers in output | `curl -i http://...` |
 
+### Self-Check: Part 4
+
+- [ ] You successfully posted a mood entry with `curl` and received a JSON response.
+- [ ] You retrieved all entries with `GET /moods` and saw the entries you created.
+- [ ] You triggered a `422` error by sending invalid data and can explain why it happened.
+- [ ] You can explain what the `-X`, `-H`, and `-d` flags do in a curl command.
+
 ---
 
 ## Individual Assignment
@@ -517,7 +660,7 @@ FastAPI will return a `422 Unprocessable Entity` error with details about what w
 
 ### Task
 
-1. **Fork** the instructor's `mood-tracker-api` repository on GitHub (link provided by instructor).
+1. **Fork** the instructor's `mood-tracker-api` repository on GitHub (the instructor will share the URL during the lab session or on the course page).
 2. **Clone** your fork locally.
 3. Create a **new branch** for your feature (e.g., `feature-average-endpoint`).
 4. **Add a new endpoint** to `main.py`. Choose one:
@@ -559,6 +702,28 @@ FastAPI will return a `422 Unprocessable Entity` error with details about what w
 | FastAPI | `FastAPI()`, `@app.get()`, `@app.post()`, Pydantic models |
 | Running | `uvicorn main:app --reload`, Swagger at `/docs` |
 | curl | `-X`, `-H`, `-d` flags; GET, POST methods |
+
+---
+
+## Troubleshooting
+
+??? question "`python: command not found` or `python3: command not found`"
+    Python may not be installed or not on your PATH. On macOS/Linux, try `python3` instead of `python`. On Windows, install Python from [python.org](https://www.python.org/downloads/) and make sure to check **"Add Python to PATH"** during installation.
+
+??? question "`pip install` fails with a permissions error"
+    Make sure your virtual environment is activated (you should see `(venv)` in your prompt). If you see `Permission denied`, you are probably installing into the system Python instead of the venv. Run `deactivate`, then re-activate with `source venv/bin/activate` (macOS/Linux) or `source venv/Scripts/activate` (Windows Git Bash).
+
+??? question "Port 8000 is already in use"
+    Another process is using port 8000. Either stop it, or run uvicorn on a different port: `uvicorn main:app --reload --port 8001`. Update your curl commands to use the new port number.
+
+??? question "`curl: (7) Failed to connect to localhost port 8000: Connection refused`"
+    Your FastAPI server is not running. Open a **separate terminal**, navigate to the `mood-api` folder, activate the venv, and run `uvicorn main:app --reload`. Keep this terminal open while testing with curl in another terminal.
+
+??? question "Merge conflict markers are still in the file after I edited it"
+    Make sure you removed **all three marker lines** (`<<<<<<<`, `=======`, `>>>>>>>`). The file should contain only the content you want to keep, with no conflict markers remaining. After editing, run `git add patient_info.txt && git commit -m "Resolve conflict"`.
+
+??? question "`git push` asks for a username and password"
+    You are using HTTPS instead of SSH. Either set up SSH keys (see Week 1 lab) or switch the remote URL: `git remote set-url origin git@github.com:username/repo.git`.
 
 ---
 

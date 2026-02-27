@@ -2,8 +2,8 @@
 
 > **Course:** Mobile Apps for Healthcare
 > **Duration:** ~2 hours
-> **Prerequisites:** C/C++ and Python experience, basic terminal skills
-> **Policy:** No AI tools (ChatGPT, Copilot, etc.) allowed. Write all code yourself.
+> **Prerequisites:** Basic programming experience (Python, C/C++, or similar), basic terminal skills
+> **AI Policy:** No AI tools (ChatGPT, Copilot, etc.) allowed in Weeks 1–3. Write all code yourself.
 
 ---
 
@@ -11,31 +11,36 @@
 
 Before you begin, make sure you have the Dart SDK installed and available in your terminal.
 
+!!! note "Already installed Flutter?"
+    If you installed the Flutter SDK in Week 0, **Dart is already included** — you can skip the installation below. Verify by running `dart --version`. If it works, jump straight to "Running Dart files."
+
 ### Install Dart SDK
 
-**macOS (Homebrew):**
+=== "macOS"
 
-```bash
-brew tap dart-lang/dart
-brew install dart
-```
+    ```bash
+    brew tap dart-lang/dart
+    brew install dart
+    ```
 
-**Windows (Chocolatey):**
+=== "Linux"
 
-```powershell
-choco install dart-sdk
-```
+    ```bash
+    sudo apt-get update
+    sudo apt-get install apt-transport-https
+    sudo sh -c 'wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -'
+    sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
+    sudo apt-get update
+    sudo apt-get install dart
+    ```
 
-**Linux (apt):**
+=== "Windows"
 
-```bash
-sudo apt-get update
-sudo apt-get install apt-transport-https
-sudo sh -c 'wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -'
-sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
-sudo apt-get update
-sudo apt-get install dart
-```
+    ```powershell
+    choco install dart-sdk
+    ```
+
+    If you don't have Chocolatey, you can install Dart via the [official installer](https://dart.dev/get-dart) or use `winget install Dart.Dart-SDK`.
 
 **Verify installation:**
 
@@ -49,13 +54,24 @@ You should see output like `Dart SDK version: 3.x.x`. Any 3.x version is fine.
 
 ```bash
 dart run my_file.dart
-# or simply:
-dart my_file.dart
 ```
+
+> **Note:** You can also use the shorthand `dart my_file.dart` (without `run`), which works identically. This course uses `dart run` for clarity.
 
 ### Lab files
 
-Open the `exercises.dart` file in your editor. Each exercise is a function stub with a `// TODO` marker. Implement the function body, then run the file to test your solutions. The `main()` function at the bottom calls each exercise so you can see the output.
+The exercise files are provided in the course materials at:
+
+```
+week-03-dart-fundamentals/lab/
+├── exercises.dart              # All exercises for Parts 1-6
+└── mood_logger_template.dart   # Starter template for the assignment
+```
+
+These files are in the course materials repository you cloned in Week 0 (see [Getting Ready](../../resources/GETTING_READY.md#step-8-clone-the-course-materials-repository)). Open `exercises.dart` in your editor. Each exercise is a function stub with a `// TODO` marker. Implement the function body, then run the file to test your solutions. The `main()` function at the bottom calls each exercise so you can see the output.
+
+!!! example "Healthcare context"
+    Dart's strong type system and null safety are particularly valuable in healthcare apps. When processing a blood glucose reading, you want the compiler to guarantee that a `double glucoseValue` is never accidentally `null` or confused with a `String`. Type safety catches bugs at compile time that could otherwise lead to incorrect health data being displayed to patients.
 
 ---
 
@@ -127,6 +143,13 @@ Status: stable
 
 Complete **Exercises 1 and 2** in `exercises.dart`.
 
+### Self-Check: Part 1
+
+- [ ] You can declare variables with explicit types (`int`, `String`) and with `var`.
+- [ ] You can explain the difference between `final` (runtime) and `const` (compile-time).
+- [ ] You can use string interpolation with `$variable` and `${expression}`.
+- [ ] Exercises 1 and 2 produce the expected output when you run the file.
+
 ---
 
 ## Part 2: Functions (~15 min)
@@ -183,6 +206,12 @@ print(formatName('Marie', 'Curie', 'Dr.'));     // Dr. Marie Curie
 
 Complete **Exercises 3 and 4** in `exercises.dart`.
 
+### Self-Check: Part 2
+
+- [ ] You can write functions with explicit return types and arrow syntax (`=>`).
+- [ ] You understand the difference between named parameters (`{required String name}`) and positional parameters.
+- [ ] Exercises 3 and 4 produce the expected output.
+
 ---
 
 ## Part 3: Collections (~15 min)
@@ -236,6 +265,12 @@ var all    = allergies1.union(allergies2);          // {'penicillin', 'aspirin',
 ### Exercises
 
 Complete **Exercises 5 and 6** in `exercises.dart`.
+
+### Self-Check: Part 3
+
+- [ ] You can create and manipulate `List`, `Map`, and `Set` collections.
+- [ ] You can use `.where()`, `.map()`, and `.fold()` for functional-style operations.
+- [ ] You understand that `List<int>` means a list that can only contain integers (generic types).
 
 ---
 
@@ -309,6 +344,12 @@ Use `late` sparingly -- if you get it wrong, you get a runtime error instead of 
 ### Exercises
 
 Complete **Exercises 7 and 8** in `exercises.dart`.
+
+### Self-Check: Part 4
+
+- [ ] You can explain why `String` cannot be `null` but `String?` can.
+- [ ] You know when to use `??` (default), `?.` (conditional access), and `!` (assertion) — and why `!` is dangerous.
+- [ ] You understand that Dart catches null errors **at compile time**, unlike C++ (segfault) or Python (runtime AttributeError).
 
 ---
 
@@ -458,6 +499,13 @@ Mixins solve the diamond problem of multiple inheritance by applying a linear or
 
 Complete **Exercises 9 and 10** in `exercises.dart`.
 
+### Self-Check: Part 5
+
+- [ ] You can create a Dart class with a constructor using `this.fieldName` shorthand.
+- [ ] You understand inheritance (`extends`) and method overriding (`@override`).
+- [ ] You can explain what an abstract class is and why you cannot instantiate one.
+- [ ] You know that mixins (`with`) add behavior to a class without inheritance.
+
 ---
 
 ## Part 6: Async Programming (~15 min)
@@ -524,6 +572,39 @@ Future<void> loadData() async {
 
 Complete **Exercises 11 and 12** in `exercises.dart`.
 
+### Self-Check: Part 6
+
+- [ ] You can explain what `Future<String>` means — a value that will be a String sometime later.
+- [ ] You know that `async` marks a function as asynchronous and `await` pauses until a Future completes.
+- [ ] You can use `try`/`catch` to handle errors in async code.
+- [ ] You see the connection to Python's `async`/`await` — the concept is the same, just different syntax.
+
+---
+
+## Reading User Input
+
+The assignment below requires reading input from the terminal. Dart provides `stdin.readLineSync()` from the `dart:io` library:
+
+```dart
+import 'dart:io';
+
+void main() {
+  stdout.write('Enter your name: ');  // print without a newline
+  String? name = stdin.readLineSync();
+  print('Hello, $name!');
+
+  stdout.write('Enter your age: ');
+  int age = int.parse(stdin.readLineSync()!);  // ! because we expect non-null input
+  print('Next year you will be ${age + 1}.');
+}
+```
+
+Key points:
+
+- `stdin.readLineSync()` returns `String?` (nullable) because the user might press Ctrl+D (end of input).
+- Use `int.parse()` or `double.parse()` to convert string input to numbers.
+- Use `stdout.write()` instead of `print()` when you want the cursor to stay on the same line (for a prompt).
+
 ---
 
 ## Individual Assignment: CLI Mood Logger
@@ -584,7 +665,7 @@ Goodbye!
 ### Submission
 
 - Push your completed `mood_logger.dart` file to your personal GitHub repository.
-- Deadline: before the next lab session.
+- Deadline: before the start of the Week 4 lab session.
 
 ### Grading criteria
 
@@ -595,3 +676,19 @@ Goodbye!
 | Interactive CLI with menu loop and input handling | 3 |
 | Code quality (naming, structure, null safety) | 2 |
 | **Total** | **10** |
+
+---
+
+## Troubleshooting
+
+??? question "`dart: command not found`"
+    The Dart SDK is not on your PATH. If you installed Flutter, Dart is bundled inside it — run `flutter doctor` to verify Flutter works, then find the Dart binary at `<flutter-sdk>/bin/cache/dart-sdk/bin/dart`. Alternatively, install Dart separately using the instructions at the top of this lab.
+
+??? question "Type error: `The argument type 'String?' can't be assigned to 'String'`"
+    You are assigning a nullable value (`String?`) to a non-nullable variable (`String`). This commonly happens with `stdin.readLineSync()` which returns `String?`. Use the null assertion operator: `stdin.readLineSync()!` — or provide a default: `stdin.readLineSync() ?? ''`.
+
+??? question "`FormatException: Invalid number` when parsing user input"
+    The user entered text that cannot be converted to a number. Wrap `int.parse()` in a try-catch block, or use `int.tryParse()` which returns `null` on failure instead of throwing an exception.
+
+??? question "My program runs but produces no output"
+    Make sure you are calling the exercise functions from `main()`. Check the bottom of `exercises.dart` — the `main()` function should call each exercise. Also verify you are running the correct file: `dart run exercises.dart`.

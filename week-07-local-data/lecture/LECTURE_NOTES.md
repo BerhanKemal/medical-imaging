@@ -12,12 +12,13 @@
 ## Table of Contents
 
 1. [Why Local Data Matters](#1-why-local-data-matters-10-min) (10 min)
-2. [Local Storage Options in Flutter](#2-local-storage-options-in-flutter-20-min) (20 min)
-3. [SQLite Fundamentals](#3-sqlite-fundamentals-20-min) (20 min)
-4. [Offline-First Architecture](#4-offline-first-architecture-15-min) (15 min)
-5. [Health Data Considerations](#5-health-data-considerations-15-min) (15 min)
-6. [Data Migration Strategies](#6-data-migration-strategies-10-min) (10 min)
-7. [Key Takeaways](#7-key-takeaways-5-min) (5 min)
+2. [Local Storage Options in Flutter](#2-local-storage-options-in-flutter-15-min) (15 min)
+3. [What Is a Database and How Does SQL Work?](#3-what-is-a-database-and-how-does-sql-work-25-min) (25 min)
+4. [SQLite in Flutter](#4-sqlite-in-flutter-12-min) (12 min)
+5. [Offline-First Architecture](#5-offline-first-architecture-12-min) (12 min)
+6. [Health Data Considerations](#6-health-data-considerations-13-min) (13 min)
+7. [Data Migration Strategies](#7-data-migration-strategies-3-min) (3 min)
+8. [Key Takeaways](#8-key-takeaways-5-min) (5 min)
 
 ---
 
@@ -51,7 +52,7 @@ Local storage is not a nice-to-have feature. It is infrastructure. Every mobile 
 
 ---
 
-## 2. Local Storage Options in Flutter (20 min)
+## 2. Local Storage Options in Flutter (15 min)
 
 Flutter gives you several options for local storage. Each one fits a different use case. Choosing the wrong tool leads to security vulnerabilities, performance problems, or unnecessary complexity.
 
@@ -104,20 +105,9 @@ In Flutter, you access SQLite through one of two packages:
 
 We will focus on sqflite because it is simpler to learn, and you practiced it in the lab. Know that drift exists for when you want stronger type safety in production projects.
 
-### Hive and Isar: The NoSQL Alternatives
+### Hive, Isar, and Other NoSQL Alternatives
 
-**What they are:** Dart-native NoSQL databases. Key-value stores with more features than SharedPreferences but without the SQL overhead.
-
-**Use cases:**
-- When you want database features (persistence, indexing, querying) but do not want to write SQL
-- Dart objects can be stored directly without manual serialization (with code generation)
-
-**Trade-offs:**
-- Hive is fast and simple but development has slowed
-- Isar is newer and more actively developed but has a smaller community
-- Both have less mature ecosystems compared to SQLite, which has been around since 2000
-
-For most projects in this course, SQLite will be the right choice. But these alternatives are worth knowing about.
+Hive and Isar are Dart-native NoSQL databases -- key-value stores with more features than SharedPreferences but without SQL. They let you store Dart objects directly (with code generation) and offer basic querying and indexing. Hive is fast and simple but development has slowed; Isar is newer and more actively maintained. Both have smaller ecosystems compared to SQLite, which has been in production since 2000. For most projects in this course, SQLite will be the right choice, but these alternatives are worth knowing about.
 
 ### Secure Storage: The Safe
 
@@ -149,13 +139,7 @@ The encryption is hardware-backed. On iOS, the Keychain is protected by the Secu
 
 ### File System: The Document Drawer
 
-**What it is:** Direct file read/write using `dart:io` and the `path_provider` package to find the right directory.
-
-**Use cases:**
-- Downloaded documents (PDFs, images)
-- Exported data (CSV files for sharing with clinicians)
-- Cached media files
-- Any large binary data that does not belong in a database
+For large binary files -- downloaded PDFs, exported CSVs, cached images -- use direct file I/O with `dart:io` and the `path_provider` package. This is not a database; it is simply reading and writing files to the device's filesystem. Use it for data that does not need querying or indexing.
 
 ```dart
 final directory = await getApplicationDocumentsDirectory();
@@ -178,22 +162,34 @@ await file.writeAsString(csvContent);
 
 When deciding which storage to use, walk through this tree:
 
-```
-What kind of data do you need to store?
-           |
-           |-- Simple key-value (settings, flags, preferences)?
-           |     +-- SharedPreferences
-           |
-           |-- Structured records (patients, mood entries, vitals)?
-           |     +-- Need SQL queries or complex relationships?
-           |           |-- Yes --> SQLite (sqflite / drift)
-           |           +-- No ---> Hive / Isar
-           |
-           |-- Sensitive credentials (tokens, keys, passwords)?
-           |     +-- flutter_secure_storage
-           |
-           +-- Large files (images, PDFs, exported CSVs)?
-                 +-- File system (path_provider + dart:io)
+```d2
+direction: down
+
+q: "What kind of data?" {style.fill: "#E3F2FD"; style.bold: true}
+
+kv: "Simple key-value\n(settings, flags)?" {style.fill: "#FFF9C4"}
+structured: "Structured records\n(patients, moods, vitals)?" {style.fill: "#FFF9C4"}
+sensitive: "Sensitive credentials\n(tokens, keys, passwords)?" {style.fill: "#FFF9C4"}
+files: "Large files\n(images, PDFs, CSVs)?" {style.fill: "#FFF9C4"}
+
+sp: "SharedPreferences" {style.fill: "#C8E6C9"; style.bold: true}
+sql_q: "Need SQL queries or\ncomplex relationships?" {style.fill: "#FFE0B2"}
+sqlite: "SQLite\n(sqflite / drift)" {style.fill: "#C8E6C9"; style.bold: true}
+hive: "Hive / Isar" {style.fill: "#C8E6C9"; style.bold: true}
+secure: "flutter_secure_storage" {style.fill: "#C8E6C9"; style.bold: true}
+fs: "File system\n(path_provider + dart:io)" {style.fill: "#C8E6C9"; style.bold: true}
+
+q -> kv
+q -> structured
+q -> sensitive
+q -> files
+
+kv -> sp
+structured -> sql_q
+sql_q -> sqlite: "Yes"
+sql_q -> hive: "No"
+sensitive -> secure
+files -> fs
 ```
 
 > PRESENTER NOTE: This is a good time for interaction. Ask the class: "What kind of
@@ -204,84 +200,217 @@ What kind of data do you need to store?
 
 ---
 
-## 3. SQLite Fundamentals (20 min)
+## 3. What Is a Database and How Does SQL Work? (25 min)
 
-### Why SQLite Dominates Mobile Storage
+Most of your projects will use SQLite. Before we look at how to use it in Flutter, you need to understand what a database actually is and how SQL works. This is foundational knowledge that applies far beyond mobile apps -- every backend, every data pipeline, every analytics tool you will encounter in your career uses databases.
 
-Most of your projects will need SQLite for structured data. Before we look at how to use it in Flutter, let's understand what SQLite actually is and why it is so widely used.
+### 3.1 Why Not Just Use Files or Variables?
 
-SQLite is an **embedded** relational database. Unlike PostgreSQL or MySQL, there is no separate server process. The database engine runs inside your app, and the entire database is stored as a **single file** on the device's file system.
+You already know how to store data in Python dictionaries, Dart Maps, and JSON files. So why do we need databases at all?
 
-SQLite is everywhere. It is built into every iPhone, every Android phone, every Mac, every Windows machine, every web browser. It is estimated to be the most widely deployed database engine in the world -- there are literally trillions of SQLite databases in active use.
+Think of data storage as a spectrum with three levels:
 
-For mobile apps, SQLite is ideal because:
-- No server configuration or management
-- Zero-latency local queries
-- Reliable -- it has been in production since 2000
-- Handles databases up to 281 terabytes (far more than any mobile app needs)
-- ACID-compliant -- transactions are safe even if the app crashes mid-write
+**Level 1: Variables (in-memory).** A Dart `List<MoodEntry>` or a Python `list[dict]` lives in RAM. It is fast to access but vanishes the instant your app closes or the device restarts. This is what your Mood Tracker does right now -- and it is why you lose all entries on restart.
 
-### SQL Basics: A Quick Review
+**Level 2: Files (JSON, CSV, plain text).** You could serialize your mood entries to a JSON file using `dart:io` and reload them on startup. This solves persistence, but creates new problems:
 
-You know Python. SQL follows a similar logic, just with a different syntax. Here are the five fundamental operations:
+- **No efficient querying.** To find all moods with score >= 4, you must load the entire file into memory and filter in Dart. With thousands of entries, this is slow and wasteful.
+- **No crash safety.** If the app crashes or the phone dies mid-write, the file may be partially written and corrupted. You lose not just the new entry, but potentially all your data.
+- **No concurrent access.** If two parts of your app try to write at the same time, one write can overwrite the other.
+
+**Level 3: Databases.** A database gives you all three: persistence (data survives restarts), querying (find specific records without loading everything), and safety (transactions ensure data is saved completely or not at all).
+
+> **Healthcare hook:** If a patient's blood pressure reading is stored in a variable, it
+> vanishes when the app closes. If stored in a JSON file and the phone dies mid-write,
+> the file may be corrupted -- and every reading in it could be lost. A database ensures
+> each reading is saved completely or not at all. This guarantee is called a
+> **transaction**, and it is fundamental to any system that handles clinical data.
+
+### 3.2 The Relational Model: Tables, Rows, Columns
+
+A relational database organizes data into **tables**. If you have ever used a spreadsheet, the concept is familiar:
+
+- A **table** is like a sheet in a spreadsheet (e.g., "mood_entries")
+- A **row** is a single record (one mood entry)
+- A **column** is a field (score, note, created_at)
+- A **primary key** uniquely identifies each row -- like a student ID number that no two students share
+
+Here is what the `mood_entries` table looks like:
+
+| id | score | note | created_at |
+|----|-------|------|------------|
+| a1b2c3 | 3 | Woke up tired | 2026-02-22T07:30:00 |
+| d4e5f6 | 5 | Great morning run | 2026-02-22T08:15:00 |
+| g7h8i9 | 2 | Anxiety before exam | 2026-02-22T14:00:00 |
+| j1k2l3 | 4 | | 2026-02-22T18:45:00 |
+
+This should look familiar. In Python, you might represent this as:
+
+```python
+mood_entries = [
+    {"id": "a1b2c3", "score": 3, "note": "Woke up tired", "created_at": "2026-02-22T07:30:00"},
+    {"id": "d4e5f6", "score": 5, "note": "Great morning run", "created_at": "2026-02-22T08:15:00"},
+]
+```
+
+In Dart, the equivalent would be a `List<Map<String, dynamic>>`. In C, you would use an array of `struct`s. A database table is a more powerful version of these structures: it is stored on disk with efficient indexing, supports querying with SQL, and guarantees data integrity through transactions.
+
+### 3.3 Data Types in SQLite
+
+SQLite uses five **storage classes** (think of them as data types):
+
+| SQLite Type | What It Stores | Dart Equivalent |
+|-------------|----------------|-----------------|
+| TEXT | Strings | `String` |
+| INTEGER | Whole numbers, booleans (0/1) | `int`, `bool` |
+| REAL | Floating-point numbers | `double` |
+| BLOB | Raw binary data | `Uint8List` |
+| NULL | No value | `null` |
+
+**Important:** SQLite has no native date/time type. Dates are stored as TEXT in ISO 8601 format (e.g., `"2026-02-22T14:30:00"`). In Dart, you convert with `DateTime.toIso8601String()` and parse back with `DateTime.parse()`. This is a common source of confusion -- remember it for the lab.
+
+### 3.4 SQL: A Declarative Language
+
+SQL (Structured Query Language) works differently from Python or Dart. In imperative languages, you tell the computer *how* to do something step by step. In SQL, you tell the computer *what* you want, and it figures out how to get it.
+
+Compare these two approaches to finding happy moods (score >= 4):
+
+**Python (imperative):**
+
+```python
+happy_moods = []
+for entry in mood_entries:
+    if entry["score"] >= 4:
+        happy_moods.append(entry)
+```
+
+**SQL (declarative):**
+
+```sql
+SELECT * FROM mood_entries WHERE score >= 4;
+```
+
+SQL reads almost like English. It was designed in the 1970s at IBM specifically to be readable by non-programmers. You describe the result you want, and the database engine optimizes the execution.
+
+### 3.5 CRUD Operations with Healthcare Examples
+
+CRUD stands for **C**reate, **R**ead, **U**pdate, **D**elete -- the four fundamental database operations. Let's walk through each one.
 
 **CREATE TABLE** -- Define the structure of your data:
 
 ```sql
-CREATE TABLE moods (
+-- The mood_entries table (you will use this in the lab)
+CREATE TABLE mood_entries (
   id TEXT PRIMARY KEY,
   score INTEGER NOT NULL,
   note TEXT,
-  createdAt TEXT NOT NULL
+  created_at TEXT NOT NULL
+);
+
+-- A richer healthcare example
+CREATE TABLE vital_signs (
+  id TEXT PRIMARY KEY,
+  patient_id TEXT NOT NULL,
+  heart_rate INTEGER,
+  systolic_bp INTEGER,
+  diastolic_bp INTEGER,
+  temperature REAL,
+  recorded_at TEXT NOT NULL
 );
 ```
 
-This is like defining a class in Dart or Python, except you are defining columns in a table.
+This is like defining a class in Dart or a `struct` in C, except you are defining the columns that every row in the table will have.
 
-**INSERT** -- Add a new row:
+**INSERT** -- Add new rows:
 
 ```sql
-INSERT INTO moods (id, score, note, createdAt)
+-- Add a mood entry
+INSERT INTO mood_entries (id, score, note, created_at)
 VALUES ('abc-123', 4, 'Feeling good today', '2026-02-22T10:30:00');
+
+-- Add a vital signs reading
+INSERT INTO vital_signs (id, patient_id, heart_rate, systolic_bp, diastolic_bp, temperature, recorded_at)
+VALUES ('vs-001', 'patient-42', 72, 120, 80, 36.6, '2026-02-22T08:00:00');
 ```
 
-**SELECT** -- Query data (the most powerful operation):
+**SELECT** -- Query data (the most versatile operation):
 
 ```sql
--- Get all moods, newest first
-SELECT * FROM moods ORDER BY createdAt DESC;
+-- Get all mood entries, newest first
+SELECT * FROM mood_entries ORDER BY created_at DESC;
 
--- Get only happy moods (score >= 4)
-SELECT * FROM moods WHERE score >= 4;
+-- Filter: only happy moods
+SELECT * FROM mood_entries WHERE score >= 4;
 
 -- Count entries per score
-SELECT score, COUNT(*) as count FROM moods GROUP BY score;
+SELECT score, COUNT(*) as count FROM mood_entries GROUP BY score;
+
+-- Average mood score
+SELECT AVG(score) as average_score FROM mood_entries;
+
+-- Clinical query: find elevated blood pressure readings
+SELECT * FROM vital_signs WHERE systolic_bp > 140;
 ```
 
 **UPDATE** -- Modify existing data:
 
 ```sql
-UPDATE moods SET score = 5, note = 'Actually, great day!'
+UPDATE mood_entries SET score = 5, note = 'Actually, great day!'
 WHERE id = 'abc-123';
 ```
+
+> **Warning:** Always include a `WHERE` clause with `UPDATE`. Without it,
+> `UPDATE mood_entries SET score = 5` would change *every row* in the table to score 5.
+> The same applies to `DELETE`.
 
 **DELETE** -- Remove data:
 
 ```sql
-DELETE FROM moods WHERE id = 'abc-123';
+DELETE FROM mood_entries WHERE id = 'abc-123';
 ```
 
-> PRESENTER NOTE: Students know Python and C/C++, so SQL syntax will be new but the
-> concepts are familiar. Don't spend too much time on SQL syntax -- they practiced
-> the Dart/sqflite API in the lab. The goal here is conceptual understanding.
+> PRESENTER NOTE: Walk through these examples on the projector. Students will practice
+> all of these operations hands-on in the lab's Part 0 (SQL Console warm-up), so focus
+> on concepts here rather than memorization.
 
-### sqflite vs drift: Two Ways to Use SQLite in Flutter
+### 3.6 SQL Clause Reference
+
+Here is a quick reference for the SQL clauses you will use most often:
+
+| Clause | Purpose | Example |
+|--------|---------|---------|
+| `WHERE` | Filter rows | `WHERE score >= 4` |
+| `ORDER BY` | Sort results | `ORDER BY created_at DESC` |
+| `GROUP BY` | Group rows for aggregation | `GROUP BY score` |
+| `COUNT(*)` | Count rows | `SELECT COUNT(*) FROM mood_entries` |
+| `AVG(col)` | Average value | `SELECT AVG(score) FROM mood_entries` |
+| `MAX(col)` / `MIN(col)` | Largest / smallest value | `SELECT MAX(score) FROM mood_entries` |
+| `LIMIT` | Return only N rows | `LIMIT 10` |
+
+> PRESENTER NOTE: Do not go deep into JOINs or subqueries. Students only need basic
+> CRUD for the lab and their projects. If asked about JOINs, say: "That is how you
+> combine data from multiple tables. We will not need it today, but it is worth learning
+> if your project has related tables."
+
+---
+
+## 4. SQLite in Flutter (12 min)
+
+Now that you understand SQL and relational databases, let's see how to use SQLite inside a Flutter app.
+
+### 4.1 Why SQLite for Mobile
+
+SQLite is an **embedded** relational database. Unlike PostgreSQL or MySQL, there is no separate server process. The database engine runs inside your app, and the entire database is stored as a **single file** on the device's file system.
+
+SQLite is everywhere -- built into every iPhone, every Android phone, every Mac, every web browser. It is estimated to be the most widely deployed database engine in the world, with trillions of databases in active use. For mobile apps, it is ideal: no server configuration, zero-latency local queries, ACID-compliant transactions (safe even if the app crashes mid-write), and it has been in production since 2000.
+
+### 4.2 sqflite vs drift: Two Ways to Use SQLite in Flutter
 
 **sqflite** gives you a direct SQL interface. You write SQL strings, and sqflite executes them:
 
 ```dart
 // sqflite: raw SQL
-final maps = await db.query('moods', where: 'score >= ?', whereArgs: [4]);
+final maps = await db.query('mood_entries', where: 'score >= ?', whereArgs: [4]);
 ```
 
 This is what you used in the lab. It is simple and explicit. But SQL strings are not checked at compile time -- a typo in a column name only shows up when the app runs.
@@ -290,7 +419,7 @@ This is what you used in the lab. It is simple and explicit. But SQL strings are
 
 ```dart
 // drift: type-safe, code-generated
-class Moods extends Table {
+class MoodEntries extends Table {
   TextColumn get id => text()();
   IntColumn get score => integer()();
   TextColumn get note => text().nullable()();
@@ -298,7 +427,7 @@ class Moods extends Table {
 }
 
 // Usage: compile-time checked
-final happyMoods = await (select(moods)..where((m) => m.score.isBiggerOrEqualValue(4))).get();
+final happyMoods = await (select(moodEntries)..where((m) => m.score.isBiggerOrEqualValue(4))).get();
 ```
 
 With drift, if you misspell a column name, the compiler catches it. If you try to compare a text column with an integer, the compiler catches it. This is safer for production apps.
@@ -307,26 +436,37 @@ drift also gives you **reactive streams** -- queries that automatically re-emit 
 
 For this course, sqflite is sufficient. But if you continue building health apps professionally, drift is worth learning.
 
-### The Repository Pattern
+### 4.3 The Repository Pattern
 
 In the lab, you implemented the repository pattern. Let's examine *why* it exists and *why* it matters so much for health apps.
 
 The repository pattern places a clean abstraction layer between your business logic and your data source:
 
-```
-+------------+     +--------------+     +--------------+
-| UI (Widget)|     |  Riverpod    |     |  Repository  |
-|            |---->|  Notifier    |---->|              |
-| ref.watch()|     |              |     | addMood()    |
-|            |     | state: moods |     | getMoods()   |
-+------------+     +--------------+     | deleteMood() |
-                                        +------+-------+
-                                               |
-                                        +------+-------+
-                                        |   SQLite     |
-                                        |   Database   |
-                                        |   (file)     |
-                                        +--------------+
+```d2
+direction: right
+
+ui: "UI (Widget)" {
+  style.fill: "#E3F2FD"
+  label: "UI (Widget)\nref.watch()"
+}
+
+notifier: "Riverpod\nNotifier" {
+  style.fill: "#BBDEFB"
+  label: "Riverpod Notifier\nstate: moods"
+}
+
+repo: "Repository" {
+  style.fill: "#FFF9C4"
+  add: "addMood()"
+  get: "getMoods()"
+  delete: "deleteMood()"
+}
+
+db: "SQLite\nDatabase\n(file)" {
+  style.fill: "#E8F5E9"
+}
+
+ui -> notifier -> repo -> db
 ```
 
 The key insight: **your Riverpod notifier talks to the repository, not directly to the database.** The notifier calls `repository.addMood(entry)`. It does not know or care whether the repository saves that entry to SQLite, sends it to a REST API, writes it to a CSV file, or does all three.
@@ -361,7 +501,7 @@ The risk of optimistic updates is that the database write could fail. In practic
 
 ---
 
-## 4. Offline-First Architecture (15 min)
+## 5. Offline-First Architecture (12 min)
 
 ### Two Philosophies
 
@@ -406,32 +546,32 @@ Offline-first is not just a nice architecture pattern. In healthcare, it can be 
 
 Here is how offline-first works in practice:
 
-```
-+---------------------------------------------------+
-|             Offline-First Architecture             |
-|                                                    |
-|  +----------+  always    +----------+              |
-|  |   UI     | ---------> |  Local   |              |
-|  |          | <--------- |  DB      |              |
-|  |          |   reads    | (SQLite) |              |
-|  +----------+            +----+-----+              |
-|                               |                    |
-|                          when online               |
-|                               |                    |
-|                          +----v-----+              |
-|                          |  Sync    |              |
-|                          |  Engine  |              |
-|                          +----+-----+              |
-|                               |                    |
-|                          +----v-----+              |
-|                          |  Remote  |              |
-|                          |  Server  |              |
-|                          | (FastAPI)|              |
-|                          +----------+              |
-|                                                    |
-|  User never waits for network.                     |
-|  Data syncs in background when possible.           |
-+---------------------------------------------------+
+```d2
+direction: down
+
+title: "Offline-First Architecture" {
+  style.fill: "#F5F5F5"
+  style.font-size: 20
+
+  ui: "UI" {style.fill: "#E3F2FD"}
+
+  db: "Local DB\n(SQLite)" {style.fill: "#C8E6C9"}
+
+  sync: "Sync Engine" {style.fill: "#FFF9C4"}
+
+  server: "Remote Server\n(FastAPI)" {style.fill: "#F3E5F5"}
+
+  ui -> db: "always reads/writes" {style.bold: true}
+  db -> ui: "data" {style.stroke-dash: 3}
+
+  db -> sync: "when online"
+  sync -> server: "push/pull"
+
+  note: |md
+    User never waits for network.
+    Data syncs in background when possible.
+  |
+}
 ```
 
 **The UI always talks to the local database.** Every read and every write goes to SQLite first. The user experience is identical whether the device is online or offline.
@@ -443,17 +583,7 @@ Here is how offline-first works in practice:
 
 ### The Sync Challenge: Conflicts
 
-Offline-first architecture introduces a hard problem: **conflict resolution.**
-
-Imagine this scenario: A patient has the app installed on their phone and their tablet. While on an airplane (offline), they edit a mood entry on their phone. Meanwhile, their therapist edits the same entry's note on the server. When the phone reconnects, there are two conflicting versions of the same record.
-
-What should happen?
-
-**Last-write-wins:** The most recent edit overwrites the other. Simple but potentially loses data. The therapist's note is gone.
-
-**Merge:** Attempt to combine both changes. Works for some data types (adding items to a list) but not others (changing a single field to two different values).
-
-**Manual resolution:** Show the user both versions and let them choose. Safe but disrupts the user experience.
+Offline-first architecture introduces a hard problem: **conflict resolution.** When the same record is modified in two places while offline, the system must decide which version wins. Common strategies include last-write-wins, field-level merging, and manual resolution -- each with trade-offs between simplicity and data safety.
 
 For this course, you do not need to implement sync. A simple "push local changes, pull remote changes" approach is sufficient for your projects. But be aware that sync is one of the hardest problems in distributed systems, and healthcare makes it even harder because data accuracy has clinical consequences.
 
@@ -468,7 +598,7 @@ The architecture you implemented in the lab -- UI talks to Riverpod, Riverpod ta
 
 ---
 
-## 5. Health Data Considerations (15 min)
+## 6. Health Data Considerations (13 min)
 
 ### Health Data Is Not Like Other Data
 
@@ -513,15 +643,20 @@ For a health app, this is not acceptable.
 
 **Key management:** Store the encryption key in secure storage (Keychain on iOS, Keystore on Android), NEVER in SharedPreferences or hardcoded in the source code. The key should be protected by the device's hardware security module.
 
-```
-+--------------------+        +---------------------+
-|  Your App          |        |  Platform Secure    |
-|                    |        |  Storage             |
-|  SQLite DB         |  key   |                     |
-|  (encrypted with   |<-------|  Encryption key     |
-|   sqlcipher)       |        |  (hardware-backed)  |
-|                    |        |                     |
-+--------------------+        +---------------------+
+```d2
+direction: right
+
+app: "Your App" {
+  style.fill: "#E3F2FD"
+  db: "SQLite DB\n(encrypted with\nsqlcipher)"
+}
+
+secure: "Platform Secure\nStorage" {
+  style.fill: "#E8F5E9"
+  key_item: "Encryption key\n(hardware-backed)"
+}
+
+secure -> app: "key" {style.bold: true}
 ```
 
 Even if the phone is stolen, the data should be unreadable without the encryption key, which is protected by the device's biometrics or PIN.
@@ -533,9 +668,7 @@ Even if the phone is stolen, the data should be unreadable without the encryptio
 
 ### The Cost of Getting It Wrong
 
-This is not theoretical. In 2015, Anthem -- one of the largest health insurance providers in the United States -- experienced a data breach that exposed the records of 78.8 million individuals. In another case, a healthcare provider's stolen laptop exposed 4.5 million patient records because the hard drive was not encrypted. Local data encryption is not optional -- it is a regulatory requirement and an ethical obligation.
-
-In the European Union, the GDPR has resulted in significant fines for healthcare organizations that failed to protect patient data. The message is clear: if you handle health data, you must handle it carefully.
+This is not theoretical. Data breaches in healthcare have exposed tens of millions of patient records -- often because local data on stolen devices was not encrypted. In the European Union, the GDPR has resulted in significant fines for healthcare organizations that failed to protect patient data. Local data encryption is not optional -- it is a regulatory requirement and an ethical obligation.
 
 ### Data Minimization
 
@@ -564,25 +697,15 @@ In your SQLite tables, always include `created_at` and `updated_at` timestamps. 
 
 ---
 
-## 6. Data Migration Strategies (10 min)
+## 7. Data Migration Strategies (3 min)
 
 ### The Inevitability of Schema Change
 
-Your first database schema will not be your last. As your app evolves, you will need to:
-
-- Add new columns (e.g., adding a `tags` field to mood entries)
-- Rename columns (e.g., `note` becomes `notes`)
-- Add new tables (e.g., a `medications` table)
-- Change column types (e.g., storing `score` as a REAL instead of INTEGER)
-- Add indexes for performance
-
-The problem: when a user updates your app from version 1.0 to version 2.0, they already have a database file on their device with the old schema. The new code expects the new schema. If you just try to run, the app crashes.
+Your first database schema will not be your last. As your app evolves, you will need to add new columns, rename columns, add new tables, or change column types. The problem: when a user updates your app, they already have a database file with the old schema. The new code expects the new schema. If you just try to run, the app crashes.
 
 ### Database Migrations
 
-A **migration** is a script that transforms the database from one schema version to another without losing data.
-
-SQLite (and sqflite) use a version number to track which migrations have been applied:
+A **migration** is a script that transforms the database from one schema version to another without losing data. SQLite (and sqflite) use a version number to track which migrations have been applied:
 
 ```dart
 final db = await openDatabase(
@@ -590,12 +713,12 @@ final db = await openDatabase(
   version: 2,  // Current schema version
   onCreate: (db, version) {
     // Fresh install: create the latest schema directly
-    db.execute('CREATE TABLE moods (id TEXT PRIMARY KEY, score INTEGER, ...)');
+    db.execute('CREATE TABLE mood_entries (id TEXT PRIMARY KEY, score INTEGER, ...)');
   },
   onUpgrade: (db, oldVersion, newVersion) {
     // Existing user updating from an older version
     if (oldVersion < 2) {
-      db.execute('ALTER TABLE moods ADD COLUMN tags TEXT');
+      db.execute('ALTER TABLE mood_entries ADD COLUMN tags TEXT');
     }
   },
 );
@@ -606,73 +729,28 @@ final db = await openDatabase(
 2. On update from version 1 to 2: `onUpgrade` runs, applying only the necessary changes
 3. If the database is already version 2: neither callback runs
 
-### Migration Best Practices
-
-**Always increment the version number** when you change the schema. Never modify the `onCreate` callback without also adding a corresponding `onUpgrade` step.
-
-**Migrations must be cumulative.** If a user skips from version 1 directly to version 3, all intermediate migrations must run in order:
-
-```dart
-onUpgrade: (db, oldVersion, newVersion) {
-  if (oldVersion < 2) {
-    db.execute('ALTER TABLE moods ADD COLUMN tags TEXT');
-  }
-  if (oldVersion < 3) {
-    db.execute('ALTER TABLE moods ADD COLUMN location TEXT');
-  }
-},
-```
-
-**Never delete old migration code.** Even if no user is on version 1 anymore, keep the migration code. You never know when someone will update after months of not using the app.
-
-**Test migrations thoroughly.** Create a test database with the old schema, run the migration, and verify that the data is intact and the new schema is correct. A failed migration means data loss.
-
-**Back up before migrating.** In a production health app, copy the database file before running migrations. If something goes wrong, you can restore the backup.
-
-```dart
-// Simple backup strategy
-final dbFile = File(dbPath);
-final backupFile = File('$dbPath.backup');
-await dbFile.copy(backupFile.path);
-```
-
-### drift Handles This More Elegantly
-
-If you use drift instead of raw sqflite, migrations become more structured. drift tracks schema versions and lets you define migration steps declaratively:
-
-```dart
-@override
-MigrationStrategy get migration => MigrationStrategy(
-  onCreate: (m) async => await m.createAll(),
-  onUpgrade: stepByStep(
-    from1To2: (m, schema) async {
-      await m.addColumn(schema.moods, schema.moods.tags);
-    },
-  ),
-);
-```
-
-The `stepByStep` function automatically applies only the necessary migrations based on the user's current version. It is less error-prone than managing `if (oldVersion < N)` chains manually.
-
-### The Bottom Line
-
-Plan for migrations from day one. Your schema **will** change. In a production health app, losing a patient's data because of a botched migration is unacceptable. Test every migration with real data before releasing an update.
+Plan for migrations from day one. Your schema **will** change. Always increment the version number when you change the schema, keep migrations cumulative (a user skipping from v1 to v3 must have all intermediate migrations run in order), and test every migration with real data before releasing.
 
 ---
 
-## 7. Key Takeaways (5 min)
+## 8. Key Takeaways (5 min)
 
 1. **Local data persistence is essential for health apps** -- data must survive restarts, work offline, and remain available when connectivity is unreliable. A patient's data is too important to exist only in memory.
 
 2. **Choose the right storage for each type of data** -- SharedPreferences for settings and flags, SQLite for structured records that need querying, flutter_secure_storage for credentials and encryption keys, and the file system for large binary files.
 
-3. **The Repository Pattern abstracts your data layer** -- your Riverpod notifier talks to a repository, not directly to the database. This makes your code testable, your storage swappable, and your architecture clean.
+3. **A database gives you persistence, querying, and transaction safety** -- three things that variables and files cannot provide together. SQL is a declarative language designed to be readable; CRUD operations (Create, Read, Update, Delete) cover everything you need for your projects.
 
-4. **Offline-first architecture ensures your app works without internet** -- critical in healthcare settings where connectivity is unreliable. The UI always reads from and writes to the local database. Sync happens in the background when a connection is available.
+4. **The Repository Pattern abstracts your data layer** -- your Riverpod notifier talks to a repository, not directly to the database. This makes your code testable, your storage swappable, and your architecture clean.
 
-5. **Health data requires encryption at rest, data minimization, and audit logging** -- SQLite does not encrypt by default. Use sqlcipher for encrypted databases and store encryption keys in secure storage. Only collect data you need. Always include timestamps.
+5. **Offline-first architecture ensures your app works without internet** -- critical in healthcare settings where connectivity is unreliable. The UI always reads from and writes to the local database. Sync happens in the background when a connection is available.
 
-6. **Plan for database migrations from day one** -- your schema will change as your app evolves. Migrations must be cumulative, thoroughly tested, and backed up. A failed migration means data loss for your users.
+6. **Health data requires encryption at rest, data minimization, and audit logging** -- SQLite does not encrypt by default. Use sqlcipher for encrypted databases and store encryption keys in secure storage. Only collect data you need. Always include timestamps.
+
+7. **Plan for database migrations from day one** -- your schema will change as your app evolves. Use the `onUpgrade` callback to apply schema changes incrementally without losing user data.
+
+!!! tip "Reference: Database Fundamentals Supplement"
+    For deeper coverage of B-tree indexes, normalization (1NF through 3NF), ACID properties, and schema design patterns — all with healthcare examples — see the [Database Fundamentals](DATABASE_FUNDAMENTALS.md) supplement. It is highly recommended reading if you want to design your team project's database well.
 
 ---
 

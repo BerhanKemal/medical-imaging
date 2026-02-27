@@ -55,33 +55,46 @@ A `StatefulWidget` is where things get interesting. Unlike a `StatelessWidget`, 
 
 Here is the complete picture:
 
-```
-+-----------------------------------------------------------+
-|              StatefulWidget Lifecycle                      |
-|                                                           |
-|  createState()                                            |
-|       |                                                   |
-|       v                                                   |
-|  initState()    <-- Called ONCE. Set up initial state,    |
-|       |             start streams, create controllers.    |
-|       v                                                   |
-|  didChangeDependencies()  <-- Called after initState and  |
-|       |                       when InheritedWidget        |
-|       v                       changes.                    |
-|  build()        <-- Called MANY times.                    |
-|       |             Must be fast and side-effect-free.    |
-|       |                                                   |
-|       +---- setState() ---- triggers ---- build()        |
-|       |                                                   |
-|       |     (widget may be rebuilt by parent too)         |
-|       |                                                   |
-|       v                                                   |
-|  didUpdateWidget()  <-- Called when parent rebuilds       |
-|       |                  with new configuration.          |
-|       v                                                   |
-|  dispose()      <-- Called ONCE. Clean up everything:     |
-|                     controllers, listeners, streams.      |
-+-----------------------------------------------------------+
+```d2
+direction: down
+
+title: "StatefulWidget Lifecycle" {
+  style.fill: "#F5F5F5"
+  style.font-size: 20
+
+  create: "createState()" {style.fill: "#E3F2FD"}
+  init: "initState()" {style.fill: "#C8E6C9"}
+  deps: "didChangeDependencies()" {style.fill: "#FFF9C4"}
+  build: "build()" {style.fill: "#BBDEFB"; style.bold: true}
+  update: "didUpdateWidget()" {style.fill: "#FFF9C4"}
+  dispose: "dispose()" {style.fill: "#FFCDD2"}
+
+  create -> init: ""
+  init -> deps: ""
+  deps -> build: ""
+  build -> update: "parent rebuilds\nwith new config"
+  update -> build: ""
+  build -> dispose: "widget removed"
+
+  setState: "setState()" {style.fill: "#FFE0B2"; style.bold: true}
+  setState -> build: "triggers rebuild"
+  build -> setState: "" {style.stroke-dash: 3}
+
+  init_note: |md
+    Called **ONCE**. Set up initial state,
+    start streams, create controllers.
+  |
+
+  build_note: |md
+    Called **MANY** times.
+    Must be fast and side-effect-free.
+  |
+
+  dispose_note: |md
+    Called **ONCE**. Clean up everything:
+    controllers, listeners, streams.
+  |
+}
 ```
 
 Let's walk through each step.
@@ -196,19 +209,26 @@ In a consumer app, this might mean slightly worse battery life. In a hospital ap
 
 ### When Does Rebuild Happen? -- A Summary
 
-```
-+-------------------------------------------------------+
-|             What triggers build()?                    |
-|                                                       |
-|  1. setState()         You explicitly asked for it    |
-|                                                       |
-|  2. Parent rebuilds    Parent created a new instance  |
-|                        of this widget with new data   |
-|                                                       |
-|  3. InheritedWidget    A dependency higher in the     |
-|     changes            tree changed (e.g., Theme,     |
-|                        MediaQuery, Locale)            |
-+-------------------------------------------------------+
+```d2
+direction: down
+
+triggers: "What triggers build()?" {
+  style.fill: "#E3F2FD"
+  style.font-size: 20
+
+  s1: "1. setState()" {style.fill: "#FFF9C4"}
+  s1_desc: "You explicitly asked for it" {style.fill: "transparent"; style.stroke: "transparent"}
+
+  s2: "2. Parent rebuilds" {style.fill: "#FFF9C4"}
+  s2_desc: "Parent created a new instance\nof this widget with new data" {style.fill: "transparent"; style.stroke: "transparent"}
+
+  s3: "3. InheritedWidget changes" {style.fill: "#FFF9C4"}
+  s3_desc: "A dependency higher in the tree\nchanged (e.g., Theme, MediaQuery, Locale)" {style.fill: "transparent"; style.stroke: "transparent"}
+
+  s1 -> s1_desc: "" {style.stroke: "transparent"}
+  s2 -> s2_desc: "" {style.stroke: "transparent"}
+  s3 -> s3_desc: "" {style.stroke: "transparent"}
+}
 ```
 
 The first one is within your control. The second and third happen automatically. This is why `build()` must always be fast -- you cannot predict exactly when or how often it will be called.
@@ -270,24 +290,35 @@ You cannot manage app state with `setState()` because `setState()` only rebuilds
 
 ### The Mental Model
 
-```
-Ephemeral State                    App State
-(single widget owns it)            (shared across many widgets)
+```d2
+direction: right
 
-+---------------+                  +---------------------+
-| MoodSelector  |                  |    State Store      |
-|               |                  |    (centralized)    |
-| _mood = happy |                  |                     |
-|               |                  |  patientList: [..]  |
-| setState()    |                  |  currentUser: {...}  |
-| rebuilds THIS |                  |  moodEntries: [..]  |
-| widget only   |                  |                     |
-+---------------+                  |  When state changes,|
-                                   |  ALL widgets that   |
-                                   |  depend on it are   |
-                                   |  notified and       |
-                                   |  rebuild.           |
-                                   +---------------------+
+ephemeral: "Ephemeral State\n(single widget owns it)" {
+  style.fill: "#E3F2FD"
+  widget: "MoodSelector" {
+    style.fill: "#BBDEFB"
+    mood: "_mood = happy"
+    action: "setState()\nrebuilds THIS\nwidget only"
+  }
+}
+
+app: "App State\n(shared across many widgets)" {
+  style.fill: "#E8F5E9"
+  store: "State Store\n(centralized)" {
+    style.fill: "#C8E6C9"
+    data: |md
+      patientList: [..]
+      currentUser: {...}
+      moodEntries: [..]
+    |
+    behavior: |md
+      When state changes,
+      ALL widgets that depend
+      on it are notified
+      and rebuild.
+    |
+  }
+}
 ```
 
 ### The setState() Problem
@@ -352,19 +383,62 @@ But here is something most beginners do not realize: Flutter actually maintains 
 
 ### The Three Trees
 
-```
-Your Code (Widget Tree)     Flutter Internal        Actual Rendering
-+-----------------+         +-----------------+     +-----------------+
-| MaterialApp     |         | Element         |     | RenderObject    |
-|  +--Scaffold    |  ==>    |  +--Element     | ==> |  +--RenderBox   |
-|    +--AppBar    |         |    +--Element    |     |    +--Render    |
-|    +--Column    |         |    +--Element    |     |    +--Render    |
-|      +--Text    |         |      +--Elem.    |     |      +--Rend.  |
-|      +--Button  |         |      +--Elem.    |     |      +--Rend.  |
-+-----------------+         +-----------------+     +-----------------+
-  Lightweight,                Persistent,             Expensive,
-  immutable                   tracks identity         handles layout
-  descriptions                and lifecycle           and painting
+```d2
+direction: right
+
+widget: "Your Code\n(Widget Tree)" {
+  style.fill: "#E3F2FD"
+  app: "MaterialApp"
+  scaffold: "Scaffold"
+  appbar: "AppBar"
+  column: "Column"
+  text: "Text"
+  button: "Button"
+  app -> scaffold
+  scaffold -> appbar
+  scaffold -> column
+  column -> text
+  column -> button
+
+  note: "Lightweight,\nimmutable\ndescriptions" {style.fill: "transparent"; style.stroke: "transparent"}
+}
+
+element: "Flutter Internal\n(Element Tree)" {
+  style.fill: "#FFF9C4"
+  e1: "Element"
+  e2: "Element"
+  e3: "Element"
+  e4: "Element"
+  e5: "Element"
+  e6: "Element"
+  e1 -> e2
+  e2 -> e3
+  e2 -> e4
+  e4 -> e5
+  e4 -> e6
+
+  note: "Persistent,\ntracks identity\nand lifecycle" {style.fill: "transparent"; style.stroke: "transparent"}
+}
+
+render: "Actual Rendering\n(RenderObject Tree)" {
+  style.fill: "#E8F5E9"
+  r1: "RenderObject"
+  r2: "RenderBox"
+  r3: "Render"
+  r4: "Render"
+  r5: "Render"
+  r6: "Render"
+  r1 -> r2
+  r2 -> r3
+  r2 -> r4
+  r4 -> r5
+  r4 -> r6
+
+  note: "Expensive,\nhandles layout\nand painting" {style.fill: "transparent"; style.stroke: "transparent"}
+}
+
+widget -> element: "==>"
+element -> render: "==>"
 ```
 
 #### Tree 1: The Widget Tree (Your Code)
@@ -457,15 +531,17 @@ The temptation is strong to open your IDE and start writing widgets immediately.
 
 ### The Development Process
 
-```
-+--------+     +-----------+     +--------------+     +------+
-|  Idea  | --> | Wireframes| --> | Architecture | --> | Code |
-+--------+     +-----------+     +--------------+     +------+
-                                                         |
-                                                         v
-                                                     +------+     +--------+
-                                                     | Test | --> | Deploy |
-                                                     +------+     +--------+
+```d2
+direction: right
+
+idea: "Idea" {style.fill: "#E3F2FD"}
+wireframes: "Wireframes" {style.fill: "#BBDEFB"}
+architecture: "Architecture" {style.fill: "#FFF9C4"}
+code: "Code" {style.fill: "#E8F5E9"}
+test: "Test" {style.fill: "#FFE0B2"}
+deploy: "Deploy" {style.fill: "#C8E6C9"}
+
+idea -> wireframes -> architecture -> code -> test -> deploy
 ```
 
 You are currently between "Idea" and "Wireframes." Let's talk about each step.
@@ -567,39 +643,49 @@ But if you wanted to turn that prototype into a product that actual patients or 
 
 ### Levels of Maturity
 
-```
-+---------------------------------------------------------------+
-|                                                               |
-|  Level 1: PROTOTYPE (this course)                             |
-|  - Proves the concept works                                   |
-|  - Runs on your device                                        |
-|  - May have hardcoded data, rough UI, no security             |
-|                                                               |
-|  Level 2: MINIMUM VIABLE PRODUCT (MVP)                        |
-|  - Works reliably on multiple devices                         |
-|  - Has real authentication and basic security                 |
-|  - Handles errors gracefully                                  |
-|  - Can be tested by real users (internal beta)                |
-|                                                               |
-|  Level 3: CLINICAL VALIDATION                                 |
-|  - Tested with real patients or clinicians                    |
-|  - Usability studies conducted                                |
-|  - Data accuracy verified against established methods         |
-|  - Ethics committee / IRB approval for studies                |
-|                                                               |
-|  Level 4: REGULATORY APPROVAL                                 |
-|  - Meets applicable standards (MDR in EU, FDA in US)          |
-|  - IEC 62304 compliant software lifecycle                     |
-|  - Risk management (ISO 14971)                                |
-|  - Clinical evidence documentation                            |
-|                                                               |
-|  Level 5: PRODUCTION                                          |
-|  - Deployed to app stores                                     |
-|  - Monitored, maintained, and updated                         |
-|  - User support and incident response                         |
-|  - Ongoing regulatory compliance                              |
-|                                                               |
-+---------------------------------------------------------------+
+```d2
+direction: down
+
+l1: "Level 1: PROTOTYPE (this course)" {
+  style.fill: "#E3F2FD"
+  d1: "Proves the concept works"
+  d2: "Runs on your device"
+  d3: "May have hardcoded data, rough UI, no security"
+}
+
+l2: "Level 2: MINIMUM VIABLE PRODUCT (MVP)" {
+  style.fill: "#BBDEFB"
+  d1: "Works reliably on multiple devices"
+  d2: "Has real authentication and basic security"
+  d3: "Handles errors gracefully"
+  d4: "Can be tested by real users (internal beta)"
+}
+
+l3: "Level 3: CLINICAL VALIDATION" {
+  style.fill: "#FFF9C4"
+  d1: "Tested with real patients or clinicians"
+  d2: "Usability studies conducted"
+  d3: "Data accuracy verified against established methods"
+  d4: "Ethics committee / IRB approval for studies"
+}
+
+l4: "Level 4: REGULATORY APPROVAL" {
+  style.fill: "#FFE0B2"
+  d1: "Meets applicable standards (MDR in EU, FDA in US)"
+  d2: "IEC 62304 compliant software lifecycle"
+  d3: "Risk management (ISO 14971)"
+  d4: "Clinical evidence documentation"
+}
+
+l5: "Level 5: PRODUCTION" {
+  style.fill: "#C8E6C9"
+  d1: "Deployed to app stores"
+  d2: "Monitored, maintained, and updated"
+  d3: "User support and incident response"
+  d4: "Ongoing regulatory compliance"
+}
+
+l1 -> l2 -> l3 -> l4 -> l5
 ```
 
 You are at Level 1. But the practices you are learning right now -- version control, code review, testing, clean architecture, API design -- are the foundation for *every* subsequent level. A team that skips these fundamentals at Level 1 will struggle enormously at Level 3 or 4.

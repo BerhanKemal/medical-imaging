@@ -5,6 +5,21 @@
 
 ---
 
+## Purpose
+
+Sprint reviews exist because professional software teams inspect their work regularly. This is not a test — it is a feedback loop. The goal is to demonstrate progress, reflect honestly, and plan the next iteration. Teams that engage genuinely with this process build better software.
+
+## Task
+
+For each sprint review, your team should prepare:
+
+1. A working demo of features completed this sprint (live on a device or emulator)
+2. A brief walkthrough of your git history (PRs, branches, code reviews)
+3. A retrospective: what went well, what didn't, what you'll change
+4. A plan for the next sprint with estimated user stories
+
+---
+
 ## Evaluation Criteria
 
 ### 1. Sprint Goal Achievement — 25 points

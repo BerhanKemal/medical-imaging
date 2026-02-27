@@ -35,6 +35,9 @@ Thumbs.db
 # MkDocs
 _site/
 
+# D2 build cache
+.cache/
+
 # Virtual environment
 venv/
 

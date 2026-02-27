@@ -38,26 +38,38 @@ Flutter's layout system follows three simple rules:
 
 That is it. Every layout in Flutter -- from a simple centered text to a complex medical dashboard -- follows these three rules.
 
-```
-┌──────────────── Screen (400 x 800) ─────────────────┐
-│                                                       │
-│   Constraints: "You can be 0-400 wide, 0-800 tall"  │
-│              │                                        │
-│              v                                        │
-│   ┌─── Column ───────────────────────┐               │
-│   │                                   │               │
-│   │  Constraints to children:         │               │
-│   │  "You can be 0-400 wide,          │               │
-│   │   as tall as you want"            │               │
-│   │        │           │              │               │
-│   │        v           v              │               │
-│   │  ┌─ Text ─┐  ┌─ Button ─┐       │               │
-│   │  │ 200x24 │  │ 150x48   │       │               │
-│   │  └────────┘  └──────────┘       │               │
-│   │                                   │               │
-│   │  Size: 400 x 72                  │               │
-│   └───────────────────────────────────┘               │
-└───────────────────────────────────────────────────────┘
+```d2
+direction: down
+
+screen: "Screen (400 x 800)" {
+  style.fill: "#F5F5F5"
+  style.font-size: 18
+
+  constraint_msg: 'Constraints: "You can be 0-400 wide, 0-800 tall"' {
+    style.fill: "transparent"
+    style.stroke: "transparent"
+  }
+
+  column: "Column" {
+    style.fill: "#E3F2FD"
+
+    constraint_children: 'Constraints to children:\n"You can be 0-400 wide,\nas tall as you want"' {
+      style.fill: "transparent"
+      style.stroke: "transparent"
+    }
+
+    text: "Text\n200 x 24" {style.fill: "#BBDEFB"}
+    button: "Button\n150 x 48" {style.fill: "#BBDEFB"}
+
+    size: "Size: 400 x 72" {
+      style.fill: "transparent"
+      style.stroke: "transparent"
+      style.bold: true
+    }
+  }
+
+  constraint_msg -> column: "constraints go down" {style.stroke-dash: 3}
+}
 ```
 
 Read this diagram from top to bottom. The screen says to Column: "You can be up to 400 pixels wide and 800 pixels tall." Column then tells each of its children: "You can be up to 400 pixels wide, and as tall as you want." The Text widget decides it needs 200x24 pixels. The Button decides it needs 150x48 pixels. Column adds up the heights (24 + 48 = 72), takes the maximum width (200), and reports its own size back up. Finally, Column positions the Text at the top and the Button below it.
@@ -74,16 +86,26 @@ The fix is always the same: either make the child smaller, or give it a scrollab
 
 The most common layout widgets are `Row` (horizontal) and `Column` (vertical). They work identically -- just in different directions:
 
-```
-Column (vertical)            Row (horizontal)
-┌────────────────┐           ┌────────────────────────┐
-│  ┌──────────┐  │           │ ┌──────┐ ┌──────────┐  │
-│  │ Widget A │  │           │ │  A   │ │    B     │  │
-│  └──────────┘  │           │ └──────┘ └──────────┘  │
-│  ┌──────────┐  │           └────────────────────────┘
-│  │ Widget B │  │
-│  └──────────┘  │
-└────────────────┘
+```d2
+direction: right
+
+col: "Column (vertical)" {
+  style.fill: "#E3F2FD"
+  direction: down
+  a: "Widget A" {style.fill: "#BBDEFB"}
+  b: "Widget B" {style.fill: "#BBDEFB"}
+  c: "Widget C" {style.fill: "#BBDEFB"}
+  a -> b -> c: "" {style.stroke: "#90CAF9"}
+}
+
+row: "Row (horizontal)" {
+  style.fill: "#E8F5E9"
+  direction: right
+  a: "Widget A" {style.fill: "#C8E6C9"}
+  b: "Widget B" {style.fill: "#C8E6C9"}
+  c: "Widget C" {style.fill: "#C8E6C9"}
+  a -> b -> c: "" {style.stroke: "#A5D6A7"}
+}
 ```
 
 Both take a `children` list and lay them out one after another. Both support `mainAxisAlignment` (how children are distributed along the main axis) and `crossAxisAlignment` (how children are aligned perpendicular to the main axis).
@@ -312,6 +334,9 @@ In healthcare, accessibility is not a nice-to-have feature -- it is a core requi
 
 Material Design's accessibility features -- contrast ratios, touch targets, screen reader support -- help you build inclusive apps. And in many jurisdictions, accessibility in healthcare software is not just good practice but a legal requirement.
 
+!!! tip "Reference: Accessibility Quick Guide"
+    For a practical checklist of accessibility implementations you should apply to your team project (semantic labels, contrast ratios, scalable text, touch targets), see the [Accessibility Guide](../../resources/ACCESSIBILITY_GUIDE.md). This guide maps directly to the mHealth Awareness rubric criteria in the final project grading.
+
 ---
 
 ## 4. mHealth Introduction -- Mobile Health in Practice (20 min)
@@ -326,22 +351,52 @@ In the lab, you started planning your health app project. Let us understand the 
 
 mHealth apps span a wide range of complexity, clinical impact, and regulatory burden:
 
-```
-┌─────────────────── mHealth Spectrum ───────────────────┐
-│                                                         │
-│  Low Regulation          <-------->      High Regulation│
-│                                                         │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────┐ │
-│  │ Wellness │  │ Lifestyle│  │ Disease  │  │Clinical│ │
-│  │          │  │ Mgmt     │  │ Mgmt     │  │Decision│ │
-│  │ Step     │  │ Medication│  │ Glucose  │  │Support │ │
-│  │ counter  │  │ reminder │  │ monitor  │  │        │ │
-│  │ Fitness  │  │ Mood     │  │ Blood    │  │ Diagno-│ │
-│  │ tracker  │  │ tracker  │  │ pressure │  │ stics  │ │
-│  └──────────┘  └──────────┘  └──────────┘  └────────┘ │
-│                                                         │
-│  Your project likely fits here ─────┘                   │
-└─────────────────────────────────────────────────────────┘
+```d2
+direction: right
+
+title: "mHealth Spectrum" {
+  style.fill: "#F5F5F5"
+  style.font-size: 20
+
+  direction: right
+
+  wellness: "Wellness" {
+    style.fill: "#C8E6C9"
+    d1: "Step counter"
+    d2: "Fitness tracker"
+  }
+
+  lifestyle: "Lifestyle Mgmt" {
+    style.fill: "#E3F2FD"
+    d1: "Medication reminder"
+    d2: "Mood tracker"
+  }
+
+  disease: "Disease Mgmt" {
+    style.fill: "#FFF9C4"
+    d1: "Glucose monitor"
+    d2: "Blood pressure"
+  }
+
+  clinical: "Clinical Decision\nSupport" {
+    style.fill: "#FFCDD2"
+    d1: "Diagnostics"
+  }
+
+  wellness -> lifestyle -> disease -> clinical: "" {style.stroke-dash: 3}
+
+  regulation: "Low Regulation ←——→ High Regulation" {
+    style.fill: "transparent"
+    style.stroke: "transparent"
+    style.bold: true
+  }
+
+  your_project: "Your project likely fits here ↑" {
+    style.fill: "transparent"
+    style.stroke: "transparent"
+    style.italic: true
+  }
+}
 ```
 
 Moving from left to right, the apps become more clinically significant, more tightly regulated, and more complex to build. Let us look at each category.
@@ -394,6 +449,9 @@ This is a brief introduction. We will revisit regulations in depth in Week 12.
 
 Your course project will NOT need regulatory approval. But knowing these frameworks exist prepares you for industry. If you build health apps professionally, you will encounter these regulations.
 
+!!! tip "Reference: mHealth Regulations Quick Guide"
+    For a deeper comparison of EU MDR, FDA, IEC 62304, and DiGA — including a flowchart to determine if your app is regulated — see the [mHealth Regulations Guide](../../resources/MHEALTH_REGULATIONS.md). It also contains template sentences you can use in your project proposal's regulatory section.
+
 > PRESENTER NOTE: Ask students: "Where does your team's project fit on the mHealth
 > spectrum?" Give each team 30 seconds to answer. This connects the theory to their
 > actual Sprint 1 work and helps you understand what they are building. If any team
@@ -412,16 +470,19 @@ In the lab, you set up your team's sprint board and wrote user stories. You move
 
 Traditional software development -- sometimes called the "waterfall" model -- works like this:
 
-```
-Waterfall:
+```d2
+direction: right
 
-  Requirements ──> Design ──> Build ──> Test ──> Deploy
-  (months)         (months)   (months)  (months)  (finally!)
+r: "Requirements\n(months)" {style.fill: "#E3F2FD"}
+d: "Design\n(months)" {style.fill: "#BBDEFB"}
+b: "Build\n(months)" {style.fill: "#FFF9C4"}
+t: "Test\n(months)" {style.fill: "#FFE0B2"}
+dep: "Deploy\n(finally!)" {style.fill: "#C8E6C9"}
 
-  Problem: by the time you deploy, the requirements have changed,
-           the users want something different, and you've spent
-           a year building the wrong thing.
+r -> d -> b -> t -> dep
 ```
+
+Problem: by the time you deploy, the requirements have changed, the users want something different, and you've spent a year building the wrong thing.
 
 This approach works for building bridges. Bridges do not change their requirements halfway through construction. But software -- especially health software -- operates in environments where requirements evolve constantly. A clinician uses your prototype and says, "Actually, I need the blood pressure graph on the main screen, not buried in a submenu." If you planned everything upfront, that feedback arrives too late.
 
@@ -429,17 +490,20 @@ This approach works for building bridges. Bridges do not change their requiremen
 
 Agile development flips the model. Instead of one long cycle, you work in short iterations -- typically 1-4 weeks -- where you plan, build, and demonstrate working software:
 
-```
-Agile:
+```d2
+direction: right
 
-  Plan ──> Build ──> Demo ──> Feedback
-    ^                              │
-    └──────────────────────────────┘
-         Repeat every 1-4 weeks
+plan: "Plan" {style.fill: "#E3F2FD"}
+build: "Build" {style.fill: "#BBDEFB"}
+demo: "Demo" {style.fill: "#FFF9C4"}
+feedback: "Feedback" {style.fill: "#E8F5E9"}
 
-  Each cycle produces working software.
-  Each cycle incorporates feedback from the previous one.
+plan -> build -> demo -> feedback
+feedback -> plan: "Repeat every\n1-4 weeks" {style.stroke-dash: 3}
 ```
+
+Each cycle produces working software.
+Each cycle incorporates feedback from the previous one.
 
 The key insight: you learn more from showing users a rough prototype than from showing them a polished requirements document. Working software generates real feedback. Documents generate theoretical feedback.
 

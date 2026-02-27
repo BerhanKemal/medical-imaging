@@ -7,6 +7,7 @@ site_dir: _site
 
 theme:
   name: material
+  custom_dir: overrides
   language: en
   palette:
     - scheme: default
@@ -27,9 +28,20 @@ theme:
     - navigation.top
     - search.highlight
     - content.code.copy
+    - content.code.annotate
+    - content.tooltips
 
 plugins:
   - search: {}
+  - d2:
+      layout: dagre
+      theme: 0
+      dark_theme: 200
+      sketch: false
+      pad: 100
+      scale: -1.0
+      cache: true
+      cache_dir: .cache
   - encryptcontent:
       global_password: 'AMM2025agh'
       title_prefix: ''
@@ -38,6 +50,10 @@ plugins:
 
 nav:
   - Home: README.md
+  - AI Tools Policy: resources/ai-tools-policy.md
+  - Project Grading: resources/PROJECT_GRADING.md
+  - Week 0 — Getting Ready:
+    - Prep Guide: resources/GETTING_READY.md
   - Week 1 — Terminal & Git:
     - Lab Workbook: week-01-terminal-git/lab/README.md
     - Lecture Notes: week-01-terminal-git/lecture/LECTURE_NOTES.md
@@ -59,6 +75,7 @@ nav:
   - Week 7 — Local Data:
     - Lab Workbook: week-07-local-data/lab/README.md
     - Lecture Notes: week-07-local-data/lecture/LECTURE_NOTES.md
+    - Database Fundamentals: week-07-local-data/lecture/DATABASE_FUNDAMENTALS.md
   - Week 8 — Networking & API:
     - Lab Workbook: week-08-networking-api/lab/README.md
     - Lecture Notes: week-08-networking-api/lecture/LECTURE_NOTES.md
@@ -66,7 +83,13 @@ nav:
     - Lab Workbook: week-09-authentication/lab/README.md
     - Lecture Notes: week-09-authentication/lecture/LECTURE_NOTES.md
   - Resources:
-    - AI Tools Policy: resources/ai-tools-policy.md
+    - Accessibility Guide: resources/ACCESSIBILITY_GUIDE.md
+    - mHealth Regulations: resources/MHEALTH_REGULATIONS.md
+
+extra_css:
+  - assets/stylesheets/mermaid-lightbox.css
+  - assets/stylesheets/tasklist.css
+  - assets/stylesheets/tooltips.css
 
 exclude_docs: |
   **/INSTRUCTOR_GUIDE.md
@@ -80,14 +103,34 @@ exclude_docs: |
   **/*.sh
 
 markdown_extensions:
+  - abbr
   - admonition
+  - attr_list
+  - md_in_html
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+      clickable_checkbox: true
+  - pymdownx.snippets:
+      auto_append:
+        - includes/abbreviations.md
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.caret
+  - pymdownx.tilde
   - tables
   - toc:
       permalink: true

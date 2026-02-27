@@ -1,6 +1,6 @@
 # AI Tools Policy — Mobile Apps for Healthcare
 
-**Course:** Mobile Applications in Medicine
+**Course:** Mobile Apps for Healthcare
 **Program:** Biomedical Engineering, 3rd Year
 **Effective from:** Week 4 of the semester
 

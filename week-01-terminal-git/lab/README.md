@@ -1,12 +1,14 @@
 # Week 1 Lab: Terminal, Git & GitHub
 
-**Course:** Mobile Apps for Healthcare
-**Duration:** ~2 hours hands-on
-**Prerequisites:** C/C++ and Python experience (no terminal or git knowledge required)
+> **Course:** Mobile Apps for Healthcare
+> **Duration:** ~2 hours hands-on
+> **Prerequisites:** Basic programming experience (Python, C/C++, or similar). No terminal or git knowledge required.
 
-> **Important:** AI tools (ChatGPT, Copilot, etc.) are **not allowed** in Weeks 1--3.
-> The goal is to build genuine understanding of these foundational tools.
-> You will rely on AI-assisted workflows later in the course --- but first, learn the basics yourself.
+!!! warning "No AI tools in Weeks 1–3"
+    AI tools (ChatGPT, Copilot, etc.) are **not allowed** in Weeks 1–3. The goal is to build genuine understanding of these foundational tools. You will rely on AI-assisted workflows later in the course — but first, learn the basics yourself.
+
+!!! info "Terminal note"
+    All commands in this course use **bash** syntax. On **macOS** and **Linux**, use the built-in Terminal app. On **Windows**, use **Git Bash** (installed with Git for Windows). Most commands — including all `git`, `cd`, `mkdir`, `ls`, and `cat` commands — work identically across all three.
 
 ---
 
@@ -21,6 +23,9 @@ By the end of this lab, you will be able to:
 5. **Read** your project's history with `git log` and `git diff`
 6. **Set up SSH keys** and connect securely to GitHub
 7. **Push** a local repository to GitHub so others can see your work
+
+!!! example "Healthcare context"
+    In medical software development, version control isn't just good practice — it's a **regulatory requirement**. Standards like IEC 62304 (medical device software) mandate that every change to source code is tracked, reviewed, and traceable. The Git skills you learn today are directly applicable to building software that meets these standards.
 
 ---
 
@@ -839,20 +844,23 @@ The key's randomart image is:
 
 **Step 4:** Copy your **public** key to clipboard.
 
-On macOS:
-```bash
-cat ~/.ssh/id_ed25519.pub | pbcopy
-```
+=== "macOS"
 
-On Linux:
-```bash
-cat ~/.ssh/id_ed25519.pub | xclip -selection clipboard
-```
+    ```bash
+    cat ~/.ssh/id_ed25519.pub | pbcopy
+    ```
 
-On Windows (Git Bash):
-```bash
-cat ~/.ssh/id_ed25519.pub | clip
-```
+=== "Linux"
+
+    ```bash
+    cat ~/.ssh/id_ed25519.pub | xclip -selection clipboard
+    ```
+
+=== "Windows (Git Bash)"
+
+    ```bash
+    cat ~/.ssh/id_ed25519.pub | clip
+    ```
 
 If none of those work, just display it and copy manually:
 ```bash
@@ -1082,11 +1090,14 @@ Navigate to your course folder:
 cd ~/mhealth-course
 ```
 
-Clone the course exercise repository:
+Clone a repository. Your instructor will share the URL — it will look something like this:
 
 ```bash
-git clone git@github.com:agh-mhealth/week-01-exercises.git
+git clone git@github.com:your-instructor/week-01-exercises.git
 ```
+
+!!! note "Repository URL"
+    The instructor will provide the actual clone URL during the lab session or on the course page. Replace the example URL above with the real one.
 
 Expected output:
 

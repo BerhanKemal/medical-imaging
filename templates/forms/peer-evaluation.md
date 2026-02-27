@@ -6,6 +6,12 @@
 
 ---
 
+## Purpose
+
+Peer evaluation ensures individual accountability in team projects. Your honest feedback helps ensure fair grading and helps your teammates grow as collaborators. This is a professional skill — giving constructive feedback is something you'll do throughout your career.
+
+---
+
 ## Your Information
 
 - **Your Name:** ___________________________
@@ -131,6 +137,28 @@ The peer evaluation grade is calculated as follows:
    _Normalized score = (Individual average / Team average) x Team average_
 
    In practice, this means a student who is rated at or above the team average keeps their score, while a student rated significantly below the team average sees a proportional reduction. The normalization prevents one lenient or strict team from skewing results.
+
+### Worked Example
+
+> Consider a 4-person team: Alice, Bob, Carol, and Dave. Each person is evaluated by their 3 teammates.
+>
+> | Student | Scores received (out of 25) | Raw average (1-5 scale) |
+> |---------|---------------------------|------------------------|
+> | Alice   | 23, 24, 22                | (23+24+22)/3 = 23.0/25 → **4.60** |
+> | Bob     | 20, 19, 21                | (20+19+21)/3 = 20.0/25 → **4.00** |
+> | Carol   | 22, 21, 23                | (22+21+23)/3 = 22.0/25 → **4.40** |
+> | Dave    | 17, 16, 18                | (17+16+18)/3 = 17.0/25 → **3.40** |
+>
+> **Team average** = (4.60 + 4.00 + 4.40 + 3.40) / 4 = **4.10**
+>
+> **Normalized scores:**
+>
+> - Alice: (4.60 / 4.10) × 4.10 = **4.60** → grade band 4.5-5.0 → **10%** (full credit)
+> - Bob: (4.00 / 4.10) × 4.10 = **4.00** → grade band 4.0-4.4 → **9%**
+> - Carol: (4.40 / 4.10) × 4.10 = **4.40** → grade band 4.0-4.4 → **9%**
+> - Dave: (3.40 / 4.10) × 4.10 = **3.40** → grade band 3.0-3.4 → **7%**
+>
+> Notice that normalization preserves the relative ranking within the team. Dave's lower contribution is reflected proportionally, but it's compared to *his own team's average*, not to a universal standard.
 
 4. **Convert to a percentage.** The normalized score (on the 1-5 scale) is converted to a percentage of the 10% grade weight:
 

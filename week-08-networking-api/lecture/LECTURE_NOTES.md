@@ -33,20 +33,33 @@ When a user taps a button to submit their mood entry, the app needs to send data
 
 This is why HTTP in mobile apps must be **asynchronous**. The app sends the request, continues running (showing a loading indicator, accepting other taps), and handles the response when it eventually arrives.
 
-```
-curl (Week 2):                          Flutter (this week):
+```d2
+direction: right
 
-  type command                            user taps "Save"
-       |                                       |
-       v                                       v
-  wait...                                 send request
-  wait...                                 show spinner
-  wait...                                 user can still navigate
-       |                                       |
-       v                                       v
-  see response                            response arrives
-  done                                    update UI
-                                          hide spinner
+curl: "curl (Week 2)" {
+  style.fill: "#FFE0B2"
+  direction: down
+  s1: "type command"
+  s2: "wait..."
+  s3: "wait..."
+  s4: "wait..."
+  s5: "see response"
+  s6: "done"
+  s1 -> s2 -> s3 -> s4 -> s5 -> s6
+}
+
+flutter: "Flutter (this week)" {
+  style.fill: "#C8E6C9"
+  direction: down
+  s1: 'user taps "Save"'
+  s2: "send request"
+  s3: "show spinner"
+  s4: "user can still navigate"
+  s5: "response arrives"
+  s6: "update UI"
+  s7: "hide spinner"
+  s1 -> s2 -> s3 -> s4 -> s5 -> s6 -> s7
+}
 ```
 
 ### Dart's async/await
@@ -120,21 +133,25 @@ The core problem: **JSON is untyped, and Dart is typed.**
 
 When you call `jsonDecode(response.body)`, you get a `Map<String, dynamic>`. That `dynamic` means "anything" -- an int, a String, a null, a nested Map. Dart's type system cannot help you if you write `json['scor']` instead of `json['score']`. The typo compiles fine and crashes at runtime.
 
-```
-JSON world:                         Dart world:
-┌─────────────────────┐             ┌─────────────────────┐
-│                     │             │                     │
-│  "score" can be     │             │  score must be int  │
-│  anything: 7, "7",  │             │  note must be       │
-│  null, [7]          │             │  String             │
-│                     │             │  timestamp must be  │
-│  Keys are strings   │             │  DateTime           │
-│  No compile-time    │             │                     │
-│  checking           │             │  Compile-time       │
-│                     │             │  type checking       │
-└─────────────────────┘             └─────────────────────┘
+```d2
+direction: right
 
-        The serialization layer bridges this gap
+json: "JSON world" {
+  style.fill: "#FFCDD2"
+  d1: '"score" can be anything:\n7, "7", null, [7]'
+  d2: "Keys are strings"
+  d3: "No compile-time checking"
+}
+
+dart: "Dart world" {
+  style.fill: "#C8E6C9"
+  d1: "score must be int"
+  d2: "note must be String"
+  d3: "timestamp must be DateTime"
+  d4: "Compile-time type checking"
+}
+
+json -> dart: "The serialization layer\nbridges this gap" {style.bold: true}
 ```
 
 ### Manual Serialization
@@ -245,27 +262,30 @@ For your course project, manual serialization is perfectly fine. You have a smal
 
 Here is how data flows between your FastAPI backend and your Flutter app:
 
-```
-Server (FastAPI)                          Flutter App
-┌──────────────┐                         ┌──────────────┐
-│              │   HTTP Response          │              │
-│  Python      │   Content-Type:          │  Dart        │
-│  dict        │   application/json       │  Object      │
-│              │                          │              │
-│  {"score": 7,│ ─────────────────────>   │  MoodEntry(  │
-│   "note":    │   JSON string            │    score: 7, │
-│   "good day"}│                          │    note:     │
-│              │          jsonDecode()     │    "good day"│
-│              │          fromJson()       │  )           │
-│              │                          │              │
-│              │   HTTP Request           │              │
-│              │   Content-Type:          │              │
-│              │   application/json       │              │
-│  dict        │ <─────────────────────   │  Object      │
-│              │   JSON string            │              │
-│              │          toJson()        │              │
-│              │          jsonEncode()    │              │
-└──────────────┘                         └──────────────┘
+```d2
+direction: right
+
+server: "Server (FastAPI)" {
+  style.fill: "#E3F2FD"
+  python: "Python dict" {
+    style.fill: "#BBDEFB"
+    d: |md
+      {"score": 7,
+       "note": "good day"}
+    |
+  }
+}
+
+flutter: "Flutter App" {
+  style.fill: "#E8F5E9"
+  dart_obj: "Dart Object" {
+    style.fill: "#C8E6C9"
+    d: "MoodEntry(\n  score: 7,\n  note: \"good day\"\n)"
+  }
+}
+
+server -> flutter: "HTTP Response\njsonDecode()\nfromJson()" {style.stroke: "#1565C0"}
+flutter -> server: "HTTP Request\ntoJson()\njsonEncode()" {style.stroke: "#2E7D32"}
 ```
 
 Two transformations on each side: between the wire format (JSON string) and the language's native data structure. On the Python side, FastAPI handles this automatically. On the Dart side, you need to handle it yourself -- that is what `fromJson` and `toJson` are for.
@@ -359,26 +379,50 @@ class MoodApiClient {
 
 Your app should have clear layers of responsibility. Here is how everything you have built so far fits together:
 
-```
-┌───────────────────┐
-│     UI Layer      │   Widgets, screens
-│   (ref.watch)     │   "What does the user see?"
-└─────────┬─────────┘
-          │
-┌─────────┴─────────┐
-│   State Layer     │   Riverpod notifiers
-│   (Notifier)      │   "What is the current state?"
-└─────────┬─────────┘
-          │
-┌─────────┴─────────┐
-│  Repository Layer │   Decides: local DB or API?
-│                   │   "Where does the data come from?"
-└─────────┬─────────┘
-          │
-┌─────────┴─────────┐
-│    Data Layer     │   API client + Local DB
-│  (http + SQLite)  │   "How do we read/write data?"
-└───────────────────┘
+```d2
+direction: down
+
+ui: "UI Layer" {
+  style.fill: "#E3F2FD"
+  style.font-size: 18
+  label: |md
+    **UI Layer**
+    Widgets, screens
+    "What does the user see?"
+  |
+}
+
+state: "State Layer" {
+  style.fill: "#BBDEFB"
+  style.font-size: 18
+  label: |md
+    **State Layer**
+    Riverpod notifiers
+    "What is the current state?"
+  |
+}
+
+repo: "Repository Layer" {
+  style.fill: "#FFF9C4"
+  style.font-size: 18
+  label: |md
+    **Repository Layer**
+    Decides: local DB or API?
+    "Where does the data come from?"
+  |
+}
+
+data: "Data Layer" {
+  style.fill: "#E8F5E9"
+  style.font-size: 18
+  label: |md
+    **Data Layer**
+    API client + Local DB
+    "How do we read/write data?"
+  |
+}
+
+ui -> state -> repo -> data
 ```
 
 Your Riverpod notifier from Week 6 currently has hardcoded data or simple in-memory lists. In Sprint 2, you replace that data source with a repository that can talk to both SQLite (Week 7) and your API (this week). The beauty of this architecture is that the UI layer does not know or care where the data comes from. It just calls `ref.watch(moodProvider)` and renders whatever state it gets.
@@ -425,33 +469,49 @@ Think of it this way: if your app only works with a perfect internet connection,
 
 Not all errors are equal. The appropriate response depends on the type:
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                     ERROR CATEGORIES                            │
-│                                                                 │
-│  Network Errors              Server Errors                      │
-│  ┌────────────────┐          ┌────────────────┐                 │
-│  │ No internet    │          │ 500 Internal   │                 │
-│  │ Timeout        │          │ 502 Bad Gateway│                 │
-│  │ DNS failure    │          │ 503 Unavailable│                 │
-│  │                │          │                │                 │
-│  │ User action:   │          │ User action:   │                 │
-│  │ Check WiFi,    │          │ Retry later,   │                 │
-│  │ try again      │          │ not user's     │                 │
-│  └────────────────┘          │ fault          │                 │
-│                              └────────────────┘                 │
-│  Client Errors               Parsing Errors                     │
-│  ┌────────────────┐          ┌────────────────┐                 │
-│  │ 400 Bad Request│          │ Unexpected JSON│                 │
-│  │ 401 Unauth     │          │ Missing fields │                 │
-│  │ 404 Not Found  │          │ Wrong types    │                 │
-│  │ 422 Validation │          │                │                 │
-│  │                │          │ Developer's    │                 │
-│  │ User action:   │          │ fault -- fix   │                 │
-│  │ Fix input or   │          │ the code       │                 │
-│  │ re-login       │          │                │                 │
-│  └────────────────┘          └────────────────┘                 │
-└─────────────────────────────────────────────────────────────────┘
+```d2
+direction: down
+
+title: "ERROR CATEGORIES" {
+  style.fill: "#F5F5F5"
+  style.font-size: 20
+  style.bold: true
+
+  direction: right
+
+  network: "Network Errors" {
+    style.fill: "#FFCDD2"
+    d1: "No internet"
+    d2: "Timeout"
+    d3: "DNS failure"
+    action: "User action:\nCheck WiFi, try again" {style.fill: "#FFF"}
+  }
+
+  server: "Server Errors" {
+    style.fill: "#FFE0B2"
+    d1: "500 Internal"
+    d2: "502 Bad Gateway"
+    d3: "503 Unavailable"
+    action: "User action:\nRetry later, not\nuser's fault" {style.fill: "#FFF"}
+  }
+
+  client: "Client Errors" {
+    style.fill: "#FFF9C4"
+    d1: "400 Bad Request"
+    d2: "401 Unauth"
+    d3: "404 Not Found"
+    d4: "422 Validation"
+    action: "User action:\nFix input or re-login" {style.fill: "#FFF"}
+  }
+
+  parsing: "Parsing Errors" {
+    style.fill: "#E3F2FD"
+    d1: "Unexpected JSON"
+    d2: "Missing fields"
+    d3: "Wrong types"
+    action: "Developer's fault\n— fix the code" {style.fill: "#FFF"}
+  }
+}
 ```
 
 Each category demands a different response:
@@ -586,6 +646,9 @@ Consider a mental health app that stores therapy session notes, mood logs, and m
 
 This is why GDPR classifies health data as special category. The potential for harm from exposure is significantly higher than, say, a leak of someone's shopping preferences.
 
+!!! tip "Reference: mHealth Regulations Quick Guide"
+    For a comprehensive comparison of GDPR, HIPAA, EU MDR, and FDA requirements — including how they apply to your team project — see the [mHealth Regulations Guide](../../resources/MHEALTH_REGULATIONS.md). It contains practical implementation advice and template sentences for your project proposals and presentations.
+
 ---
 
 ## 6. Data Transmission Security (10 min)
@@ -604,15 +667,20 @@ Both Android and iOS enforce this by default:
 
 HTTPS protects against eavesdropping, but there is a subtler attack: **man-in-the-middle (MITM)**. An attacker could present a fake certificate that your phone trusts (perhaps by compromising a certificate authority). Certificate pinning solves this:
 
-```
-Without pinning:                    With pinning:
+```d2
+direction: right
 
-App trusts ANY valid cert           App trusts ONLY your server's cert
+without: "Without pinning" {
+  style.fill: "#FFCDD2"
+  desc: "App trusts ANY valid cert"
+  attack: 'Attacker with fake cert:\nApp: "Cert valid? Yes."\nApp: "Connected!"\nAttacker: reads all data' {style.fill: "#FFF"}
+}
 
-Attacker with fake cert:            Attacker with fake cert:
-  App: "Cert is valid? Yes."          App: "Cert matches my pin? No."
-  App: "Connected!"                   App: "Connection refused!"
-  Attacker: reads all data            Attacker: blocked
+with_pin: "With pinning" {
+  style.fill: "#C8E6C9"
+  desc: "App trusts ONLY your server's cert"
+  attack: 'Attacker with fake cert:\nApp: "Cert matches pin? No."\nApp: "Connection refused!"\nAttacker: blocked' {style.fill: "#FFF"}
+}
 ```
 
 Certificate pinning is essential for high-security applications -- banking, healthcare, government. For your course project, HTTPS is sufficient. But know that pinning exists for when the stakes are higher.

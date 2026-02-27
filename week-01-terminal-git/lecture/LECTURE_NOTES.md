@@ -41,29 +41,38 @@ These are the "missing semester" --- the skills that everyone assumes you alread
 
 What you see when you look at a finished app is just the tip of the iceberg:
 
-```
-                    What users see
-                   ┌─────────────┐
-                   │  Beautiful  │
-                   │  working    │
-                   │  app        │
-       ~~~~~~~~~~~~│~~~~~~~~~~~~~│~~~~~~~~~~  surface
-                   │             │
-              ┌────┴─────────────┴────┐
-              │   Version control     │
-              │   Testing             │
-              │   Code review         │
-              │   CI/CD pipelines     │
-              │   Documentation       │
-              │   Dependency mgmt     │
-              │   Security practices  │
-              │   Debugging tools     │
-              │   Deployment          │
-              │   Monitoring          │
-              │   Team coordination   │
-              └───────────────────────┘
-                What actually makes
-                the app possible
+```d2
+direction: down
+
+visible: "What Users See" {
+  style.fill: "#E3F2FD"
+  style.font-size: 20
+  app: "Beautiful working app"
+}
+
+surface: "" {
+  style.stroke-dash: 5
+  style.fill: "transparent"
+  label: "~~ surface ~~"
+}
+
+hidden: "What Actually Makes the App Possible" {
+  style.fill: "#FFF3E0"
+  style.font-size: 20
+  vc: "Version control"
+  testing: "Testing"
+  review: "Code review"
+  cicd: "CI/CD pipelines"
+  docs: "Documentation"
+  deps: "Dependency management"
+  security: "Security practices"
+  debug: "Debugging tools"
+  deploy: "Deployment"
+  monitoring: "Monitoring"
+  team: "Team coordination"
+}
+
+visible -> hidden: {style.stroke-dash: 3}
 ```
 
 This course teaches you both halves: the visible app (Flutter, APIs) AND the invisible infrastructure (Git, testing, CI/CD, team workflows).
@@ -131,22 +140,30 @@ In the lab, you learned the commands: `git add`, `git commit`, `git push`. Now l
 
 Many people think Git stores the **changes** (diffs) between versions. It does not. Git stores **complete snapshots** of your project at each commit.
 
-```
-Commit A              Commit B              Commit C
-(initial)             (add feature)         (fix bug)
-┌───────────┐         ┌───────────┐         ┌───────────┐
-│ README.md │         │ README.md │         │ README.md │
-│ (v1)      │         │ (v1)      │         │ (v2)      │  <-- changed
-│           │         │           │         │           │
-│ app.py    │         │ app.py    │         │ app.py    │
-│ (v1)      │         │ (v2)      │         │ (v2)      │
-│           │         │           │         │           │
-│           │         │ test.py   │         │ test.py   │
-│           │         │ (v1)      │         │ (v1)      │
-└───────────┘         └───────────┘         └───────────┘
-     │                      │                     │
-     └──────────────────────┘─────────────────────┘
-              Linked timeline (each points to its parent)
+```d2
+direction: right
+
+a: "Commit A\n(initial)" {
+  style.fill: "#E3F2FD"
+  a1: "README.md (v1)"
+  a2: "app.py (v1)"
+}
+
+b: "Commit B\n(add feature)" {
+  style.fill: "#E3F2FD"
+  b1: "README.md (v1)"
+  b2: "app.py (v2)"
+  b3: "test.py (v1)"
+}
+
+c: "Commit C\n(fix bug)" {
+  style.fill: "#E3F2FD"
+  c1: "README.md (v2)"
+  c2: "app.py (v2)"
+  c3: "test.py (v1)"
+}
+
+a -> b -> c: "parent"
 ```
 
 **Analogy:** Each commit is like a **photograph** of your entire project at that moment. You are not recording "what changed" --- you are taking a full snapshot. To see what changed, Git compares two snapshots.
@@ -163,26 +180,44 @@ Commit A              Commit B              Commit C
 
 You practiced this in the lab. Now let's go deeper:
 
-```
-┌─────────────────────┐     ┌──────────────────────┐     ┌─────────────────────┐
-│   WORKING           │     │   STAGING AREA       │     │   REPOSITORY        │
-│   DIRECTORY          │     │   (Index)            │     │   (.git directory)  │
-│                     │     │                      │     │                     │
-│   Your files as     │     │   A preview of what  │     │   Permanent,        │
-│   you see them      │     │   your next commit   │     │   immutable         │
-│   in Finder/        │     │   will look like     │     │   history of        │
-│   Explorer          │     │                      │     │   your project      │
-│                     │     │   "Shopping cart"     │     │                     │
-│   You edit these    │     │   --- you can add     │     │   Each commit is    │
-│   files freely      │     │   and remove items   │     │   a snapshot,       │
-│                     │     │   before checkout     │     │   frozen in time    │
-└──────────┬──────────┘     └───────────┬──────────┘     └─────────────────────┘
-           │                            │
-           │       git add              │       git commit
-           │ ──────────────────>        │ ──────────────────>
-           │                            │
-           │       git restore          │       (cannot easily
-           │ <──────────────────        │        undo commits)
+```d2
+direction: right
+
+working: "WORKING\nDIRECTORY" {
+  style.fill: "#E3F2FD"
+  label: "WORKING DIRECTORY"
+  desc: |md
+    Your files as you see them
+    in Finder/Explorer.
+    You edit these files freely.
+  |
+}
+
+staging: "STAGING AREA\n(Index)" {
+  style.fill: "#FFF9C4"
+  label: "STAGING AREA (Index)"
+  desc: |md
+    A preview of what your next
+    commit will look like.
+    "Shopping cart" — you can add
+    and remove items before checkout.
+  |
+}
+
+repo: "REPOSITORY\n(.git directory)" {
+  style.fill: "#E8F5E9"
+  label: "REPOSITORY (.git directory)"
+  desc: |md
+    Permanent, immutable history
+    of your project.
+    Each commit is a snapshot,
+    frozen in time.
+  |
+}
+
+working -> staging: "git add"
+staging -> working: "git restore" {style.stroke-dash: 3}
+staging -> repo: "git commit"
 ```
 
 **Why does the staging area exist?** It gives you fine-grained control. Real-world example:
@@ -229,21 +264,38 @@ Think of the hash like a fingerprint:
 
 This matters in healthcare: Git's commit hashes provide a built-in **integrity guarantee**. If someone tampers with the code history, the hashes will break, and everyone will know. This is crucial for regulated environments where you need to prove that your code has not been modified without authorization.
 
-```
-Commit chain with hashes:
+```d2
+direction: right
 
-  ┌──────────┐    ┌──────────┐    ┌──────────┐
-  │ a1b2c3d  │<───│ f4e5d6c  │<───│ b7a8c9d  │
-  │          │    │          │    │          │
-  │ "Initial │    │ "Add     │    │ "Fix     │
-  │  README" │    │  feature"│    │  bug"    │
-  └──────────┘    └──────────┘    └──────────┘
-    (oldest)                        (newest)
+c1: "a1b2c3d" {
+  style.fill: "#E3F2FD"
+  label: |md
+    **a1b2c3d**
+    "Initial README"
+  |
+}
 
-  Each commit points back to its parent. The hash of each
-  commit depends on its parent's hash, creating an unbreakable
-  chain. Change any commit, and all subsequent hashes change too.
+c2: "f4e5d6c" {
+  style.fill: "#E3F2FD"
+  label: |md
+    **f4e5d6c**
+    "Add feature"
+  |
+}
+
+c3: "b7a8c9d" {
+  style.fill: "#E3F2FD"
+  label: |md
+    **b7a8c9d**
+    "Fix bug"
+  |
+}
+
+c3 -> c2: "" {style.stroke: "#666"}
+c2 -> c1: "" {style.stroke: "#666"}
 ```
+
+Each commit points back to its parent. The hash of each commit depends on its parent's hash, creating an unbreakable chain. Change any commit, and all subsequent hashes change too.
 
 > PRESENTER NOTE: If students ask about SHA-1 collisions, briefly mention that Git is
 > transitioning to SHA-256, but SHA-1 collisions are not a practical concern for version
@@ -271,29 +323,57 @@ When you make a new commit on `main`, the pointer moves forward:
 
 Creating a new branch just creates a new pointer:
 
-```
-                                   main
-                                     |
-                                     v
-  [Commit A] <── [Commit B] <── [Commit C] <── [Commit D]
-                                     ^
-                                     |
-                                  feature
+```d2
+direction: right
+
+a: "[Commit A]"
+b: "[Commit B]"
+c: "[Commit C]"
+d: "[Commit D]"
+
+a <- b <- c <- d
+
+main: "main" {
+  style.fill: "#C8E6C9"
+  style.font-size: 18
+  style.bold: true
+}
+feature: "feature" {
+  style.fill: "#BBDEFB"
+  style.font-size: 18
+  style.bold: true
+}
+
+main -> d: {style.stroke-dash: 3}
+feature -> c: {style.stroke-dash: 3}
 ```
 
 If you switch to `feature` and make a new commit:
 
-```
-                                                main
-                                                  |
-                                                  v
-  [Commit A] <── [Commit B] <── [Commit C] <── [Commit D]
-                                     ^
-                                     |
-                                 [Commit E]
-                                     ^
-                                     |
-                                  feature
+```d2
+direction: right
+
+a: "[Commit A]"
+b: "[Commit B]"
+c: "[Commit C]"
+d: "[Commit D]"
+e: "[Commit E]"
+
+a <- b <- c
+c <- d
+c <- e
+
+main: "main" {
+  style.fill: "#C8E6C9"
+  style.bold: true
+}
+feature: "feature" {
+  style.fill: "#BBDEFB"
+  style.bold: true
+}
+
+main -> d: {style.stroke-dash: 3}
+feature -> e: {style.stroke-dash: 3}
 ```
 
 Now `main` and `feature` have diverged. We will learn how to merge them in Week 2.
@@ -318,14 +398,34 @@ Now `main` and `feature` have diverged. We will learn how to merge them in Week 
 
 When you switch branches with `git checkout feature` (or `git switch feature`), HEAD moves:
 
-```
-                    main           HEAD
-                      |              |
-                      v              v
-  [A] <── [B] <── [C]           feature
-                    ^                |
-                    |                v
-                 [D] <── [E]
+```d2
+direction: right
+
+a: "[A]"
+b: "[B]"
+c: "[C]"
+d: "[D]"
+e: "[E]"
+
+a <- b <- c
+c <- d <- e
+
+main: "main" {
+  style.fill: "#C8E6C9"
+  style.bold: true
+}
+head: "HEAD" {
+  style.fill: "#FFCDD2"
+  style.bold: true
+}
+feature_label: "feature" {
+  style.fill: "#BBDEFB"
+  style.bold: true
+}
+
+main -> c: {style.stroke-dash: 3}
+head -> feature_label: {style.stroke-dash: 3}
+feature_label -> e: {style.stroke-dash: 3}
 ```
 
 > PRESENTER NOTE: Open a terminal and show `.git/HEAD`:
@@ -343,28 +443,44 @@ When you switch branches with `git checkout feature` (or `git switch feature`), 
 
 Here is the complete mental model of how Git works:
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                        YOUR PROJECT                          │
-│                                                              │
-│  Working Directory        Staging Area         Repository    │
-│  ┌──────────────┐        ┌───────────┐        ┌───────────┐ │
-│  │ Files you    │  add   │ Next      │ commit │ Permanent │ │
-│  │ edit daily   │ ────>  │ commit    │ ────>  │ history   │ │
-│  │              │        │ preview   │        │           │ │
-│  └──────────────┘        └───────────┘        └─────┬─────┘ │
-│                                                     │       │
-│                                                     │ push  │
-│                                                     v       │
-│                                            ┌──────────────┐ │
-│                                            │ Remote repo  │ │
-│                                            │ (GitHub)     │ │
-│                                            └──────────────┘ │
-│                                                              │
-│  Branches: lightweight pointers to commits                   │
-│  HEAD: points to your current branch                         │
-│  Commits: snapshots with unique hash fingerprints            │
-└──────────────────────────────────────────────────────────────┘
+```d2
+direction: down
+
+project: "YOUR PROJECT" {
+  style.fill: "#F5F5F5"
+
+  direction: right
+
+  working: "Working Directory" {
+    style.fill: "#E3F2FD"
+    desc: "Files you edit daily"
+  }
+
+  staging: "Staging Area" {
+    style.fill: "#FFF9C4"
+    desc: "Next commit preview"
+  }
+
+  repo: "Repository" {
+    style.fill: "#E8F5E9"
+    desc: "Permanent history"
+  }
+
+  working -> staging: "add"
+  staging -> repo: "commit"
+
+  repo -> remote: "push"
+
+  remote: "Remote repo\n(GitHub)" {
+    style.fill: "#F3E5F5"
+  }
+
+  notes: |md
+    **Branches:** lightweight pointers to commits
+    **HEAD:** points to your current branch
+    **Commits:** snapshots with unique hash fingerprints
+  |
+}
 ```
 
 ---
@@ -387,59 +503,85 @@ Before we talk about SSH keys, we need to understand two types of encryption.
 
 #### Symmetric Encryption: One Key for Everything
 
-```
-┌────────────────────────────────────────────────┐
-│           SYMMETRIC ENCRYPTION                 │
-│                                                │
-│   Same key locks AND unlocks                   │
-│                                                │
-│   ┌───────┐    lock     ┌──────────┐           │
-│   │ Hello │ ──────────> │ x8#kQ2m! │           │
-│   └───────┘   (key A)   └──────────┘           │
-│                                                │
-│   ┌───────┐   unlock    ┌──────────┐           │
-│   │ Hello │ <────────── │ x8#kQ2m! │           │
-│   └───────┘   (key A)   └──────────┘           │
-│                                                │
-│   Analogy: A house key.                        │
-│   The same key locks and unlocks the door.     │
-│                                                │
-│   Problem: How do you safely give the key      │
-│   to someone far away? If you send it,         │
-│   anyone who intercepts it can unlock          │
-│   your messages.                               │
-└────────────────────────────────────────────────┘
+```d2
+direction: down
+
+title: "SYMMETRIC ENCRYPTION" {
+  style.fill: "#FFF3E0"
+  style.font-size: 22
+  style.bold: true
+
+  subtitle: "Same key locks AND unlocks"
+
+  direction: right
+
+  encrypt: {
+    direction: right
+    plain1: "Hello"
+    cipher1: "x8#kQ2m!"
+    plain1 -> cipher1: "lock (key A)" {style.stroke: "#E65100"}
+  }
+
+  decrypt: {
+    direction: right
+    cipher2: "x8#kQ2m!"
+    plain2: "Hello"
+    cipher2 -> plain2: "unlock (key A)" {style.stroke: "#2E7D32"}
+  }
+
+  analogy: |md
+    **Analogy:** A house key.
+    The same key locks and unlocks the door.
+
+    **Problem:** How do you safely give the key
+    to someone far away?
+  |
+}
 ```
 
 Symmetric encryption is fast and simple, but it has a fundamental problem: you need to somehow share the secret key with the other person. If you send the key over the internet, someone could steal it.
 
 #### Asymmetric Encryption: Two Keys Working Together
 
-```
-┌──────────────────────────────────────────────────────────┐
-│             ASYMMETRIC ENCRYPTION                        │
-│                                                          │
-│   Two different keys: one LOCKS, the other UNLOCKS       │
-│                                                          │
-│   PUBLIC KEY                    PRIVATE KEY              │
-│   ┌──────────┐                 ┌──────────┐             │
-│   │          │                 │          │             │
-│   │  Share   │                 │  Keep    │             │
-│   │  with    │                 │  SECRET  │             │
-│   │  everyone│                 │  forever │             │
-│   │          │                 │          │             │
-│   └──────────┘                 └──────────┘             │
-│                                                          │
-│   Can LOCK (encrypt)           Can UNLOCK (decrypt)      │
-│   Can VERIFY signatures        Can CREATE signatures     │
-│                                                          │
-│   Analogy:                                               │
-│   You manufacture 100 identical PADLOCKS and give them   │
-│   to anyone who wants one. Only YOU keep the KEY.        │
-│                                                          │
-│   Anyone can snap a padlock shut on a message for you,   │
-│   but only you can open it.                              │
-└──────────────────────────────────────────────────────────┘
+```d2
+direction: down
+
+title: "ASYMMETRIC ENCRYPTION" {
+  style.fill: "#E8F5E9"
+  style.font-size: 22
+  style.bold: true
+
+  subtitle: "Two different keys: one LOCKS, the other UNLOCKS"
+
+  direction: right
+
+  public_key: "PUBLIC KEY" {
+    style.fill: "#BBDEFB"
+    share: "Share with everyone"
+    can_do: |md
+      Can LOCK (encrypt)
+      Can VERIFY signatures
+    |
+  }
+
+  private_key: "PRIVATE KEY" {
+    style.fill: "#FFCDD2"
+    keep: "Keep SECRET forever"
+    can_do: |md
+      Can UNLOCK (decrypt)
+      Can CREATE signatures
+    |
+  }
+
+  analogy: |md
+    **Analogy:** You manufacture 100 identical
+    PADLOCKS and give them to anyone who wants one.
+    Only YOU keep the KEY.
+
+    Anyone can snap a padlock shut on a message
+    for you, but only you can open it.
+  |
+}
 ```
 
 Asymmetric encryption solves the key-sharing problem: you freely share your public key, and keep your private key secret. No secret needs to travel over the internet.
@@ -453,30 +595,18 @@ Asymmetric encryption solves the key-sharing problem: you freely share your publ
 
 When you run `ssh -T git@github.com`, here is what happens step by step:
 
-```
-Your Computer                              GitHub Server
-┌──────────────┐                          ┌──────────────┐
-│              │                          │              │
-│  Has:        │  1. "Hello, I'm         │  Has:        │
-│  - Private   │     user X"             │  - Your      │
-│    key       │ ────────────────────>    │    public    │
-│              │                          │    key       │
-│              │                          │              │
-│              │  2. "OK, prove it.       │              │
-│              │     Sign this random     │              │
-│              │     challenge: 7f3a..."  │              │
-│              │ <────────────────────    │              │
-│              │                          │              │
-│  Signs the   │  3. "Here's my          │              │
-│  challenge   │     signature: 9d2b..."  │              │
-│  with        │ ────────────────────>    │  Verifies   │
-│  private     │                          │  signature  │
-│  key         │                          │  with       │
-│              │  4. "Signature valid!    │  public     │
-│              │     Welcome, user X."    │  key        │
-│              │ <────────────────────    │              │
-│              │                          │              │
-└──────────────┘                          └──────────────┘
+```d2
+shape: sequence_diagram
+
+your_computer: "Your Computer\n(has private key)"
+github: "GitHub Server\n(has your public key)"
+
+your_computer -> github: "1. Hello, I'm user X"
+github -> your_computer: "2. Prove it. Sign this challenge: 7f3a..."
+your_computer -> github: "3. Here's my signature: 9d2b..."
+your_computer."Signs challenge with private key"
+github."Verifies signature with public key"
+github -> your_computer: "4. Signature valid! Welcome, user X."
 ```
 
 **Step by step:**
@@ -571,13 +701,29 @@ What happens when multiple people edit the same file? How do you review each oth
 
 In professional teams, no one pushes directly to `main`. Instead:
 
-```
-main:       ──[A]──[B]──────────────────[F]──
-                     \                  /
-feature-x:           [C]──[D]──[E]───
-                           ↑
-                        Pull Request
-                        + Code Review
+```d2
+direction: right
+
+a: "[A]" {style.fill: "#E8F5E9"}
+b: "[B]" {style.fill: "#E8F5E9"}
+c: "[C]" {style.fill: "#BBDEFB"}
+d: "[D]" {style.fill: "#BBDEFB"}
+e: "[E]" {style.fill: "#BBDEFB"}
+f: "[F]" {style.fill: "#E8F5E9"}
+
+a -> b: "main"
+b -> c: ""
+c -> d: "feature-x"
+d -> e: ""
+e -> f: "merge"
+b -> f: "main" {style.stroke-dash: 5}
+
+pr: "Pull Request\n+ Code Review" {
+  style.fill: "#FFF9C4"
+  style.font-size: 14
+  style.bold: true
+}
+pr -> d: {style.stroke-dash: 3}
 ```
 
 **The workflow:**
@@ -688,27 +834,31 @@ Over the next 14 weeks, you will build a complete **mood tracking application** 
 
 ### The Stack
 
-```
-┌─────────────────────────────────────────────────┐
-│                                                 │
-│   Mobile App (Flutter/Dart)                     │
-│   ├── UI screens (mood input, history, charts)  │
-│   ├── Local storage (SQLite)                    │
-│   └── API client                                │
-│              │                                  │
-│              │  HTTP/REST                        │
-│              v                                  │
-│   Backend API (FastAPI/Python)                   │
-│   ├── Authentication                            │
-│   ├── Data validation                           │
-│   └── Database (PostgreSQL)                     │
-│                                                 │
-│   Infrastructure                                │
-│   ├── Git + GitHub (version control)            │
-│   ├── CI/CD (automated testing + deployment)    │
-│   └── Docker (containerization)                 │
-│                                                 │
-└─────────────────────────────────────────────────┘
+```d2
+direction: down
+
+mobile: "Mobile App (Flutter/Dart)" {
+  style.fill: "#E3F2FD"
+  ui: "UI screens (mood input, history, charts)"
+  storage: "Local storage (SQLite)"
+  client: "API client"
+}
+
+backend: "Backend API (FastAPI/Python)" {
+  style.fill: "#E8F5E9"
+  auth: "Authentication"
+  validation: "Data validation"
+  db: "Database (PostgreSQL)"
+}
+
+infra: "Infrastructure" {
+  style.fill: "#FFF3E0"
+  git: "Git + GitHub (version control)"
+  cicd: "CI/CD (automated testing + deployment)"
+  docker: "Docker (containerization)"
+}
+
+mobile -> backend: "HTTP/REST"
 ```
 
 ### From Zero to Shipped
@@ -716,16 +866,16 @@ Over the next 14 weeks, you will build a complete **mood tracking application** 
 ```
 Week 1:  You are here. You just learned to use the terminal and Git.
 Week 2:  Git branching, REST APIs, curl
-Week 3:  Dart language, Flutter hello world
-Week 4:  Flutter UI, state management
-Week 5:  Backend with FastAPI
-Week 6:  Databases and data models
-Week 7:  Authentication and security
-Week 8:  Connecting app to API
-Week 9:  Testing strategies
-Week 10: CI/CD pipelines
+Week 3:  Dart language fundamentals
+Week 4:  Flutter UI, widgets, navigation
+Week 5:  Sprint planning workshop, project proposals
+Week 6:  State management with Riverpod
+Week 7:  Local data persistence with SQLite
+Week 8:  Networking, REST API integration
+Week 9:  Authentication and security
+Week 10: Testing strategies
 Week 11: Advanced Flutter (charts, animations)
-Week 12: Deployment
+Week 12: CI/CD and deployment
 Week 13: Polish and refactoring
 Week 14: Final presentations
 

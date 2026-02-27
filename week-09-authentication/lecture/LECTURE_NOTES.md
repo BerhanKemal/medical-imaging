@@ -53,33 +53,41 @@ Once the system knows who you are, the next question is: what are you allowed to
 
 A nurse arrives at the hospital and authenticates by tapping their badge and entering a PIN. The system now knows the nurse is Maria Nowak from the cardiology department. Authorization then determines which patient records Maria can access -- only patients in cardiology, not the psychiatric ward. Same login, different access depending on role and department.
 
-```
-┌──────────────────────────────────────────────────┐
-│                                                    │
-│   User: "I'm Dr. Smith"                          │
-│              │                                     │
-│              v                                     │
-│   ┌──── Authentication ────┐                      │
-│   │ Verify identity:        │                      │
-│   │ - Password correct?     │──── NO ──> Reject   │
-│   │ - 2FA code valid?       │                      │
-│   └──────────┬──────────────┘                      │
-│              │ YES                                  │
-│              v                                     │
-│   ┌──── Authorization ─────┐                      │
-│   │ Check permissions:      │                      │
-│   │ - Role: Cardiologist    │                      │
-│   │ - Can access: cardiac   │                      │
-│   │   patients only         │──── NO ──> 403      │
-│   │ - Can prescribe: yes    │     Forbidden       │
-│   └──────────┬──────────────┘                      │
-│              │ YES                                  │
-│              v                                     │
-│   ┌──── Access Granted ────┐                      │
-│   │ Show patient record     │                      │
-│   └─────────────────────────┘                      │
-│                                                    │
-└──────────────────────────────────────────────────┘
+```d2
+direction: down
+
+user: "User: I'm Dr. Smith" {style.fill: "#E3F2FD"; style.bold: true}
+
+authn: "Authentication" {
+  style.fill: "#BBDEFB"
+  label: |md
+    **Authentication**
+    Verify identity:
+    - Password correct?
+    - 2FA code valid?
+  |
+}
+
+authz: "Authorization" {
+  style.fill: "#FFF9C4"
+  label: |md
+    **Authorization**
+    Check permissions:
+    - Role: Cardiologist
+    - Can access: cardiac patients only
+    - Can prescribe: yes
+  |
+}
+
+granted: "Access Granted\nShow patient record" {style.fill: "#C8E6C9"; style.bold: true}
+reject: "Reject" {style.fill: "#FFCDD2"; style.bold: true}
+forbidden: "403 Forbidden" {style.fill: "#FFCDD2"; style.bold: true}
+
+user -> authn
+authn -> reject: "NO"
+authn -> authz: "YES"
+authz -> forbidden: "NO"
+authz -> granted: "YES"
 ```
 
 The diagram shows a clean separation: first prove identity, then check permissions. A 401 (Unauthorized) response really means "unauthenticated" -- the server does not know who you are. A 403 (Forbidden) response means "authenticated but not authorized" -- the server knows who you are, but you do not have permission.
@@ -117,23 +125,51 @@ Three parts, separated by dots. Each part is base64url-encoded.
 
 ### The Three Parts
 
-```
-JWT Token:
-eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMTIzIiwiZXhwIjoxNjk5...signature
+````d2
+direction: right
 
-┌──────────────┐ ┌──────────────────────────┐ ┌─────────────┐
-│   Header     │.│         Payload          │.│  Signature  │
-│              │ │                          │ │             │
-│ {            │ │ {                        │ │ HMAC-SHA256(│
-│  "alg":     │ │  "sub": "user123",       │ │   base64(   │
-│   "HS256",  │ │  "role": "patient",      │ │     header)+│
-│  "typ":     │ │  "exp": 1699999999,      │ │   "." +     │
-│   "JWT"     │ │  "iat": 1699996399       │ │   base64(   │
-│ }           │ │ }                        │ │     payload),│
-│              │ │                          │ │   secret    │
-│  base64url  │ │       base64url          │ │ )           │
-└──────────────┘ └──────────────────────────┘ └─────────────┘
-```
+header: "Header" {
+  style.fill: "#E3F2FD"
+  content: |md
+    ```json
+    {
+      "alg": "HS256",
+      "typ": "JWT"
+    }
+    ```
+    base64url encoded
+  |
+}
+
+payload: "Payload" {
+  style.fill: "#FFF9C4"
+  content: |md
+    ```json
+    {
+      "sub": "user123",
+      "role": "patient",
+      "exp": 1699999999,
+      "iat": 1699996399
+    }
+    ```
+    base64url encoded
+  |
+}
+
+signature: "Signature" {
+  style.fill: "#E8F5E9"
+  content: |md
+    HMAC-SHA256(
+      base64(header) +
+      "." +
+      base64(payload),
+      secret
+    )
+  |
+}
+
+header -> payload -> signature: "."
+````
 
 1. **Header:** Declares the algorithm (e.g., HS256) and the token type (JWT). This tells the server how to verify the signature.
 
@@ -184,39 +220,27 @@ The "signature" is like a holographic seal on the badge. If someone tries to alt
 
 ### The Refresh Token Pattern
 
-```
-Client                                   Server
-  │                                        │
-  │  1. Login (username + password)        │
-  │ ─────────────────────────────────────> │
-  │                                        │
-  │  2. Access token (15 min)              │
-  │     + Refresh token (7 days)           │
-  │ <───────────────────────────────────── │
-  │                                        │
-  │  3. API call (Authorization: Bearer)   │
-  │ ─────────────────────────────────────> │
-  │                                        │  ← Token valid, return data
-  │  4. Data response                      │
-  │ <───────────────────────────────────── │
-  │                                        │
-  │        ... 15 minutes pass ...         │
-  │                                        │
-  │  5. API call (expired access token)    │
-  │ ─────────────────────────────────────> │
-  │                                        │  ← Token expired, return 401
-  │  6. 401 Unauthorized                   │
-  │ <───────────────────────────────────── │
-  │                                        │
-  │  7. Send refresh token to /refresh     │
-  │ ─────────────────────────────────────> │
-  │                                        │  ← Refresh token valid
-  │  8. New access token (15 min)          │
-  │ <───────────────────────────────────── │
-  │                                        │
-  │  9. Retry API call with new token      │
-  │ ─────────────────────────────────────> │
-  │                                        │
+```d2
+shape: sequence_diagram
+
+client: "Client"
+server: "Server"
+
+client -> server: "1. Login (username + password)"
+server -> client: "2. Access token (15 min) + Refresh token (7 days)"
+
+client -> server: "3. API call (Authorization: Bearer)"
+server -> client: "4. Data response"
+
+client -> client: "... 15 minutes pass ..."
+
+client -> server: "5. API call (expired access token)"
+server -> client: "6. 401 Unauthorized"
+
+client -> server: "7. Send refresh token to /refresh"
+server -> client: "8. New access token (15 min)"
+
+client -> server: "9. Retry API call with new token"
 ```
 
 Why two tokens? The access token is sent with every request, so it has higher exposure. If someone intercepts it, the damage is limited to 15 minutes. The refresh token is only sent to one endpoint (`/refresh`), reducing its exposure. If the refresh token is compromised, the user will need to log in again after the server revokes it.
@@ -245,35 +269,20 @@ OAuth2 solves this: **grant an app access to your data without sharing your pass
 
 This is the most common and most secure OAuth2 flow. Here is how it works:
 
-```
-┌──────────┐     ┌──────────────┐     ┌──────────────┐
-│  Your     │     │  Auth Server │     │  Resource    │
-│  App      │     │  (Google,    │     │  Server     │
-│           │     │   Auth0,    │     │  (your API) │
-│           │     │   Firebase) │     │             │
-│           │     │             │     │             │
-│  1. Redirect    │             │     │             │
-│  ──────────────>│             │     │             │
-│           │     │  2. User    │     │             │
-│           │     │  logs in    │     │             │
-│  3. Auth code   │             │     │             │
-│  <──────────────│             │     │             │
-│           │     │             │     │             │
-│  4. Exchange    │             │     │             │
-│     code for    │             │     │             │
-│     token       │             │     │             │
-│  ──────────────>│             │     │             │
-│           │     │             │     │             │
-│  5. Access      │             │     │             │
-│     token       │             │     │             │
-│  <──────────────│             │     │             │
-│           │     │             │     │             │
-│  6. API call with token       │     │             │
-│  ──────────────────────────────────>│             │
-│           │     │             │     │  7. Data    │
-│  <──────────────────────────────────│             │
-│           │     │             │     │             │
-└──────────┘     └──────────────┘     └──────────────┘
+```d2
+shape: sequence_diagram
+
+app: "Your App"
+auth: "Auth Server\n(Google, Auth0, Firebase)"
+resource: "Resource Server\n(your API)"
+
+app -> auth: "1. Redirect user to login"
+auth -> auth: "2. User logs in"
+auth -> app: "3. Authorization code"
+app -> auth: "4. Exchange code for token"
+auth -> app: "5. Access token"
+app -> resource: "6. API call with token"
+resource -> app: "7. Data response"
 ```
 
 **Step by step:**
@@ -519,23 +528,13 @@ You do not need to memorize the STRIDE categories. The point is to have a struct
 
 The good news: most of what you have learned in this lecture directly mitigates these threats.
 
-```
-Threat                    Mitigation
-────────────────────────  ────────────────────────────────────
-Stolen device          -> Secure storage, biometric lock,
-                          short-lived tokens
-
-Man-in-the-middle      -> HTTPS, certificate pinning
-
-Reverse engineering    -> Don't store secrets in the app,
-                          keep sensitive logic server-side
-
-Server compromise      -> Encrypt stored data, hash passwords,
-                          parameterized queries (no SQL injection)
-
-Social engineering     -> Clear UI that users trust, email
-                          verification, multi-factor auth
-```
+| Threat | Mitigation |
+|--------|-----------|
+| Stolen device | Secure storage, biometric lock, short-lived tokens |
+| Man-in-the-middle | HTTPS, certificate pinning |
+| Reverse engineering | Don't store secrets in the app, keep sensitive logic server-side |
+| Server compromise | Encrypt stored data, hash passwords, parameterized queries (no SQL injection) |
+| Social engineering | Clear UI that users trust, email verification, multi-factor auth |
 
 None of these mitigations are perfect individually. Security is about **layers** -- each layer makes the attacker's job harder. The goal is not to be unbreakable (nothing is) but to be hard enough to attack that adversaries move on to easier targets.
 

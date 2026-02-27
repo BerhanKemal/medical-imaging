@@ -1,94 +1,29 @@
 # Week 5 Lab: Sprint Planning Workshop
 
+> **Course:** Mobile Apps for Healthcare
+> **Duration:** ~2 hours (workshop format)
+> **Prerequisites:** Flutter fundamentals (Week 4), team formation completed
+
 ## Overview
 
-This lab is different from previous weeks — it's a **workshop** where you transition from individual learners to a **development team**. By the end of this session, your team will have a fully set up project infrastructure and a plan for Sprint 1.
+This lab is different from previous weeks — it's a **workshop** where you transition from individual learners to a **development team**. By the end of this session, your team will have a sprint plan, user stories, and a clear picture of what you're building.
 
-> **Project proposals are due at the end of this session.** Use the template at `templates/project-proposal/PROPOSAL_TEMPLATE.md`.
+> **Verbal pitch + written proposal due this week.** Before leaving, your team will pitch your project idea to the instructor in 2 minutes (see checklist at the bottom). The **full written proposal** is also due at the end of this week (Week 5) so that Sprint 1 can begin in Week 6 with an approved scope.
 
----
+!!! note "Repository and project board already set up"
+    You should have completed the **Team Setup homework** from Week 4 (Part 7). If your team hasn't done this yet, do it now — but be aware you're starting behind.
 
-## Part 1: Repository Setup (~20 min)
+    Verify before proceeding:
 
-### 1.1 Create Your Team Repository
-
-One team member creates the repository:
-
-```bash
-# On GitHub: click "New repository"
-# Name: something descriptive (e.g., "mhealth-diabetes-tracker")
-# Visibility: Public (so the teacher can see it)
-# Initialize with README: Yes
-# Add .gitignore: Select "Flutter" from the dropdown
-```
-
-### 1.2 Add Team Members as Collaborators
-
-```
-GitHub repo → Settings → Collaborators → Add people
-```
-
-Add all team members with "Write" access.
-
-### 1.3 Set Up Branch Protection Rules
-
-This is **critical** — it enforces the PR workflow:
-
-```
-GitHub repo → Settings → Branches → Add branch protection rule
-```
-
-Configure:
-- **Branch name pattern:** `main`
-- **Require a pull request before merging:** ✅
-- **Require approvals:** 1
-- **Do not allow bypassing the above settings:** ✅ (even admins must use PRs)
-
-This means **nobody can push directly to `main`**. All changes go through Pull Requests.
-
-### 1.4 Everyone Clones the Repo
-
-```bash
-git clone git@github.com:your-team/your-repo.git
-cd your-repo
-```
-
-Verify the setup:
-```bash
-git remote -v
-git branch -a
-```
+    - [ ] Team repository exists on GitHub with branch protection enabled
+    - [ ] All team members can clone the repo and push to branches
+    - [ ] GitHub Projects board exists with 5 columns (Backlog, Sprint Backlog, In Progress, In Review, Done)
 
 ---
 
-## Part 2: GitHub Projects Board (~15 min)
+## Part 1: Writing User Stories (~25 min)
 
-### 2.1 Create a Project Board
-
-```
-GitHub repo → Projects → New project → Board
-```
-
-Create these columns:
-1. **Backlog** — all planned work
-2. **Sprint Backlog** — work selected for current sprint
-3. **In Progress** — actively being worked on
-4. **In Review** — PR submitted, waiting for review
-5. **Done** — merged to main
-
-### 2.2 Understanding the Board
-
-- Each card on the board is a **GitHub Issue**
-- Cards move left to right as work progresses
-- At any time, each team member should have at most **1-2 cards** in "In Progress"
-- A card moves to "In Review" when a PR is opened
-- A card moves to "Done" when the PR is merged
-
----
-
-## Part 3: Writing User Stories (~25 min)
-
-### 3.1 What is a User Story?
+### 1.1 What is a User Story?
 
 A user story describes a feature from the user's perspective:
 
@@ -103,7 +38,7 @@ so that [I get some benefit].
 - "As a patient, I want to see a history of my mood entries so that I can identify patterns."
 - "As a clinician, I want to view a patient's mood trends so that I can adjust treatment."
 
-### 3.2 Create GitHub Issues
+### 1.2 Create GitHub Issues
 
 For each user story, create a GitHub Issue:
 
@@ -130,7 +65,7 @@ Body:
 
 > If something is **XL** (more than 8 hours), break it into smaller stories!
 
-### 3.3 Exercise: Write Your Stories
+### 1.3 Exercise: Write Your Stories
 
 As a team, write **at least 10-15 user stories** covering:
 - Core features of your app
@@ -141,7 +76,10 @@ As a team, write **at least 10-15 user stories** covering:
 
 Add all stories as GitHub Issues. Add them to your Project Board in the **Backlog** column.
 
-### 3.4 Add Labels
+!!! tip
+    Teams can start drafting user stories as homework between Weeks 4-5. Use your team chat to brainstorm before the workshop — you'll move faster in class if you arrive with ideas.
+
+### 1.4 Add Labels
 
 Create and apply labels to categorize your issues:
 - `feature` — new functionality
@@ -153,11 +91,11 @@ Create and apply labels to categorize your issues:
 
 ---
 
-## Part 4: Sprint 1 Planning (~20 min)
+## Part 2: Sprint 1 Planning (~20 min)
 
-### 4.1 Select Sprint 1 Work
+### 2.1 Select Sprint 1 Work
 
-Sprint 1 covers **weeks 5-7** (about 3 weeks of work). Each team member can realistically complete **2-4 medium stories** in a sprint.
+Sprint 1 covers **weeks 6-7** (about 2 weeks of work). Each team member can realistically complete **2-3 medium stories** in a sprint.
 
 As a team, select stories for Sprint 1. Focus on:
 1. **App skeleton** — basic navigation between 2-3 screens
@@ -166,141 +104,123 @@ As a team, select stories for Sprint 1. Focus on:
 
 Move selected issues from **Backlog** to **Sprint Backlog**.
 
-### 4.2 Assign Work
+### 2.2 Assign Work
 
 - Assign each issue to a team member
 - No one should have more than 2 issues assigned at a time
 - Start with the most important stories
 
-### 4.3 Sprint Goal
+### 2.3 Sprint Goal
 
 Write a 1-sentence sprint goal as a pinned issue:
 
 > **Sprint 1 Goal:** "Build the app skeleton with navigation between the home, entry, and history screens, with basic mood/health data entry working locally."
 
+!!! info "Grading"
+    For detailed sprint review rubrics and grading criteria, see the [Project Grading Guide](../../resources/PROJECT_GRADING.md).
+
 ---
 
-## Part 5: Flutter Project Setup (~30 min)
+## Part 3: Preview — State Management (~20 min)
 
-### 5.1 Create the Flutter Project
+!!! info "Why this section exists"
+    Next week (Week 6), you'll implement state management with Riverpod. This preview introduces the **vocabulary and concepts** so you arrive prepared. **No coding here** — just understanding.
 
-One team member creates the project (on a feature branch!):
+### 3.1 Why `setState()` Doesn't Scale
 
-```bash
-git checkout -b setup/flutter-project
-flutter create --org com.yourteam your_app_name
-cd your_app_name
-```
+In Week 4, you used `setState()` to update the UI. This works for a single screen, but what happens when **multiple screens need the same data**?
 
-### 5.2 Clean Up the Default App
-
-Replace the default counter app with a minimal skeleton:
-
-**`lib/main.dart`:**
-```dart
-import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Your App Name',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-        useMaterial3: true,
-      ),
-      home: const HomeScreen(),
-    );
-  }
-}
-```
-
-**`lib/screens/home_screen.dart`:**
-```dart
-import 'package:flutter/material.dart';
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
-      body: const Center(
-        child: Text('Welcome to Your App!'),
-      ),
-    );
-  }
-}
-```
-
-### 5.3 Create Additional Screen Stubs
-
-Create placeholder screens for your app (at least 2-3):
+Consider a mood tracker app:
 
 ```
-lib/
-├── main.dart
-├── screens/
-│   ├── home_screen.dart
-│   ├── entry_screen.dart      # Where users enter data
-│   └── history_screen.dart    # Where users view past entries
-└── models/
-    └── (to be added later)
+Home Screen          Add Mood Screen        Stats Screen
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│ Mood List    │     │ Score: [7]   │     │ Average: 6.2 │
+│ - 😊 7/10   │     │ Note: [...]  │     │ Total: 15    │
+│ - 😐 5/10   │     │ [Save]       │     │ Highest: 9   │
+│ - 😢 3/10   │     │              │     │              │
+└──────────────┘     └──────────────┘     └──────────────┘
 ```
 
-### 5.4 Add Basic Navigation
+When the user saves a new mood on the Add screen:
 
-Add navigation between screens using simple `Navigator.push`:
+- The Home Screen list needs to update
+- The Stats Screen averages need to recalculate
+- The Add Screen needs to clear the form
 
-```dart
-ElevatedButton(
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const EntryScreen()),
-    );
-  },
-  child: const Text('New Entry'),
-),
+With `setState()`, each screen manages its own state independently. To keep them in sync, you'd need to pass callbacks up and down the widget tree — this is called **prop drilling**, and it becomes unmanageable quickly.
+
+### 3.2 The Solution: Centralized State
+
+Instead of each screen holding its own copy of the data, we put the data in a **central place** that all screens can access:
+
+```
+                ┌─────────────────────┐
+                │   MoodNotifier      │
+                │   (central state)   │
+                │                     │
+                │   moods: [...]      │
+                │   addMood()         │
+                │   deleteMood()      │
+                └──────┬──────────────┘
+                       │
+          ┌────────────┼────────────┐
+          ▼            ▼            ▼
+    Home Screen   Add Screen   Stats Screen
+    (watches)     (reads)      (watches)
 ```
 
-### 5.5 Commit and Create PR
+When `addMood()` is called, **every screen watching the state automatically updates**. No callbacks, no prop drilling.
 
-```bash
-git add .
-git commit -m "Set up Flutter project with basic navigation"
-git push -u origin setup/flutter-project
-```
+### 3.3 Key Vocabulary for Next Week
 
-Create a PR on GitHub. Have a teammate review and merge it.
+You'll encounter these terms in Week 6. Don't memorize definitions — just recognize them:
 
-Then everyone pulls:
-```bash
-git checkout main
-git pull
-```
+| Term | What It Is | Analogy |
+|------|-----------|---------|
+| **Provider** | A container that holds a piece of state and makes it accessible to any widget | Like a global variable, but safe and reactive |
+| **StateNotifier** | A class that holds state and exposes methods to modify it | Like a controller — it owns the data and the rules for changing it |
+| **`ref.watch()`** | Subscribe to a provider — rebuild when it changes | Like a spreadsheet cell that updates when its formula inputs change |
+| **`ref.read()`** | Read a provider's value once (in event handlers) | Like checking a value at a specific moment, without subscribing |
+| **ProviderScope** | The root widget that stores all provider state | The "container" that makes everything work |
+
+### 3.4 What You'll Build Next Week
+
+In Week 6, you'll take the Mood Tracker starter project and replace its hardcoded data with Riverpod state management. You'll implement:
+
+1. A `MoodNotifier` that holds the list of mood entries
+2. Providers that expose the state to the UI
+3. Reactive screens that automatically update when data changes
+
+The concepts above are all you need to understand before walking in. The lab will guide you through the code step by step.
+
+---
+
+## Verbal Pitch (~5 min per team)
+
+Before leaving today, **pitch your project to the instructor**. This is informal — no slides needed.
+
+### What to Cover (2 minutes max)
+
+1. **The problem:** What health-related problem does your app address?
+2. **Target users:** Who will use it? (patients, clinicians, caregivers?)
+3. **3 key features:** What are the most important things the app will do?
+
+### Why a Pitch?
+
+The verbal pitch gives you early feedback before you invest time writing the full proposal. The instructor can flag scope issues, suggest features, or point out regulatory considerations you haven't thought of.
+
+> **Full written proposal** is due at the end of **this week (Week 5)**. Use the template at `templates/project-proposal/PROPOSAL_TEMPLATE.md`. Submitting it now ensures Sprint 1 (Weeks 6–7) can start with a clear, approved scope.
 
 ---
 
 ## Checklist Before Leaving
 
-- [ ] Repository created with branch protection enabled
-- [ ] All team members can clone and push (to branches)
-- [ ] GitHub Project board set up with correct columns
-- [ ] At least 10 user stories written as GitHub Issues
+- [ ] At least 10 user stories written as GitHub Issues on your project board
 - [ ] Sprint 1 planned: stories selected, assigned, sprint goal written
-- [ ] Flutter project skeleton committed and merged to main
-- [ ] **Project proposal submitted** (link to `templates/project-proposal/PROPOSAL_TEMPLATE.md`)
+- [ ] **Verbal pitch delivered** to the instructor
+- [ ] Team understands the state management vocabulary (Provider, StateNotifier, `ref.watch`, `ref.read`)
+- [ ] Everyone knows: full proposal due end of this week (Week 5), Flutter project setup happens in Week 6 lab
 
 ---
 

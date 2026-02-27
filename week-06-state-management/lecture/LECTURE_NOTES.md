@@ -64,28 +64,43 @@ Think of a hospital's patient record system. There should be ONE record per pati
 
 ### Visualizing the Problem
 
-```
-WITHOUT state management:        WITH state management:
+```d2
+direction: right
 
-Screen A    Screen B              Screen A    Screen B
-+--------+ +--------+            +--------+ +--------+
-| moods: | | moods: |            |  ref.  | |  ref.  |
-| [copy] | | [copy] |            | watch()| | watch()|
-|        | |        |            +---+----+ +---+----+
-| Out of | | Out of |                |          |
-| sync!  | | sync!  |                v          v
-+--------+ +--------+            +------------------+
-                                 |  MoodNotifier    |
-Screen C                         |  (single source  |
-+--------+                       |   of truth)      |
-| moods: |                       |  state: [moods]  |
-| [copy] |                       +------------------+
-|        |                              ^
-| Also   |                       Screen C |
-| out of |                       +--------+
-| sync!  |                       |  ref.  |
-+--------+                       | watch()|
-                                 +--------+
+without: "WITHOUT state management" {
+  style.fill: "#FFCDD2"
+
+  a: "Screen A" {
+    style.fill: "#FFF"
+    d: "moods: [copy]\nOut of sync!"
+  }
+  b: "Screen B" {
+    style.fill: "#FFF"
+    d: "moods: [copy]\nOut of sync!"
+  }
+  c: "Screen C" {
+    style.fill: "#FFF"
+    d: "moods: [copy]\nAlso out of sync!"
+  }
+}
+
+with: "WITH state management" {
+  style.fill: "#C8E6C9"
+
+  store: "MoodNotifier\n(single source of truth)" {
+    style.fill: "#E8F5E9"
+    style.bold: true
+    d: "state: [moods]"
+  }
+
+  sa: "Screen A\nref.watch()" {style.fill: "#FFF"}
+  sb: "Screen B\nref.watch()" {style.fill: "#FFF"}
+  sc: "Screen C\nref.watch()" {style.fill: "#FFF"}
+
+  store -> sa: "" {style.stroke-dash: 3}
+  store -> sb: "" {style.stroke-dash: 3}
+  store -> sc: "" {style.stroke-dash: 3}
+}
 ```
 
 On the left, each screen holds its own copy of the mood list. When Screen A adds a mood entry, Screen B and Screen C have no idea. The data drifts out of sync. On the right, a single `MoodNotifier` holds the truth. Every screen watches it and rebuilds automatically when it changes.
@@ -291,54 +306,64 @@ In the lab, `moodStatsProvider` watches `moodProvider`. When a mood is added, th
 
 Nobody has to orchestrate this. Nobody has to call "refreshStats" manually. The dependency chain handles it.
 
-```
-User taps "Add Mood"
-       |
-       v
-MoodNotifier.addMood()
-       |
-       v
-moodProvider state changes (new list)
-       |
-       +-------> HomeScreen rebuilds (ref.watch(moodProvider))
-       |
-       +-------> moodStatsProvider recalculates
-                        |
-                        v
-                 StatsScreen rebuilds (ref.watch(moodStatsProvider))
+```d2
+direction: down
+
+action: 'User taps "Add Mood"' {style.fill: "#E3F2FD"; style.bold: true}
+
+notifier: "MoodNotifier.addMood()" {style.fill: "#BBDEFB"}
+
+state: "moodProvider state changes\n(new list)" {style.fill: "#FFF9C4"}
+
+home: "HomeScreen rebuilds\n(ref.watch(moodProvider))" {style.fill: "#E8F5E9"}
+
+stats_provider: "moodStatsProvider recalculates" {style.fill: "#FFE0B2"}
+
+stats_screen: "StatsScreen rebuilds\n(ref.watch(moodStatsProvider))" {style.fill: "#E8F5E9"}
+
+action -> notifier -> state
+state -> home
+state -> stats_provider -> stats_screen
 ```
 
 This is **reactive programming** -- data flows downhill automatically. You declare dependencies, and the system handles propagation.
 
 ### The Riverpod Data Flow
 
-```
-+---------------------------------------------------+
-|                  ProviderScope                      |
-|                                                     |
-|   +-----------------+    +------------------+      |
-|   | moodProvider    |    | moodStatsProvider|      |
-|   | (StateNotifier) |--->| (derived/        |      |
-|   |                 |    |  computed)        |      |
-|   | state: [moods]  |    |                  |      |
-|   | addMood()       |    | totalEntries     |      |
-|   | deleteMood()    |    | averageScore     |      |
-|   +--------+--------+    +--------+---------+      |
-|            |                       |                |
-|   +--------v---------+   +--------v---------+      |
-|   |  ref.watch()     |   |  ref.watch()     |      |
-|   |  HomeScreen      |   |  StatsScreen     |      |
-|   |  (rebuilds on    |   |  (rebuilds on    |      |
-|   |   mood change)   |   |   stat change)   |      |
-|   +------------------+   +------------------+      |
-|                                                     |
-|   +------------------+                              |
-|   |  ref.read()      |                              |
-|   |  AddMoodScreen   |                              |
-|   |  (one-time       |                              |
-|   |   action)        |                              |
-|   +------------------+                              |
-+---------------------------------------------------+
+```d2
+direction: down
+
+scope: "ProviderScope" {
+  style.fill: "#F5F5F5"
+  style.font-size: 20
+
+  direction: right
+
+  mood: "moodProvider\n(StateNotifier)" {
+    style.fill: "#E3F2FD"
+    state: "state: [moods]"
+    add: "addMood()"
+    delete: "deleteMood()"
+  }
+
+  stats: "moodStatsProvider\n(derived/computed)" {
+    style.fill: "#FFF9C4"
+    total: "totalEntries"
+    avg: "averageScore"
+  }
+
+  mood -> stats: "watches"
+
+  direction: down
+
+  home: "HomeScreen\nref.watch()\n(rebuilds on mood change)" {style.fill: "#C8E6C9"}
+  stats_screen: "StatsScreen\nref.watch()\n(rebuilds on stat change)" {style.fill: "#C8E6C9"}
+  add_screen: "AddMoodScreen\nref.read()\n(one-time action)" {style.fill: "#E8F5E9"}
+
+  mood -> home: "ref.watch()"
+  stats -> stats_screen: "ref.watch()"
+  add_screen -> mood: "ref.read()" {style.stroke-dash: 3}
+}
 ```
 
 The `ProviderScope` at the top of your widget tree is the container that holds all provider state. Inside it, `moodProvider` holds the authoritative mood list. `moodStatsProvider` derives from it. Screens either watch (for reactive display) or read (for one-time actions).
@@ -418,17 +443,28 @@ This is what you used in the lab to navigate between HomeScreen, AddMoodScreen, 
 
 **Mental model -- a stack of cards:**
 
-```
-            +------------+
-            | AddMood    |  <-- top (visible)
-            | Screen     |
-            +------------+
-            | Home       |
-            | Screen     |  <-- hidden underneath
-            +------------+
+```d2
+direction: down
 
-  push(AddMoodScreen)     pop()
-  adds a card on top      removes the top card
+stack: "Navigator Stack" {
+  style.fill: "#F5F5F5"
+
+  add_mood: "AddMood Screen" {
+    style.fill: "#E3F2FD"
+    style.bold: true
+    label: "AddMood Screen ← top (visible)"
+  }
+
+  home: "Home Screen" {
+    style.fill: "#BBDEFB"
+    label: "Home Screen ← hidden underneath"
+  }
+
+  add_mood -> home: "" {style.stroke: "transparent"}
+}
+
+push: "push(AddMoodScreen)\nadds a card on top" {style.fill: "#C8E6C9"}
+pop: "pop()\nremoves the top card" {style.fill: "#FFCDD2"}
 ```
 
 ### Navigator 2.0: The Declarative Approach
@@ -604,6 +640,9 @@ Two often-overlooked details that make or break healthcare app usability:
 This may sound dramatic, but it is backed by research: the usability of a health app directly affects clinical outcomes. A medication reminder app that is confusing leads to missed doses. A symptom tracker that is tedious to use leads to incomplete data. A telemedicine app that is difficult to navigate leads to missed appointments.
 
 When you design a health app, you are not just designing software. You are designing a clinical intervention. Treat the UX with the same rigor you would treat a clinical protocol.
+
+!!! tip "Reference: Accessibility Quick Guide"
+    For concrete code examples implementing semantic labels, contrast checks, scalable text, and proper touch targets in Flutter, see the [Accessibility Guide](../../resources/ACCESSIBILITY_GUIDE.md). Apply these patterns to your team project — they are graded as part of the mHealth Awareness rubric (15 points in the final project).
 
 ---
 
