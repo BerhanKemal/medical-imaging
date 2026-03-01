@@ -1,6 +1,6 @@
 site_name: Mobile Apps for Healthcare
 site_description: Course materials for AGH BME students
-site_url: https://<username>.github.io/<repo-name>/
+site_url: https://MDaniolAGH.github.io/mhealth/
 
 docs_dir: docs
 site_dir: _site
