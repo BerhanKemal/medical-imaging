@@ -266,6 +266,16 @@ Complete **all** of this before the first lab session to avoid losing time on in
 !!! info "Terminal note"
     All commands in this course use **bash** syntax. On **macOS** and **Linux**, use the built-in Terminal app. On **Windows**, use **Git Bash** (installed automatically with Git for Windows). Most commands are identical across all three operating systems — we use tabs only where they genuinely differ.
 
+**Which terminal should I open?**
+
+| Operating System | What to open |
+|---|---|
+| **macOS** | Open **Terminal** (press ++cmd+space++, type "Terminal", hit ++enter++) |
+| **Windows** | Open **Git Bash** (installed with Git for Windows — see Step 1). If you haven't installed Git yet, do Step 1 first (it's a regular download, no terminal needed), then come back here. |
+| **Linux** | Open your default **Terminal** emulator (usually ++ctrl+alt+t++) |
+
+You should see a blinking cursor waiting for input — something like `username@computer ~ %` or `username@computer:~$`. This is the **prompt**, and it means the terminal is ready for your commands.
+
 Here's an overview of the setup steps and how they connect:
 
 ```mermaid
@@ -294,7 +304,7 @@ graph TD
     ```bash
     xcode-select --install
     ```
-    This installs git along with the Xcode Command Line Tools.
+    A system dialog will appear asking to install — click **Install** and wait (may take several minutes). This installs git along with the Xcode Command Line Tools.
 
 === "Linux"
 
@@ -305,21 +315,24 @@ graph TD
     # Fedora
     sudo dnf install git
     ```
+    `sudo` runs the command with administrator privileges — it will ask for your password. When you type the password, nothing will appear on screen (no dots, no stars). That's normal — just type it and press ++enter++.
 
 === "Windows"
 
-    Download and install [Git for Windows](https://git-scm.com/download/win). This also installs **Git Bash**, which you will use as your terminal throughout the course.
+    Download and install [Git for Windows](https://git-scm.com/download/win). The installer shows many option screens — **accept the defaults** for all of them. This also installs **Git Bash**, which you will use as your terminal throughout the course.
 
 Verify:
 ```bash
 git --version
 ```
 
-Configure your identity:
+Configure your identity and default branch name (replace the placeholder values with your real name and email):
 ```bash
 git config --global user.name "Your Name"
 git config --global user.email "your.email@student.agh.edu.pl"
+git config --global init.defaultBranch main
 ```
+The last line sets `main` as the name for the default branch in new repositories. Don't worry about what that means yet — branches are covered in detail in the Week 1 and Week 2 labs.
 
 !!! success "Checkpoint: Git"
     Run `git --version` — you should see a version number (e.g., `git version 2.44.0`).
@@ -327,27 +340,117 @@ git config --global user.email "your.email@student.agh.edu.pl"
 
 ### Step 2: Create a GitHub Account and SSH Key
 
-1. **Sign up** at [github.com/join](https://github.com/join) (if you don't have an account)
-2. **Set up SSH key** — follow the [GitHub SSH setup guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
-3. **Verify** the connection:
-   ```bash
-   ssh -T git@github.com
-   ```
-   You should see: `Hi username! You've successfully authenticated...`
+#### 2.1 Create a GitHub account
+
+If you don't already have one:
+
+1. Go to [github.com/join](https://github.com/join)
+2. Use your student email (`@student.agh.edu.pl`) — this gives you access to the GitHub Student Developer Pack
+3. Choose a professional username (you may use this on your CV someday)
+
+#### 2.2 Generate an SSH key
+
+An SSH key is a pair of files on your computer that lets you prove your identity to GitHub without typing a password every time. You'll create the key pair now and then give GitHub the public half.
+
+Open your terminal and run (replace the email with the one you used for GitHub):
+
+```bash
+ssh-keygen -t ed25519 -C "your.email@student.agh.edu.pl"
+```
+
+When prompted:
+
+- **File location** — press ++enter++ to accept the default (`~/.ssh/id_ed25519`). The `~` means your home folder (e.g., `/Users/you` on macOS, `C:\Users\you` on Windows).
+- **Passphrase** — press ++enter++ twice for no passphrase (or set one if you prefer)
+
+You should see output like:
+
+```
+Generating public/private ed25519 key pair.
+Your identification has been saved in /home/you/.ssh/id_ed25519
+Your public key has been saved in /home/you/.ssh/id_ed25519.pub
+The key fingerprint is:
+SHA256:abc123... your.email@student.agh.edu.pl
+```
+
+#### 2.3 Copy your public key
+
+=== "macOS"
+
+    ```bash
+    pbcopy < ~/.ssh/id_ed25519.pub
+    ```
+
+=== "Linux"
+
+    ```bash
+    xclip -selection clipboard < ~/.ssh/id_ed25519.pub
+    ```
+    If `xclip` is not installed: `sudo apt install xclip`
+
+=== "Windows (Git Bash)"
+
+    ```bash
+    clip < ~/.ssh/id_ed25519.pub
+    ```
+
+If none of the above work, you can always open the file manually and copy its contents:
+
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
+
+Select the entire output (starts with `ssh-ed25519`) and copy it (++cmd+c++ on macOS, right-click → **Copy** in Git Bash).
+
+#### 2.4 Add the key to GitHub
+
+1. Go to [github.com](https://github.com) → click your profile picture → **Settings**
+2. In the left sidebar, click **SSH and GPG keys**
+3. Click **New SSH key**
+4. **Title**: enter something descriptive (e.g., "My laptop")
+5. **Key**: paste the public key you just copied
+6. Click **Add SSH key**
+
+#### 2.5 Test the connection
+
+```bash
+ssh -T git@github.com
+```
+
+If this is your first time connecting, you'll see:
+
+```
+The authenticity of host 'github.com (...)' can't be established.
+ED25519 key fingerprint is SHA256:+DiY3wv...
+Are you sure you want to continue connecting (yes/no/[fingerprint])?
+```
+
+Type `yes` and press ++enter++. This is normal — your computer is verifying GitHub's identity for the first time.
+
+You should then see:
+
+```
+Hi <username>! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+That means it worked.
 
 !!! warning "Why SSH matters"
-    Without SSH keys, you'll be asked for a username and password on every git push. The Week 1 lab assumes SSH is configured. **Do this now.**
+    GitHub no longer accepts passwords for git operations — without SSH keys, `git push` will fail with an authentication error. The Week 1 lab assumes SSH is configured. **Do this now.**
 
 !!! warning "Common mistake"
-    Copying the SSH key with extra spaces or newlines. Use `pbcopy < ~/.ssh/id_ed25519.pub` (macOS) or `clip < ~/.ssh/id_ed25519.pub` (Windows Git Bash) to copy the key cleanly. If `ssh -T git@github.com` returns `Permission denied`, the key wasn't added correctly.
+    Copying the SSH key with extra spaces or newlines. Use the copy commands above to copy the key cleanly. If `ssh -T git@github.com` returns `Permission denied`, the key wasn't added correctly — go back to step 2.4 and re-check.
+
+!!! tip "Stuck? Don't worry"
+    If you can't get SSH working at home, don't let it block you. The **Week 1 lab** walks through this step by step with instructor help. Move on to Steps 3–9 and come back to this during class.
 
 !!! success "Checkpoint: GitHub + SSH"
     Run `ssh -T git@github.com` — you should see `Hi <username>! You've successfully authenticated`.
-    If you see `Permission denied (publickey)`, re-do the SSH key setup.
+    If you see `Permission denied (publickey)`, re-do steps 2.2–2.4 above.
 
 ### Step 3: Install Flutter SDK
 
-Follow the official guide for your platform: [Install Flutter](https://docs.flutter.dev/get-started/install)
+Follow the official guide for your platform: [Install Flutter](https://docs.flutter.dev/get-started/install). When the page asks for your target platform, choose **Android** — it works on all operating systems and is what we use in this course.
 
 After installation, run:
 ```bash
@@ -356,8 +459,13 @@ flutter doctor
 
 Resolve any issues it reports. Target: all checks pass (minor warnings for platforms you won't use are fine).
 
-??? protip "Pro tip"
-    Add Flutter to your shell PATH permanently. If you only set it for one terminal session, you'll have to re-export it every time. Add the `export PATH` line to your `~/.zshrc` (macOS) or `~/.bashrc` (Linux) so it's always available.
+!!! warning "Add Flutter to your PATH permanently"
+    If you only set the PATH for one terminal session, you'll have to re-export it every time you open a new terminal.
+
+    - **macOS / Linux:** Add the `export PATH` line to your `~/.zshrc` (macOS) or `~/.bashrc` (Linux), then **restart your terminal** or run `source ~/.zshrc` (or `source ~/.bashrc`) for the change to take effect.
+    - **Windows:** Add the Flutter `bin` folder to your system PATH via **Settings → System → About → Advanced system settings → Environment Variables**. The [official Flutter guide](https://docs.flutter.dev/get-started/install/windows/mobile#update-your-windows-path-variable) walks through this. **Restart Git Bash** afterwards.
+
+    Without this, `flutter` commands won't work after you close the terminal.
 
 ### Step 4: Install Android Studio
 
@@ -370,7 +478,7 @@ Even if you prefer VS Code as your editor, you need Android Studio because it pr
 **Set up an emulator:**
 
 1. Open Android Studio → More Actions → Virtual Device Manager
-2. Create a new device (e.g., Pixel 7, API 34)
+2. Create a new device (e.g., Pixel 7, API 34 — the API number is the Android version; pick the highest available)
 3. Launch it once to verify it works
 
 !!! warning "Common mistake"
@@ -402,7 +510,7 @@ If you're on macOS and want to test on iOS:
 
 1. Install Xcode from the Mac App Store
 2. Open Xcode once to accept the license agreement
-3. Point the command-line tools to the full Xcode installation:
+3. Point the command-line tools to the full Xcode installation (`sudo` will ask for your Mac password — nothing appears on screen as you type, that's normal):
    ```bash
    sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
    ```
@@ -428,6 +536,12 @@ Doctor summary (to see all details, run flutter doctor -v):
 [✓] VS Code
 [✓] Connected device (or set up an emulator)
 ```
+
+| Symbol | Meaning |
+|--------|---------|
+| `[✓]` | Fully configured and working |
+| `[!]` | Partially working — a minor issue or optional component is missing (often safe to ignore) |
+| `[✗]` | Not working — needs to be fixed before you can develop for that platform |
 
 !!! warning "Don't skip this"
     Every semester, students lose 30-60 minutes of the first lab session debugging installation issues. Doing this at home means you can start coding from minute one.
@@ -481,7 +595,7 @@ You should see `Python 3.8` or higher. If not:
 
 === "macOS"
 
-    Python 3 comes pre-installed on recent macOS versions. If missing, install via Homebrew: `brew install python3`.
+    Python 3 comes pre-installed on recent macOS versions (or gets installed with the Xcode Command Line Tools from Step 1). If still missing, install via Homebrew (`brew install python3`) or download from [python.org](https://www.python.org/downloads/).
 
 === "Linux"
 
@@ -492,6 +606,9 @@ You should see `Python 3.8` or higher. If not:
 === "Windows"
 
     Download from [python.org](https://www.python.org/downloads/). During installation, check **"Add Python to PATH"**.
+
+    !!! note "Windows note"
+        The `python3` command may not work on Windows. Try `python --version` or `py --version` instead.
 
 ---
 
@@ -504,7 +621,7 @@ Before continuing, verify every tool:
 - [ ] `flutter doctor` shows all green checks (or only platform-irrelevant warnings)
 - [ ] Android emulator launches and boots to the home screen
 - [ ] VS Code opens and the Flutter extension is installed
-- [ ] `python3 --version` prints a version number
+- [ ] `python3 --version` prints a version number (on Windows, try `python --version` or `py --version`)
 
 ---
 
@@ -577,7 +694,7 @@ Print this or keep it open. Check off each item:
 - [ ] Addressed Tier 1 skill gaps (if any) using the remediation links
 - [ ] **Git** installed and configured (`git --version` works)
 - [ ] **GitHub account** created with SSH key set up (`ssh -T git@github.com` works)
-- [ ] **Python 3** installed (`python3 --version` works) — needed for Week 2
+- [ ] **Python 3** installed (`python3 --version` works — on Windows, try `python` or `py`) — needed for Week 2
 - [ ] **Flutter SDK** installed (`flutter doctor` passes)
 - [ ] **Android Studio** installed with at least one emulator configured
 - [ ] **VS Code** installed with Flutter and Dart extensions

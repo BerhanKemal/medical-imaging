@@ -151,6 +151,8 @@ This shows **all** files (including hidden ones that start with `.`) and extra i
 cd Desktop
 ```
 
+> **Note:** If you don't have a `Desktop` folder, use any folder you see in your `ls` output — like `Documents` or `Downloads`.
+
 Now check where you are:
 
 ```bash
@@ -506,6 +508,12 @@ git config --global user.email "your.email@student.agh.edu.pl"
 
 These will be attached to every commit you make. You only need to do this once per computer.
 
+Also set the default branch name to `main` (the modern convention):
+
+```bash
+git config --global init.defaultBranch main
+```
+
 You can verify your settings:
 
 ```bash
@@ -583,13 +591,15 @@ No commits yet
 nothing to commit (create/copy files and use "git add" to track)
 ```
 
-> **Note:** If you see `master` instead of `main`, that is fine. Both are just names for the default branch. To set `main` as the default for future repositories, run:
-> ```bash
-> git config --global init.defaultBranch main
-> ```
+> **Note:** If you see `master` instead of `main`, that is fine — both are just names for the default branch. If you ran the `init.defaultBranch` config from section 2.2, new repos will default to `main`. If your current branch is called `master`, just use `master` everywhere this guide says `main`.
 
 ??? question "Try to break it"
-    Run `git status` in a folder that is NOT a git repository (try `cd /tmp && git status`). What error do you get? This is one of the most common beginner mistakes — now you'll recognize it instantly. Navigate back with `cd ~/mhealth-course/my-first-repo`.
+    Run `git status` in a folder that is NOT a git repository. Try it:
+    ```bash
+    cd /tmp
+    git status
+    ```
+    What error do you get? This is one of the most common beginner mistakes — now you'll recognize it instantly. Navigate back with `cd ~/mhealth-course/my-first-repo`.
 
 <quiz>
 You ran `git status` inside your new repository. What did Git tell you?
@@ -605,7 +615,7 @@ You ran `git status` inside your new repository. What did Git tell you?
 
 ### 2.5 Your First Commit
 
-Let us create a file and commit it. This is a three-step process:
+Let us create a file and commit it. This is a four-step process:
 
 **Step 1: Create a file**
 
@@ -814,9 +824,9 @@ Lines starting with `+` are additions. Lines starting with `-` are deletions. Th
 
 ### 2.8 Exercise: Build a Commit History
 
-Now work through this guided exercise to practice the full workflow. You will make **5 commits** to a small project about biomedical engineering topics.
+Now work through this guided exercise to practice the full workflow. You will make **5 guided commits** (plus one on your own) to build on the repository you started in section 2.5.
 
-**Commit 1** (already done above): You already committed the README. Now stage and commit the changes you just made:
+**Commit 1** (continuing from section 2.7): The file changes are already in `README.md` — now stage and commit them:
 
 ```bash
 git add README.md
@@ -879,13 +889,14 @@ Now view your history:
 git log --oneline
 ```
 
-Expected output:
+Expected output (your hashes on the left will be different — that is normal):
 
 ```
 f6e5d4c Update README with medical imaging topic and file listing
 d3c2b1a Add medical imaging overview notes
 b1a2c3d Add key ECG wave components to notes
 e4d5f6a Add ECG signal processing notes
+c7d8e9f Add Topics section with ECG signal processing
 a1b2c3d Add initial README with project description
 ```
 
@@ -971,6 +982,9 @@ You should see that `test.log` does NOT appear in `git status`. Git is ignoring 
     Generate an SSH key pair, add the public key to GitHub, and verify the connection. This is a one-time setup that lets you push code securely without typing passwords.
 
 ~~GitHub is the same thing as Git~~ — it's not. Git is the version control tool that runs on your computer. GitHub is a website that hosts Git repositories in the cloud so you can share and collaborate.
+
+!!! tip "Already set up SSH in Week 0?"
+    If you completed the SSH setup in the Getting Ready guide, skip ahead to [section 3.4](#34-test-the-connection) to verify your connection still works. Do **not** run `ssh-keygen` again — it will ask to overwrite your existing key.
 
 ### 3.1 Create a GitHub Account
 
@@ -1307,7 +1321,7 @@ Open your repository URL on GitHub. What can you see there?
 >
 > - **`git push`** sends your commits from your computer to GitHub (local → remote)
 > - **`git clone`** downloads a repository from GitHub to your computer (remote → local)
-> - **`git pull`** downloads new commits from GitHub that you don't have yet (we'll cover this in Week 2)
+> - **`git pull`** downloads new commits from GitHub that you don't have yet (you'll use this shortly, and explore it further in Week 2)
 >
 > Both copies are full repositories with complete history. Git is **distributed** --- there
 > is no single "master" copy. Your local repo and the GitHub repo are equal partners.
@@ -1399,7 +1413,7 @@ What do you see?
 
 ---
 
-**You just experienced distributed version control!** Two copies of the same repository, on the same computer, synced through GitHub. This is exactly how teams work: your teammate pushes code from their machine, and you `git pull` to get their changes. In a hospital's software team, a developer in Kraków pushes a bug fix, and a developer in Warsaw pulls it — same workflow, same commands you just used.
+**You just experienced distributed version control!** Two copies of the same repository, on the same computer, synced through GitHub. Note that `git pull` fetches from GitHub (the remote), not from the other folder on your machine — both repos talk to GitHub independently. This is exactly how teams work: your teammate pushes code from their machine, and you `git pull` to get their changes. In a hospital's software team, a developer in Kraków pushes a bug fix, and a developer in Warsaw pulls it — same workflow, same commands you just used.
 </quiz>
 
 !!! info "Two copies, one remote"
@@ -1565,6 +1579,7 @@ Keep this reference handy. You will use these commands every week.
 | `git remote add origin <url>` | Connect to a GitHub repository | `git remote add origin git@github.com:user/repo.git` |
 | `git push -u origin main` | Push to GitHub (first time) | `git push -u origin main` |
 | `git push` | Push to GitHub (after first time) | `git push` |
+| `git pull` | Download new commits from GitHub | `git pull` |
 | `git clone <url>` | Download a repository from GitHub | `git clone git@github.com:user/repo.git` |
 
 ### SSH Setup (One-Time)
