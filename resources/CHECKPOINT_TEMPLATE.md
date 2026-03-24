@@ -122,7 +122,7 @@ What would happen if you ran `COMMAND` without `FLAG`?
 
 ---
 
-**Great reasoning!** Understanding CONCEPT prevents REAL_WORLD_PROBLEM. In healthcare software, SPECIFIC_SCENARIO. This kind of attention to detail is what separates junior from senior engineers.
+**Great reasoning!** Understanding CONCEPT prevents REAL_WORLD_PROBLEM. In regulated industries like healthcare, SPECIFIC_SCENARIO. This kind of attention to detail is what separates junior from senior engineers.
 </quiz>
 ```
 

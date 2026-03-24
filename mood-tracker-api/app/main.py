@@ -50,7 +50,7 @@ app = FastAPI(
     description=(
         "REST API backend for the Mood Tracker mobile application. "
         "Built as a reference implementation for the "
-        "'Mobile Apps for Healthcare' course at AGH UST."
+        "'Multiplatform Mobile Software Engineering in Practice' course at AGH UST."
     ),
     version="1.0.0",
     lifespan=lifespan,

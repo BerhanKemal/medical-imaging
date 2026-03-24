@@ -1,6 +1,6 @@
 # Mood Tracker API
 
-REST API backend for the **Mood Tracker** mobile application, built as a reference implementation for the *Mobile Apps for Healthcare* course at AGH UST.
+REST API backend for the **Mood Tracker** mobile application, built as a reference implementation for the *Multiplatform Mobile Software Engineering in Practice* course at AGH University of Krakow.
 
 ## Tech Stack
 
@@ -217,4 +217,4 @@ When running the API on your local machine and the Flutter app on:
 
 ## License
 
-Educational material for the Mobile Apps for Healthcare course at AGH UST.
+Educational material for the Multiplatform Mobile Software Engineering in Practice course at AGH University of Krakow.

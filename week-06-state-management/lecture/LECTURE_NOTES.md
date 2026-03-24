@@ -1,6 +1,6 @@
-# Week 6 Lecture: Provider/Riverpod, Navigation & Patient UX
+# Week 6 Lecture: Provider/Riverpod, Navigation & User-Centered Design
 
-**Course:** Mobile Apps for Healthcare
+**Course:** Multiplatform Mobile Software Engineering in Practice
 **Duration:** ~2 hours (including Q&A)
 **Format:** Student-facing notes with presenter cues
 
@@ -15,7 +15,7 @@
 2. [State Management Solutions Landscape](#2-state-management-solutions-landscape-15-min) (15 min)
 3. [Riverpod Deep Dive](#3-riverpod-deep-dive-25-min) (25 min)
 4. [Navigation Patterns in Flutter](#4-navigation-patterns-in-flutter-15-min) (15 min)
-5. [Patient UX Design Principles](#5-patient-ux-design-principles-15-min) (15 min)
+5. [User-Centered Design Principles](#5-user-centered-design-principles-15-min) (15 min)
 6. [Key Takeaways](#6-key-takeaways-5-min) (5 min)
 
 ---
@@ -553,7 +553,7 @@ Choose navigation patterns based on your user. Do not impose a clinician's workf
 
 ---
 
-## 5. Patient UX Design Principles (15 min)
+## 5. User-Centered Design Principles (15 min)
 
 ### Why Healthcare UX Demands More
 
@@ -642,7 +642,7 @@ This may sound dramatic, but it is backed by research: the usability of a health
 When you design a health app, you are not just designing software. You are designing a clinical intervention. Treat the UX with the same rigor you would treat a clinical protocol.
 
 !!! tip "Reference: Accessibility Quick Guide"
-    For concrete code examples implementing semantic labels, contrast checks, scalable text, and proper touch targets in Flutter, see the [Accessibility Guide](../../resources/ACCESSIBILITY_GUIDE.md). Apply these patterns to your team project — they are graded as part of the mHealth Awareness rubric (15 points in the final project).
+    For concrete code examples implementing semantic labels, contrast checks, scalable text, and proper touch targets in Flutter, see the [Accessibility Guide](../../resources/ACCESSIBILITY_GUIDE.md). Apply these patterns to your team project — they are graded as part of the Industry & Regulatory Awareness rubric (15 points in the final project).
 
 ---
 
@@ -654,9 +654,9 @@ When you design a health app, you are not just designing software. You are desig
 
 3. **Immutable state updates ensure that changes are always detected and propagated** -- replace the entire state object, do not mutate it in place.
 
-4. **Navigation patterns should match your user's mental model** -- patients need simplicity and linear flows, clinicians need speed and direct access.
+4. **Navigation patterns should match your user's mental model** -- some users need simplicity and linear flows, power users need speed and direct access.
 
-5. **Patient UX requires extra care** -- accessibility, clarity, trust, and error prevention are not optional features; they are core requirements.
+5. **User-centered design requires extra care** -- accessibility, clarity, trust, and error prevention are not optional features; they are core requirements.
 
 6. **The patterns you learned in the lab scale to production apps** -- ConsumerWidget, ref.watch, StateNotifier, and derived providers are the same building blocks used in professional Flutter applications.
 

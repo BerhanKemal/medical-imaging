@@ -3,7 +3,7 @@
 <div class="lab-meta" markdown>
 | | |
 |---|---|
-| **Course** | Mobile Apps for Healthcare |
+| **Course** | Multiplatform Mobile Software Engineering in Practice |
 | **Duration** | ~2 hours (workshop format) |
 | **Prerequisites** | Flutter fundamentals (Week 4), team formation completed |
 </div>

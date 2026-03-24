@@ -1,6 +1,6 @@
 # Database Fundamentals: A Supplementary Guide
 
-**Course:** Mobile Apps for Healthcare
+**Course:** Multiplatform Mobile Software Engineering in Practice
 **Format:** Self-paced reading (supplement to Lecture Notes and Lab)
 
 > This guide goes deeper than the lecture. The lecture taught you *what SQL is* and

@@ -1,7 +1,7 @@
 """
 Mood Tracking API — Complete Solution
 ======================================
-Mobile Apps for Healthcare, Week 2
+Multiplatform Mobile Software Engineering in Practice, Week 2
 
 A minimal REST API that stores and retrieves mood entries.
 This file is the COMPLETE solution. Students should build this

@@ -1,9 +1,9 @@
 # Week 9 Lab: Instructor Guide
 
-**Course:** Mobile Apps for Healthcare
+**Course:** Multiplatform Mobile Software Engineering in Practice
 **Lab Duration:** 2 hours
 **Topic:** Authentication & Security
-**Audience:** 3rd-year Biomedical Engineering students -- familiar with Flutter widgets, Riverpod, SQLite, and API networking from Weeks 4--8
+**Audience:** Familiar with Flutter widgets, Riverpod, SQLite, and API networking from Weeks 4--8
 
 > This document is for the **instructor only**. Students use the separate `README.md` workbook.
 

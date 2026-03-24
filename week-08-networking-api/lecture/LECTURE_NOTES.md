@@ -1,6 +1,6 @@
 # Week 8 Lecture: HTTP in Flutter, JSON Serialization & GDPR
 
-**Course:** Mobile Apps for Healthcare
+**Course:** Multiplatform Mobile Software Engineering in Practice
 **Duration:** ~2 hours (including Q&A)
 **Format:** Student-facing notes with presenter cues
 

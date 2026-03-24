@@ -1,4 +1,4 @@
-# Peer Evaluation Form — Mobile Apps for Healthcare
+# Peer Evaluation Form — Multiplatform Mobile Software Engineering in Practice
 
 > **Weight:** Peer evaluation accounts for **10% of the total course grade.**
 > This form is **anonymous** — your teammates will not see your individual responses.

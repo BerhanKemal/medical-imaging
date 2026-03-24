@@ -1,7 +1,7 @@
 """
 Mood Tracking API — Starter Template
 =====================================
-Mobile Apps for Healthcare, Week 2
+Multiplatform Mobile Software Engineering in Practice, Week 2
 
 Build a simple REST API that tracks mood entries.
 Follow the lab instructions to fill in each TODO section.

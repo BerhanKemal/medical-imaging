@@ -1,7 +1,7 @@
 # Week 1 Lecture: Terminal, Git & GitHub --- How It All Works
 
 <div class="lab-meta" markdown>
-<div class="lab-meta__row"><span class="lab-meta__label">Course</span> Mobile Apps for Healthcare</div>
+<div class="lab-meta__row"><span class="lab-meta__label">Course</span> Multiplatform Mobile Software Engineering in Practice</div>
 <div class="lab-meta__row"><span class="lab-meta__label">Duration</span> ~2 hours (including Q&A)</div>
 </div>
 
@@ -119,7 +119,7 @@ With version control, ==this cannot happen==. Git detects conflicts and forces y
 
 #### The "We Can't Reproduce the Results" Problem
 
-This one is particularly relevant to **biomedical research**:
+This one is particularly relevant to **research and regulated industries**:
 
 - A researcher publishes a paper with computational results
 - Another lab tries to reproduce the results but gets different numbers
@@ -805,7 +805,7 @@ Why do professional teams use Pull Requests?
 
     1. **What concept was most surprising?** (Git storing snapshots? Asymmetric crypto? The regulatory angle?)
     2. **How would you explain Git's three areas** (working directory, staging, repository) to a friend who has never heard of version control?
-    3. **Why should a biomedical engineer care about Git?** Think beyond "it's required for this course."
+    3. **Why should an engineer care about Git?** Think beyond "it's required for this course."
 
     Jot down your answers or discuss with your neighbor.
 

@@ -1,7 +1,7 @@
 # Week 1 Lab: Terminal, Git & GitHub
 
 <div class="lab-meta" markdown>
-<div class="lab-meta__row"><span class="lab-meta__label">Course</span> Mobile Apps for Healthcare</div>
+<div class="lab-meta__row"><span class="lab-meta__label">Course</span> Multiplatform Mobile Software Engineering in Practice</div>
 <div class="lab-meta__row"><span class="lab-meta__label">Duration</span> 90 min in-class + ~30 min at home</div>
 <div class="lab-meta__row"><span class="lab-meta__label">Prerequisites</span> Basic programming experience (Python, C/C++, or similar). No terminal or git knowledge required.</div>
 </div>
@@ -503,7 +503,7 @@ Before using git for the first time, tell it who you are. Run these two commands
 
 ```bash
 git config --global user.name "Your Full Name"
-git config --global user.email "your.email@student.agh.edu.pl"
+git config --global user.email "your.email@university.edu"
 ```
 
 These will be attached to every commit you make. You only need to do this once per computer.
@@ -622,7 +622,7 @@ Let us create a file and commit it. This is a four-step process:
 ```bash
 echo "# My First Repository" > README.md
 echo "" >> README.md
-echo "This is a practice project for the Mobile Apps for Healthcare course." >> README.md
+echo "This is a practice project for the Multiplatform Mobile Software Engineering in Practice course." >> README.md
 ```
 
 **Step 2: Check what git sees**
@@ -767,7 +767,7 @@ Expected output:
 
 ```
 commit a1b2c3d4e5f6... (HEAD -> main)
-Author: Your Full Name <your.email@student.agh.edu.pl>
+Author: Your Full Name <your.email@university.edu>
 Date:   Mon Feb 23 10:30:00 2026 +0100
 
     Add initial README with project description
@@ -813,7 +813,7 @@ index abc1234..def5678 100644
 @@ -1,3 +1,5 @@
  # My First Repository
 
- This is a practice project for the Mobile Apps for Healthcare course.
+ This is a practice project for the Multiplatform Mobile Software Engineering in Practice course.
 +## Topics
 +- ECG signal processing
 ```
@@ -833,7 +833,7 @@ git add README.md
 git commit -m "Add Topics section with ECG signal processing"
 ```
 
-**Commit 2**: Create a new file about a biomedical topic:
+**Commit 2**: Create a new file about a topic from your field of study:
 
 ```bash
 echo "# ECG Signal Processing" > ecg-notes.txt
@@ -879,7 +879,7 @@ git add README.md
 git commit -m "Update README with medical imaging topic and file listing"
 ```
 
-**Commit 6 (on your own):** Create a new file about any biomedical topic that interests you. Write at least two lines of content. Stage it, compose your own commit message (start with a verb!), and commit. No copy-paste — this one is yours.
+**Commit 6 (on your own):** Create a new file about any technical topic that interests you. Write at least two lines of content. Stage it, compose your own commit message (start with a verb!), and commit. No copy-paste — this one is yours.
 
 *Hint:* The commands are the same as Commits 2–5. You just choose the file name, content, and message.
 
@@ -992,7 +992,7 @@ If you do not already have one:
 
 1. Go to [github.com](https://github.com)
 2. Click **Sign up**
-3. Use your student email (`@student.agh.edu.pl`) --- this will let you access the free GitHub Student Developer Pack later
+3. Use your student email --- this will let you access the free GitHub Student Developer Pack later
 4. Choose a professional username (you may use this on your CV someday)
 
 ### 3.2 Generate an SSH Key
@@ -1002,7 +1002,7 @@ SSH keys allow you to securely connect to GitHub without typing your password ev
 **Step 1:** Open your terminal and run (replace the email with your own):
 
 ```bash
-ssh-keygen -t ed25519 -C "your.email@student.agh.edu.pl"
+ssh-keygen -t ed25519 -C "your.email@university.edu"
 ```
 
 **Step 2:** When prompted, press **Enter** to accept the default file location:
@@ -1026,7 +1026,7 @@ Expected output:
 Your identification has been saved in /Users/yourname/.ssh/id_ed25519
 Your public key has been saved in /Users/yourname/.ssh/id_ed25519.pub
 The key fingerprint is:
-SHA256:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx your.email@student.agh.edu.pl
+SHA256:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx your.email@university.edu
 The key's randomart image is:
 +--[ED25519 256]--+
 |       ...       |
@@ -1064,7 +1064,7 @@ cat ~/.ssh/id_ed25519.pub
 It will look something like:
 
 ```
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx your.email@student.agh.edu.pl
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx your.email@university.edu
 ```
 
 > **Important:** You have TWO key files:
@@ -1478,9 +1478,9 @@ If any of these are missing, go back and complete the relevant section before st
 
 ## Individual Assignment
 
-### Task: Create Your Biomedical Engineering Knowledge Repository
+### Task: Create Your Knowledge Repository
 
-Create a personal GitHub repository that serves as a collection of notes about biomedical engineering topics that interest you.
+Create a personal GitHub repository that serves as a collection of notes about topics from your field of study that interest you.
 
 ### Requirements
 
@@ -1505,7 +1505,7 @@ Create a personal GitHub repository that serves as a collection of notes about b
 - Telemedicine and remote monitoring
 - Wearable health sensors
 - Drug delivery systems
-- Biomedical data standards (HL7, FHIR, DICOM)
+- Domain-specific data standards (e.g., HL7/FHIR in healthcare, ISO 20022 in finance)
 - Rehabilitation engineering
 - Neural interfaces and brain-computer interfaces
 
@@ -1586,7 +1586,7 @@ Keep this reference handy. You will use these commands every week.
 
 ```bash
 # Generate SSH key
-ssh-keygen -t ed25519 -C "your.email@student.agh.edu.pl"
+ssh-keygen -t ed25519 -C "your.email@university.edu"
 
 # Display public key (copy this to GitHub)
 cat ~/.ssh/id_ed25519.pub
@@ -1599,7 +1599,7 @@ ssh -T git@github.com
 
 ```bash
 git config --global user.name "Your Full Name"
-git config --global user.email "your.email@student.agh.edu.pl"
+git config --global user.email "your.email@university.edu"
 git config --global init.defaultBranch main
 ```
 

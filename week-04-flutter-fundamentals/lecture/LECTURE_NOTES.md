@@ -1,6 +1,6 @@
 # Week 4 Lecture: Widget Lifecycle, State Basics & Project Kickoff
 
-**Course:** Mobile Apps for Healthcare
+**Course:** Multiplatform Mobile Software Engineering in Practice
 **Duration:** ~2 hours (including Q&A)
 **Format:** Student-facing notes with presenter cues
 

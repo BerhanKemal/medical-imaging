@@ -1,9 +1,9 @@
 # Week 3 Lab: Instructor Guide
 
-**Course:** Mobile Apps for Healthcare
+**Course:** Multiplatform Mobile Software Engineering in Practice
 **Lab Duration:** 2 hours
 **Topic:** Dart Language Fundamentals
-**Audience:** 3rd-year Biomedical Engineering students -- familiar with C/C++ and Python, comfortable with terminal and Git from Weeks 1--2
+**Audience:** Familiar with C/C++ and Python, comfortable with terminal and Git from Weeks 1--2
 
 > This document is for the **instructor only**. Students use the separate `README.md` workbook.
 

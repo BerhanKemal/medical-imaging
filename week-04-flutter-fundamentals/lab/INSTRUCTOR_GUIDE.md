@@ -1,9 +1,9 @@
 # Week 4 Lab: Instructor Guide
 
-**Course:** Mobile Apps for Healthcare
+**Course:** Multiplatform Mobile Software Engineering in Practice
 **Lab Duration:** 2 hours
 **Topic:** Flutter Fundamentals
-**Audience:** 3rd-year Biomedical Engineering students -- familiar with Dart basics from Week 3, first time writing Flutter code
+**Audience:** Familiar with Dart basics from Week 3, first time writing Flutter code
 
 > This document is for the **instructor only**. Students use the separate `README.md` workbook.
 

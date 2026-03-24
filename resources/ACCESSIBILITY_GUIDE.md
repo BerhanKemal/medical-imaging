@@ -1,17 +1,17 @@
 # Accessibility Quick Reference
 
-**Mobile Apps for Healthcare — AGH University of Krakow**
+**Multiplatform Mobile Software Engineering in Practice — AGH University of Krakow**
 
 !!! info "Why this page exists"
-    The project rubric allocates 15 points for **mHealth Awareness**, with accessibility explicitly listed in the top band: *"screen reader support, sufficient contrast, scalable text."* This guide shows you **how** to implement these in Flutter.
+    The project rubric allocates 15 points for **Industry & Regulatory Awareness**, with accessibility explicitly listed in the top band: *"screen reader support, sufficient contrast, scalable text."* This guide shows you **how** to implement these in Flutter.
 
 ---
 
-## Why Accessibility Matters in mHealth
+## Why Accessibility Matters in Mobile Apps
 
-Health apps serve people who may have visual, motor, or cognitive impairments — including the very conditions your app is designed to help with. A diabetes management app used by elderly patients, or a mental health tracker used during a crisis, **must** be usable by everyone. Accessibility is not optional in healthcare; it is a core quality attribute.
+Accessibility is essential for all mobile apps, but especially critical in regulated industries. Health apps serve people who may have visual, motor, or cognitive impairments — including the very conditions the app is designed to help with. A diabetes management app used by elderly patients, or a mental health tracker used during a crisis, **must** be usable by everyone. These examples from mHealth illustrate a universal principle: accessibility is a core quality attribute for any serious mobile application.
 
-For the theoretical background, refer to the Week 5 and Week 6 lecture materials on mHealth design principles.
+For the theoretical background, refer to the Week 5 and Week 6 lecture materials on design principles and regulatory context.
 
 ---
 
@@ -237,7 +237,7 @@ Before presenting your project, walk through these three checks:
 
 ## Checklist for Final Presentation
 
-Use this binary checklist to verify your app's accessibility before presenting. You do **not** need to pass every item, but each "yes" strengthens your mHealth Awareness score:
+Use this binary checklist to verify your app's accessibility before presenting. You do **not** need to pass every item, but each "yes" strengthens your Industry & Regulatory Awareness score:
 
 - [ ] All interactive elements (buttons, links, form fields) have semantic labels
 - [ ] Decorative images/icons are excluded from the semantics tree

@@ -3,7 +3,7 @@
 <div class="lab-meta" markdown>
 | | |
 |---|---|
-| **Course** | Mobile Apps for Healthcare |
+| **Course** | Multiplatform Mobile Software Engineering in Practice |
 | **Duration** | ~2 hours |
 | **Prerequisites** | Week 7 Local Data (working Mood Tracker with SQLite persistence) |
 </div>

@@ -1,8 +1,8 @@
-# Mobile Apps for Healthcare
+# Multiplatform Mobile Software Engineering in Practice
 
-**AGH University of Krakow — Biomedical Engineering, 3rd Year**
+**AGH University of Krakow**
 
-A 14-week project-based course combining mobile development (Flutter), backend APIs (FastAPI), and mobile health (mHealth) domain knowledge. Students build real health-related apps in teams while learning professional development workflows.
+A 14-week project-based course combining multiplatform mobile development (Flutter), backend APIs (FastAPI), and industry-aware software engineering practices. Students build real mobile apps in teams while learning professional development workflows. Mobile health (mHealth) serves as a recurring case study for understanding regulatory requirements in the industry.
 
 ## Course Structure
 
@@ -12,15 +12,15 @@ A 14-week project-based course combining mobile development (Flutter), backend A
 | 2 | Git Branching, APIs & curl | Branching, merge conflicts, PRs, FastAPI basics, curl | HTTP deep dive, REST architecture, API design |
 | 3 | Dart Language Fundamentals | Dart exercises: types, null safety, OOP, async | Mobile dev landscape, Flutter/Dart rationale |
 | 4 | Flutter Fundamentals + Teams | First Flutter app, widgets, StatelessWidget/StatefulWidget | Widget lifecycle, state basics, project kickoff |
-| 5 | Layouts, Forms & Sprint Planning | Sprint planning workshop, GitHub Projects, user stories | Layouts, forms, Material Design, mHealth intro |
-| 6 | State Management | Project work — core screens | Provider/Riverpod, navigation, patient UX |
-| 7 | Local Data + Sprint Review #1 | Sprint Review #1, retrospective, Sprint 2 planning | SharedPreferences, SQLite, offline-first, health data |
+| 5 | Layouts, Forms & Sprint Planning | Sprint planning workshop, GitHub Projects, user stories | Layouts, forms, Material Design, industry regulatory context |
+| 6 | State Management | Project work — core screens | Provider/Riverpod, navigation, user-centered design |
+| 7 | Local Data + Sprint Review #1 | Sprint Review #1, retrospective, Sprint 2 planning | SharedPreferences, SQLite, offline-first, sensitive data handling |
 | 8 | Networking & API Integration | Project work — API connection | HTTP in Flutter, JSON serialization, GDPR |
 | 9 | Authentication & Security | Project work — auth flow | JWT, OAuth2, secure storage, HIPAA/GDPR |
 | 10 | Testing + Sprint Review #2 | Sprint Review #2, testing workshop | Testing pyramid, CI, IEC 62304 intro |
-| 11 | Advanced Flutter & Polish | Project work — polish and animations | Animations, performance, pub.dev, evidence-based mHealth |
+| 11 | Advanced Flutter & Polish | Project work — polish and animations | Animations, performance, pub.dev, real-world case studies |
 | 12 | Deployment & Regulations | Project work — final features, peer code review | App stores, CI/CD, MDR/FDA medical device regulations |
-| 13 | Final Sprint Review & Polish | Sprint Review #3, final polish, presentation prep | Technical debt, open source health, career paths, future of mHealth |
+| 13 | Final Sprint Review & Polish | Sprint Review #3, final polish, presentation prep | Technical debt, open source, career paths, industry trends |
 | 14 | Presentations | Final project presentations (15-20 min each) | Course wrap-up, reflection, celebration |
 
 > **Note:** Lab always precedes the lecture in a given week — creating a "struggle first, understand later" pedagogical flow.
@@ -82,14 +82,15 @@ Full policy: [`resources/ai-tools-policy.md`](resources/ai-tools-policy.md)
 
 ## Project Requirements
 
-Student teams (3-4 people) build a health-related mobile app. Minimum requirements:
+Student teams (3-4 people) build a mobile app. Minimum requirements:
 
-- Health-related (patient-facing or clinician-facing)
+- A clearly defined problem with identified target users
 - At least 3 screens
 - API connection (own FastAPI or provided endpoint)
 - Some form of authentication
 - Git workflow with PRs (no direct push to main)
 - 1-page proposal submitted by Week 5
+- Awareness of relevant industry regulations (e.g., GDPR for data privacy; mHealth regulations like MDR/FDA if the app handles health data)
 
 Proposal template: `templates/project-proposal/PROPOSAL_TEMPLATE.md` (in the course materials repository)
 
@@ -126,7 +127,7 @@ Proposal template: `templates/project-proposal/PROPOSAL_TEMPLATE.md` (in the cou
 └── resources/
     ├── ai-tools-policy.md             # AI tools policy handout
     ├── ACCESSIBILITY_GUIDE.md         # Accessibility quick reference for Flutter
-    ├── MHEALTH_REGULATIONS.md         # mHealth regulations overview (GDPR, HIPAA, MDR)
+    ├── MHEALTH_REGULATIONS.md         # Industry regulations reference (GDPR, HIPAA, MDR examples)
     └── PROJECT_GRADING.md             # Grading rubrics and timeline
 ```
 
@@ -134,7 +135,7 @@ Proposal template: `templates/project-proposal/PROPOSAL_TEMPLATE.md` (in the cou
 
 - **Full grading guide:** [`resources/PROJECT_GRADING.md`](resources/PROJECT_GRADING.md) — rubrics, timeline, and grade descriptors
 - **Accessibility guide:** [`resources/ACCESSIBILITY_GUIDE.md`](resources/ACCESSIBILITY_GUIDE.md) — Flutter accessibility quick reference
-- **mHealth regulations:** [`resources/MHEALTH_REGULATIONS.md`](resources/MHEALTH_REGULATIONS.md) — GDPR, HIPAA, MDR overview
+- **Industry regulations reference:** [`resources/MHEALTH_REGULATIONS.md`](resources/MHEALTH_REGULATIONS.md) — GDPR, HIPAA, MDR — regulatory case studies
 - Sprint review rubric: `templates/rubrics/sprint-review-rubric.md` (in the course materials repository)
 - Final presentation rubric: `templates/rubrics/final-presentation-rubric.md` (in the course materials repository)
 - Peer evaluation form: `templates/forms/peer-evaluation.md` (in the course materials repository)

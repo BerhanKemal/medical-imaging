@@ -1,7 +1,7 @@
 # Week 2 Lecture: HTTP Deep Dive, REST Architecture and API Design
 
 <div class="lab-meta" markdown>
-<div class="lab-meta__row"><span class="lab-meta__label">Course</span> Mobile Apps for Healthcare</div>
+<div class="lab-meta__row"><span class="lab-meta__label">Course</span> Multiplatform Mobile Software Engineering in Practice</div>
 <div class="lab-meta__row"><span class="lab-meta__label">Duration</span> ~2 hours (including Q&A)</div>
 </div>
 

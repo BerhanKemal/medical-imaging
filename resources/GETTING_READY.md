@@ -1,7 +1,7 @@
 # Week 0 — Getting Ready
 
 <div class="lab-meta" markdown>
-<div class="lab-meta__row"><span class="lab-meta__label">Course</span> Mobile Apps for Healthcare</div>
+<div class="lab-meta__row"><span class="lab-meta__label">Course</span> Multiplatform Mobile Software Engineering in Practice</div>
 <div class="lab-meta__row"><span class="lab-meta__label">Duration</span> ~2-3 hours (self-paced, at home)</div>
 <div class="lab-meta__row"><span class="lab-meta__label">Prerequisites</span> Basic programming experience in any language</div>
 </div>
@@ -47,7 +47,7 @@
 
 ### The Big Picture
 
-You will build a **real health-related mobile app** in a team of 3-4 students over 14 weeks. The first 3 weeks teach you individual skills (terminal, git, Dart). From Week 4, you form teams and start building.
+You will build a **real mobile app** in a team of 3-4 students over 14 weeks. The first 3 weeks teach you individual skills (terminal, git, Dart). From Week 4, you form teams and start building.
 
 ~~This is a lecture-heavy theory course~~ — it's the opposite. You'll write code from day one, and the lectures *follow* the labs to clarify what you experienced hands-on.
 
@@ -94,12 +94,12 @@ graph LR
 | **Focus** | Terminal, Git, Dart | Sprints 1 & 2 | Sprint 3, testing, polish |
 | **Deliverables** | 3 graded assignments | 2 sprint reviews + proposal | 1 sprint review + final presentation |
 
-> **Healthcare Context: Why Preparation Matters in mHealth Development**
+> **Industry Context: Why Preparation Matters in Professional Development**
 >
-> In real mHealth teams, a botched development environment wastes days, not hours:
-> - **Regulatory audits** (IEC 62304, HIPAA) require that every developer's toolchain is documented and reproducible. A setup checklist like this one is a simplified version of an "environment qualification" document.
-> - **Patient safety** starts with consistent builds. If your Flutter version differs from your teammate's, the app might behave differently on different machines — exactly the kind of inconsistency that causes bugs in medication dosing or vital-sign displays.
-> - **Professional mHealth teams** at companies like Oura, Withings, and Apple Health spend their first sprint setting up CI/CD, linters, and shared toolchains. What you're doing now mirrors that process.
+> In professional software teams, a botched development environment wastes days, not hours. Here's why preparation matters, using mHealth as an example of a regulated industry:
+> - **Regulatory audits** (IEC 62304, HIPAA) require that every developer's toolchain is documented and reproducible. A setup checklist like this one is a simplified version of an "environment qualification" document used in healthcare software development.
+> - **Patient safety** starts with consistent builds. If your Flutter version differs from your teammate's, the app might behave differently on different machines — exactly the kind of inconsistency that causes bugs in safety-critical applications like medication dosing or vital-sign displays.
+> - **Professional teams** at companies like Oura, Withings, and Apple Health spend their first sprint setting up CI/CD, linters, and shared toolchains. What you're doing now mirrors that process — whether you end up building apps for healthcare, finance, education, or any other domain.
 
 ---
 
@@ -109,7 +109,7 @@ Before continuing, make sure you understand:
 
 - [ ] The course has three phases: individual skills, team project, and polish
 - [ ] Labs come *before* lectures each week
-- [ ] You will form teams in Week 4 and build a real mHealth app
+- [ ] You will form teams in Week 4 and build a real mobile app
 - [ ] Sprint reviews happen in Weeks 7, 10, and 13
 
 ---
@@ -252,7 +252,7 @@ If your background is in content management systems (WordPress, Strapi, headless
 | **Object-oriented architecture** | The course uses OOP patterns extensively. If you mainly write procedural PHP or JS, review the OOP section above. |
 
 !!! note "You belong here"
-    Non-traditional backgrounds bring valuable perspective — especially in mHealth, where understanding end-users matters as much as writing code. Your experience with content architecture, user flows, and API integration is directly applicable.
+    Non-traditional backgrounds bring valuable perspective — especially when building apps for specific domains (healthcare, education, finance), where understanding end-users matters as much as writing code. Your experience with content architecture, user flows, and API integration is directly applicable.
 
 ---
 
@@ -329,7 +329,7 @@ git --version
 Configure your identity and default branch name (replace the placeholder values with your real name and email):
 ```bash
 git config --global user.name "Your Name"
-git config --global user.email "your.email@student.agh.edu.pl"
+git config --global user.email "your.email@university.edu"
 git config --global init.defaultBranch main
 ```
 The last line sets `main` as the name for the default branch in new repositories. Don't worry about what that means yet — branches are covered in detail in the Week 1 and Week 2 labs.
@@ -345,7 +345,7 @@ The last line sets `main` as the name for the default branch in new repositories
 If you don't already have one:
 
 1. Go to [github.com/join](https://github.com/join)
-2. Use your student email (`@student.agh.edu.pl`) — this gives you access to the GitHub Student Developer Pack
+2. Use your student email — this gives you access to the GitHub Student Developer Pack
 3. Choose a professional username (you may use this on your CV someday)
 
 #### 2.2 Generate an SSH key
@@ -355,7 +355,7 @@ An SSH key is a pair of files on your computer that lets you prove your identity
 Open your terminal and run (replace the email with the one you used for GitHub):
 
 ```bash
-ssh-keygen -t ed25519 -C "your.email@student.agh.edu.pl"
+ssh-keygen -t ed25519 -C "your.email@university.edu"
 ```
 
 When prompted:
@@ -370,7 +370,7 @@ Generating public/private ed25519 key pair.
 Your identification has been saved in /home/you/.ssh/id_ed25519
 Your public key has been saved in /home/you/.ssh/id_ed25519.pub
 The key fingerprint is:
-SHA256:abc123... your.email@student.agh.edu.pl
+SHA256:abc123... your.email@university.edu
 ```
 
 #### 2.3 Copy your public key
@@ -557,7 +557,7 @@ All lab exercises, starter projects, and templates are distributed through a sin
 
 ```bash
 cd ~
-git clone <course-repo-url> mhealth-course-materials
+git clone <course-repo-url> course-materials
 ```
 
 !!! note "Repository URL"
@@ -566,7 +566,7 @@ git clone <course-repo-url> mhealth-course-materials
 Once cloned, the repository contains:
 
 ```
-mhealth-course-materials/
+course-materials/
 ├── week-01-terminal-git/          # Week 1 exercises
 ├── week-02-git-apis-curl/         # Week 2 exercises + FastAPI starter
 ├── week-03-dart-fundamentals/     # Week 3 Dart exercises + assignment template
@@ -668,8 +668,8 @@ If `flutter doctor` reports problems, check these common fixes before asking for
 ??? question "I only know Python. Is that enough?"
     Python gives you everything you need for Tier 1. The course teaches Dart from scratch in Week 3 — if you understand Python OOP (classes, methods, inheritance), you'll pick up Dart quickly because the concepts are the same.
 
-??? question "I'm a biomedical engineering student, not a CS student. Is this course too hard?"
-    This course is designed for BME students. The instructor knows you're not computer scientists. Weeks 1-3 build your foundation step by step. The project work (Weeks 4-14) is done in teams, so you can lean on teammates with different strengths. The key is doing the Week 0 preparation and not falling behind in Weeks 1-3.
+??? question "I'm not a CS student. Is this course too hard?"
+    This course is designed for students from diverse backgrounds, including international students from various programs. No computer science degree is required. Weeks 1-3 build your foundation step by step. The project work (Weeks 4-14) is done in teams, so you can lean on teammates with different strengths. The key is doing the Week 0 preparation and not falling behind in Weeks 1-3.
 
 ??? question "Do I need a Mac for this course?"
     No. Flutter works on macOS, Windows, and Linux. The only thing you can't do without a Mac is test on iOS. Android development works on all platforms, and that's sufficient for the course.
@@ -678,7 +678,7 @@ If `flutter doctor` reports problems, check these common fixes before asking for
     Weeks 1-3: about **2-3 hours/week** on individual assignments. Weeks 4-14: about **4-6 hours/week** on team project work, depending on your role and sprint goals. Teams that communicate well and plan realistically spend less time than teams that don't.
 
 ??? question "What if I'm already experienced with Flutter/mobile dev?"
-    Great — you'll move faster through the early weeks and can help your teammates. The course still offers value through the mHealth domain knowledge, project management skills, and the experience of building a real app in a team.
+    Great — you'll move faster through the early weeks and can help your teammates. The course still offers value through the industry awareness and regulatory context, project management skills, and the experience of building a real app in a team.
 
 ??? question "I come from a web/CMS background (WordPress, Strapi, etc.). Is that relevant?"
     Very much so. See the "For CMS / Web Developers" section above. Your experience with APIs, content structure, and user flows transfers directly. The main new things are the typed language (Dart) and managing state on the device instead of the server.

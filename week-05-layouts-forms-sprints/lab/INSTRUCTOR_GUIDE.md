@@ -1,9 +1,9 @@
 # Week 5 Lab: Instructor Guide
 
-**Course:** Mobile Apps for Healthcare
+**Course:** Multiplatform Mobile Software Engineering in Practice
 **Lab Duration:** 2 hours
 **Topic:** Sprint Planning Workshop
-**Audience:** 3rd-year Biomedical Engineering students -- teams formed in Week 4, familiar with Flutter basics, Git branching, and PRs from Weeks 1--4
+**Audience:** Teams formed in Week 4, familiar with Flutter basics, Git branching, and PRs from Weeks 1--4
 
 > This document is for the **instructor only**. Students use the separate `README.md` workbook.
 

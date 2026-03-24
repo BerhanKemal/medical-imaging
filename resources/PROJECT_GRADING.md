@@ -1,6 +1,6 @@
 # Project Grading Guide
 
-**Mobile Apps for Healthcare — AGH University of Krakow**
+**Multiplatform Mobile Software Engineering in Practice — AGH University of Krakow**
 
 !!! info "Why this page exists"
     Research consistently shows that students perform better when they understand *exactly* how they will be assessed. This page consolidates all grading criteria, rubrics, and expectations in one place so you can reference it throughout the semester. Bookmark it.
@@ -208,7 +208,7 @@ The final presentation is your opportunity to demonstrate what you've learned �
 
 Your team delivers a 15-minute presentation:
 
-- **10 minutes:** present the problem, show the app (live demo), explain key technical decisions, discuss mHealth considerations
+- **10 minutes:** present the problem, show the app (live demo), explain key technical decisions, discuss industry and regulatory considerations
 - **5 minutes:** Q&A from the instructor and peers
 
 Before the presentation, ensure your GitHub repository is clean: README updated, no hardcoded secrets, meaningful commit history visible.
@@ -266,17 +266,17 @@ Separation of concerns, reasonable project structure, and appropriate state mana
 | 4-7   | Minimal separation of concerns. Most logic resides in widget files. No clear project structure. |
 | 0-3   | No discernible architecture. All code in a few monolithic files. |
 
-#### 4. mHealth Awareness — 15 points
+#### 4. Industry & Regulatory Awareness — 15 points
 
 Data privacy is considered, the app is appropriate for target users, and accessibility has been addressed.
 
 | Score | Descriptor |
 |-------|------------|
-| 14-15 | Team demonstrates strong awareness of health data privacy (e.g., encryption, minimal data collection, informed consent). App is designed with the target user group in mind. Accessibility features implemented (e.g., screen reader support, sufficient contrast, scalable text). Relevant regulations identified and discussed. |
+| 14-15 | Team demonstrates strong awareness of relevant regulations (e.g., GDPR for data privacy, and domain-specific frameworks like MDR/FDA if applicable). App is designed with the target user group in mind. Accessibility features implemented (e.g., screen reader support, sufficient contrast, scalable text). Relevant industry regulations identified and discussed. |
 | 11-13 | Privacy considerations are present (e.g., no plaintext storage of sensitive data). Some accessibility features implemented. Basic regulatory awareness demonstrated. |
 | 8-10  | Privacy is mentioned but not fully addressed in the implementation. Accessibility is minimal. Regulatory context is vague. |
 | 4-7   | Little evidence of privacy or accessibility considerations. No regulatory awareness demonstrated. |
-| 0-3   | Health data handled carelessly. No consideration of the target user population, accessibility, or regulations. |
+| 0-3   | User data handled carelessly. No consideration of the target user population, accessibility, or regulations. |
 
 #### 5. Presentation Quality — 15 points
 
@@ -318,13 +318,13 @@ Honest assessment of what went well, what went poorly, and what the team would d
 
 | Grade | Score | What it means |
 |-------|-------|---------------|
-| **Excellent** | 90-100 | Outstanding project that demonstrates mastery of mobile development, health-tech awareness, and professional teamwork. |
-| **Good** | 75-89 | Strong project with solid technical execution and good awareness of mHealth considerations. |
-| **Satisfactory** | 60-74 | Acceptable project that meets minimum requirements but has notable gaps in quality, process, or health-tech awareness. |
+| **Excellent** | 90-100 | Outstanding project that demonstrates mastery of mobile development, industry and regulatory awareness, and professional teamwork. |
+| **Good** | 75-89 | Strong project with solid technical execution and good awareness of regulatory considerations. |
+| **Satisfactory** | 60-74 | Acceptable project that meets minimum requirements but has notable gaps in quality, process, or industry and regulatory awareness. |
 | **Needs Improvement** | < 60 | Project has significant deficiencies. Core requirements are not met or quality is well below expectations. |
 
 ??? example "What excellent looks like (90+)"
-    The team presents a medication reminder app for elderly patients. The demo runs on a physical phone — no crashes. They explain why they chose large touch targets and high-contrast colors (accessibility for their target user group). They discuss how they store medication data encrypted locally and only sync anonymized usage analytics. The architecture uses a clean separation: UI layer, service layer, repository layer. Their git history shows consistent PR-based workflow with substantive code reviews. During Q&A, every team member can answer technical questions about any part of the app.
+    The team presents a medication reminder app for elderly patients (health apps are one example of a domain with specific regulatory requirements). The demo runs on a physical phone — no crashes. They explain why they chose large touch targets and high-contrast colors (accessibility for their target user group). They discuss how they store medication data encrypted locally and only sync anonymized usage analytics. The architecture uses a clean separation: UI layer, service layer, repository layer. Their git history shows consistent PR-based workflow with substantive code reviews. During Q&A, every team member can answer technical questions about any part of the app.
 
 ---
 
@@ -380,19 +380,19 @@ Use this checklist to verify your project meets all requirements before the fina
 
 ### Minimum Technical Requirements
 
-- [ ] Health-related mobile application (patient-facing or clinician-facing)
+- [ ] Mobile application with a clearly defined problem and target users
 - [ ] At least 3 distinct screens
 - [ ] API connection to a backend (own FastAPI or provided endpoint)
 - [ ] Authentication flow (login/register)
 - [ ] Git workflow with pull requests (no direct push to main)
 - [ ] 1-page proposal submitted by Week 5
 
-### mHealth-Specific Requirements
+### Regulatory & Quality Requirements
 
-- [ ] Health-related problem with clearly identified target users
-- [ ] Data privacy approach documented (how sensitive data is stored, transmitted, protected)
+- [ ] Clearly defined problem with identified target users
+- [ ] Data privacy approach documented (how personal/sensitive data is stored, transmitted, protected — GDPR applies if processing EU user data; HIPAA applies if handling US health data)
 - [ ] Accessibility considerations addressed (e.g., contrast, text scaling, touch targets)
-- [ ] Relevant regulatory framework identified (GDPR/HIPAA/MDR awareness — you don't need to be compliant, but you need to know what applies)
+- [ ] Relevant regulatory framework identified (e.g., GDPR for data privacy; MDR/FDA if the app handles health data — you don't need to be compliant, but you need to know what applies)
 
 ### Quality Expectations
 

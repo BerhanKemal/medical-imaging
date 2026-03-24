@@ -1,6 +1,6 @@
-# Week 9 Lecture: JWT, OAuth2, Secure Storage & Healthcare Compliance
+# Week 9 Lecture: JWT, OAuth2, Secure Storage & Regulatory Compliance
 
-**Course:** Mobile Apps for Healthcare
+**Course:** Multiplatform Mobile Software Engineering in Practice
 **Duration:** ~2 hours (including Q&A)
 **Format:** Student-facing notes with presenter cues
 
@@ -15,8 +15,8 @@
 2. [JWT Deep Dive](#2-jwt-deep-dive-25-min) (25 min)
 3. [OAuth2 and OpenID Connect](#3-oauth2-and-openid-connect-20-min) (20 min)
 4. [Secure Storage on Mobile Devices](#4-secure-storage-on-mobile-devices-15-min) (15 min)
-5. [HIPAA and GDPR Compliance for Health Apps](#5-hipaa-and-gdpr-compliance-for-health-apps-20-min) (20 min)
-6. [Threat Modeling for Health Apps](#6-threat-modeling-for-health-apps-10-min) (10 min)
+5. [HIPAA and GDPR Compliance -- A Case Study from Healthcare](#5-hipaa-and-gdpr-compliance--a-case-study-from-healthcare-20-min) (20 min)
+6. [Threat Modeling for Mobile Apps](#6-threat-modeling-for-mobile-apps-10-min) (10 min)
 7. [Key Takeaways](#7-key-takeaways-5-min) (5 min)
 
 ---
@@ -401,7 +401,7 @@ If a nurse's phone with a health app is stolen, the authentication tokens should
 
 ---
 
-## 5. HIPAA and GDPR Compliance for Health Apps (20 min)
+## 5. HIPAA and GDPR Compliance -- A Case Study from Healthcare (20 min)
 
 ### Why Developers Need to Understand Regulations
 
@@ -489,7 +489,7 @@ Even though your course project is not subject to regulatory audit, building wit
 
 ---
 
-## 6. Threat Modeling for Health Apps (10 min)
+## 6. Threat Modeling for Mobile Apps (10 min)
 
 ### Thinking Like an Attacker
 

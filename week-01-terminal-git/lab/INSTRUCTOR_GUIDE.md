@@ -1,9 +1,9 @@
 # Week 1 Lab: Instructor Guide
 
-**Course:** Mobile Apps for Healthcare
-**Lab Duration:** 2 hours
+**Course:** Multiplatform Mobile Software Engineering in Practice
+**Lab Duration:** 90 minutes
 **Topic:** Terminal, Git & GitHub
-**Audience:** 3rd-year Biomedical Engineering students --- zero prior terminal/git experience
+**Audience:** Students with basic programming experience — zero prior terminal/git experience
 
 > This document is for the **instructor only**. Students use the separate `README.md` workbook.
 
@@ -42,458 +42,298 @@ Windows machines may not have Git Bash. Fallback plan:
 
 ---
 
+## What's Already Built Into the Workbook
+
+The student workbook (`README.md`) has strong written scaffolding you can leverage:
+
+- 4 progress breadcrumbs (visual progress tracking)
+- 4 TL;DRs, 4 checkpoints, 4 self-check sections
+- 7 interactive quizzes with contextual healthcare feedback
+- 3 "Try to break it" exercises (intentional error practice)
+- 3 "Pair moment" boxes (peer collaboration)
+- 4 common-mistake warnings, 2 pro tips
+- 2 "How does this actually work?" collapsible deep dives
+- 1 healthcare context box, 1 end-of-lab reflection
+- Mermaid diagrams, FAQ troubleshooting section
+
+**The gap this guide fills:** The workbook tells students *what to do*, but the instructor needs a strategy for *how to run the room* --- pacing, energy management, where to demo live vs let them type, how to handle stuck students, and where to inject interaction.
+
+---
+
 ## Timing Overview
 
 | Time | Duration | Activity | Type |
 |------|----------|----------|------|
-| 0:00--0:05 | 5 min | Welcome & context setting | Instructor talk |
-| 0:05--0:35 | 30 min | Part 1: Terminal basics | Follow-along + exercises |
-| 0:35--0:40 | 5 min | Break / catch-up buffer | --- |
-| 0:40--1:20 | 40 min | Part 2: Git basics | Follow-along + exercises |
-| 1:20--1:25 | 5 min | Break / catch-up buffer | --- |
-| 1:25--1:50 | 25 min | Part 3: GitHub & SSH setup | Follow-along |
-| 1:50--2:00 | 10 min | Part 4: Clone & push + assignment intro | Follow-along + wrap-up |
+| 0:00--0:05 | 5 min | Opening Hook | Instructor talk |
+| 0:05--0:30 | 25 min | Part 1: Terminal Basics | Demo + type-along + exercise |
+| 0:30--1:05 | 35 min | Part 2: Git Basics | Demo + type-along + self-paced |
+| 1:05--1:20 | 15 min | Part 3: SSH Setup | Guided step-by-step |
+| 1:20--1:30 | 10 min | Part 4: Push & Clone | Fast-paced guided |
+| 1:30--1:35 | 5 min | Closing | Wrap-up |
 
-**Total:** 120 minutes (2 hours)
+**Total:** 90 minutes (with 5-min buffer at the end)
 
-> **Pacing note:** The two 5-minute buffers are critical. Use them to help stragglers catch up. If everyone is on track, use the time for Q&A or to reinforce concepts. Never skip the buffers --- someone always needs them.
-
----
-
-## Detailed Facilitation Guide
-
-### 0:00--0:05 --- Welcome & Context Setting (5 min)
-
-**Type:** Instructor talk
-
-**What to say (talking points, not a script):**
-
-- Welcome to Mobile Apps for Healthcare
-- Today's lab: learn the tools that every professional developer uses daily
-- "You may feel like you're learning to walk before you can run --- that's intentional"
-- This lab comes BEFORE the lecture on purpose: struggle first, understand later
-- AI tools are NOT allowed in Weeks 1--3 (explain why: build genuine understanding first)
-- The workbook (`README.md`) is your guide --- follow it step by step
-- Ask questions at any time. There are no stupid questions, especially today
-
-**What students should be doing:**
-
-- Opening their terminals (help them find it if needed)
-- Having the workbook open (on projector or their own screen)
-
-**Checkpoint:** Before moving on, verify that **every student has a terminal open** with a blinking cursor. Walk around the room if necessary.
-
-**Common pitfall:** Windows students may not have Git Bash installed. Identify these students immediately and start the download while you continue talking.
+> **Pacing note:** There are no explicit break slots. The self-paced exercise transitions (Exercise 1.8 at ~0:22 and Exercise 2.8 at ~0:52) act as natural breathing room. If students are struggling, use the exercise time as catch-up.
 
 ---
 
-### 0:05--0:35 --- Part 1: Terminal Basics (30 min)
+## Minute-by-Minute Execution Plan
 
-**Type:** Follow-along + independent exercises
+### Opening Hook (0:00--0:05)
 
-**Pacing:** This section has 8 subsections. Budget roughly 3--4 minutes per subsection, leaving 5 minutes for the exercise at the end.
+**Goal:** Create curiosity before touching the terminal.
 
-#### 0:05--0:08 --- `pwd` (Where Am I?)
+Choose ONE of these three options:
 
-**Demo on projector:**
-- Type `pwd`, explain the output
-- Emphasize: "The terminal is always standing in some folder"
-- Show that different OS give different-looking paths
+#### Option A --- "The Disaster Demo"
 
-**What to watch for:**
-- Students who press Enter before typing the command (nervous clicking)
-- Students confused by the prompt itself (they may try to type the `$` or `%`)
-
-**Talking point:** "Think of the terminal as a text-based file explorer. Right now, `pwd` is like looking at the address bar."
-
-#### 0:08--0:12 --- `ls` (What Is Here?)
-
-**Demo:**
-- `ls` --- basic listing
-- `ls -la` --- all files with details, explain hidden files (dotfiles)
-
-**What to watch for:**
-- Windows PowerShell users need `dir` instead (Git Bash users are fine with `ls`)
-- Students surprised by hidden files
-
-**Talking point:** "Hidden files start with a dot. They're used for configuration. You'll see `.git` soon --- that's how Git stores everything."
-
-#### 0:12--0:17 --- `cd` (Moving Around)
-
-**Demo the full sequence:**
-1. `cd Desktop`
-2. `pwd` (show the change)
-3. `cd ..` (go back up)
-4. `cd ~` (go home)
-5. Show an absolute path: `cd /Users/yourname/Documents`
-
-**Have students follow along** --- do each command, wait, check.
-
-**What to watch for:**
-- "No such file or directory" errors --- students misspelling folder names
-- Students forgetting the space between `cd` and the path
-- Tab completion: teach them to press Tab to autocomplete folder names (huge time saver!)
-
-**Talking point:** "Tab completion is your best friend. Start typing a folder name and press Tab. The terminal will complete it for you. If there are multiple matches, press Tab twice to see all options."
-
-#### 0:17--0:20 --- `mkdir` (Creating Folders)
-
-**Demo:**
-1. `cd ~`
-2. `mkdir mhealth-course`
-3. `ls` (show it was created)
-4. `cd mhealth-course`
-5. `mkdir -p week-01/exercises` (explain the `-p` flag)
-
-**What to watch for:**
-- Students creating the folder in the wrong location (remind them to `pwd` first)
-- Spaces in folder names cause issues --- tell them to use hyphens instead
-
-#### 0:20--0:24 --- `touch`, `echo`, `cat` (Creating and Viewing Files)
-
-**Demo:**
-1. Navigate to `week-01/exercises`
-2. `touch notes.txt`
-3. `echo "Hello" > notes.txt`
-4. `cat notes.txt`
-5. `echo "Second line" >> notes.txt`
-6. `cat notes.txt`
-
-**Key emphasis:** The difference between `>` (overwrite) and `>>` (append). Demo what happens if you accidentally use `>` when you meant `>>`.
-
-**What to watch for:**
-- Students forgetting quotes around the text
-- Confusion about `>` vs `>>`
-
-#### 0:24--0:26 --- `rm` (Deleting Files)
-
-**Demo briefly:**
-- `rm notes.txt`
-- Explain `rm -r` for folders
-- **Emphasize strongly:** No trash can, no undo. Permanent deletion.
-
-**Talking point:** "In the GUI, you can drag to Trash and recover. In the terminal, `rm` is permanent. Always double-check. If you're not sure, use `ls` first to see what you're about to delete."
-
-#### 0:26--0:28 --- `which` (Finding Programs)
-
-**Demo:**
-- `which git`
-- `which python3`
-- Brief explanation of PATH (don't go deep --- the workbook has a conceptual box)
-
-#### 0:28--0:35 --- Exercise 1.8 (Build a Project Structure)
-
-**Switch to independent work.** Say: "Now it's your turn. Follow Exercise 1.8 in the workbook. You have 7 minutes. Raise your hand if you get stuck."
-
-**Walk around the room.** Common issues:
-- Students creating folders in the wrong place (remind them to `pwd`)
-- Forgetting to create nested directories with `-p`
-- Not knowing how to write multiple lines to a file
-
-**Checkpoint:** Before moving on, ask: "Who can show me the output of `ls -R` from their `mhealth-course` folder?" Pick a student to show on projector or read aloud.
-
-**Recovery if behind:** If many students are struggling, do the exercise together as a class. Speed is less important than understanding.
-
----
-
-### 0:35--0:40 --- Break / Catch-Up Buffer (5 min)
-
-- Students who finished the exercise: take a real break
-- Students who are behind: use this time to catch up
-- Walk around and verify everyone has the `mhealth-course` folder structure
-- Answer individual questions
-- If everyone is done, use this time to reinforce: "What does `cd ..` do? What's the difference between `>` and `>>`?"
-
----
-
-### 0:40--1:20 --- Part 2: Git Basics (40 min)
-
-**Type:** Follow-along + exercises
-
-**This is the core of the lab.** Students must leave understanding `init`, `add`, `commit`, `status`, `log`, and `diff`.
-
-#### 0:40--0:43 --- What Is Git? + Configuration (3 min)
-
-**Talking points:**
-- "Git is like unlimited undo for your entire project"
-- "It tracks every change --- who made it, when, and why"
-- "You will use this every single day as a professional developer"
-
-**Demo git config:**
-```bash
-git config --global user.name "Your Full Name"
-git config --global user.email "your.email@student.agh.edu.pl"
-```
-
-**Have every student run these commands** with their own name and email.
-
-**What to watch for:**
-- Students forgetting quotes around their name
-- Students using a non-student email (remind them to use AGH email)
-
-#### 0:43--0:48 --- `git init` + `git status` (5 min)
-
-**Demo:**
-1. `cd ~/mhealth-course && mkdir my-first-repo && cd my-first-repo`
-2. `git init`
-3. `ls -la` (show the hidden `.git` directory)
-4. `git status`
-
-**Talking point:** "The `.git` folder is where Git stores everything. Never delete it, never edit it manually. As far as you're concerned, it's magic --- and we'll peek inside later."
-
-**What to watch for:**
-- Students who see `master` instead of `main` (both are fine, explain this)
-- Students who accidentally init git in the wrong folder (home directory, Desktop, etc.)
-
-**Recovery:** If a student inits in the wrong place, show them `rm -r .git` to undo it, then `cd` to the right folder.
-
-#### 0:48--1:00 --- First Commit Cycle (12 min)
-
-**This is the most important part of the lab.** Go slowly.
-
-**Demo the full cycle step by step:**
-
-1. Create `README.md` with `echo`
-2. `git status` --- show "Untracked files" in red
-3. `git add README.md`
-4. `git status` --- show "Changes to be committed" in green
-5. `git commit -m "Add initial README with project description"`
-6. `git status` --- show "nothing to commit, working tree clean"
-7. `git log` --- show the commit
-
-**Pause after each step.** Ask: "What color are the files? What does that mean?"
-
-**Key teaching moment:** The three areas of Git.
-
-Draw on the whiteboard (or point to the ASCII diagram in the workbook):
-```
-Working Directory  -->  Staging Area  -->  Repository
-(your files)           (git add)          (git commit)
-```
-
-**Analogy:** "Think of it like packing a box to ship. Your working directory is your room --- stuff is scattered around. `git add` puts items into the box (staging). `git commit` seals the box, labels it, and puts it on the shelf (repository). You can only ship what's in the box."
-
-**What to watch for:**
-- Students skipping `git add` and going straight to `git commit`
-- Students confused about why staging exists ("Why can't I just commit directly?")
-  - Answer: "Staging lets you choose exactly what goes into each commit. You might have changed 5 files but only want to commit 2 of them."
-
-#### 1:00--1:05 --- `git log` and `git diff` (5 min)
-
-**Demo:**
-1. Modify `README.md` with `echo "## Topics" >> README.md`
-2. `git diff` --- show the `+` lines
-3. `git add README.md && git commit -m "Add Topics section"`
-4. `git log --oneline` --- show compact history
-
-**Talking point:** "`git diff` is your pre-commit review. Always check what you're about to commit. It's like proofreading before hitting Send."
-
-#### 1:05--1:20 --- Exercise 2.8: Build a Commit History (15 min)
-
-**Switch to guided independent work.** Students follow the exercise in the workbook to make 5 commits.
-
-**Say:** "Work through the exercise in the workbook. You have 15 minutes. The goal is to have at least 5 commits when you run `git log --oneline`. Raise your hand if you need help."
-
-**Walk around actively.** This is where most students get stuck.
-
-**Common issues:**
-- Forgetting `git add` before `git commit` --- the commit will be empty or fail
-- Making all commits at once without actually editing files between commits
-- Typos in commit messages (it's fine, don't worry about fixing them)
-- Students who race ahead vs students who fall behind
-
-**For fast students:** Suggest they explore `git log --oneline --graph` or try modifying files and using `git diff` before committing.
-
-**Checkpoint:** "Show me your `git log --oneline`. Do you have at least 5 commits?" Aim for 80%+ of students completing this.
-
-**Recovery if behind:** If many students are stuck, do commits 3--5 together as a class on the projector.
-
----
-
-### 1:20--1:25 --- Break / Catch-Up Buffer (5 min)
-
-- Same as the first break
-- Priority: make sure every student has a working git repo with at least a few commits
-- Students who are ahead can read the "How does this work?" boxes in the workbook
-- Quick check: "How many of you have 5+ commits? How many have 3+? How many have at least 1?"
-
----
-
-### 1:25--1:50 --- Part 3: GitHub & SSH Setup (25 min)
-
-**Type:** Follow-along (everyone does it together, step by step)
-
-**This section requires patience.** SSH setup is where things go wrong most often.
-
-#### 1:25--1:28 --- GitHub Account Creation (3 min)
-
-**Say:** "If you don't have a GitHub account, create one now. Use your AGH student email. Choose a professional username --- you might put this on your CV."
-
-**Most students may already have accounts.** Use this time for those who don't.
-
-**What to watch for:**
-- Students choosing unprofessional usernames (gently suggest they reconsider)
-- Email verification delays
-
-#### 1:28--1:38 --- SSH Key Generation (10 min)
-
-**This is the most error-prone section. Go very slowly.**
-
-**Demo on projector:**
-
-1. `ssh-keygen -t ed25519 -C "your.email@student.agh.edu.pl"`
-2. Press Enter for default file location
-3. Press Enter twice for no passphrase (explain this is fine for the course)
-4. Show the output, point out the two files created
-
-**Then copy the public key:**
-- macOS: `cat ~/.ssh/id_ed25519.pub | pbcopy`
-- Windows Git Bash: `cat ~/.ssh/id_ed25519.pub | clip`
-- Fallback: `cat ~/.ssh/id_ed25519.pub` and copy manually
-
-**Key emphasis:** "You have TWO files. The `.pub` file is your PUBLIC key --- share it freely. The other file is your PRIVATE key --- never share it, never email it, never upload it."
-
-**What to watch for:**
-- Students who already have SSH keys: that's fine, they can use existing ones or generate new ones
-- Students who set a passphrase and then forget it: for the course, no passphrase is fine
-- Students who copy the private key instead of the public key (the private key does NOT end in `.pub`)
-- Windows students who can't find the `.ssh` folder (it's hidden --- use `ls -la ~` or `cat ~/.ssh/id_ed25519.pub`)
-- Students on older systems where ed25519 is not supported: fall back to `ssh-keygen -t rsa -b 4096`
-
-#### 1:38--1:43 --- Add Key to GitHub (5 min)
-
-**Demo on projector with your browser:**
-1. GitHub > Settings > SSH and GPG keys > New SSH key
-2. Title: "Lab Computer" (or similar)
-3. Paste the public key
-4. Click "Add SSH key"
-
-**Have students follow along.** Walk around to help.
-
-**What to watch for:**
-- Students pasting the key incorrectly (extra spaces, missing characters)
-- Students who can't find the Settings page
-
-#### 1:43--1:50 --- Test Connection (7 min)
-
-**Demo:**
-```bash
-ssh -T git@github.com
-```
-
-**Expected:** "Hi username! You've successfully authenticated..."
-
-**Type `yes`** when asked about the host fingerprint. Explain: "This is your computer learning to trust GitHub. You only need to do this once."
-
-**Troubleshooting (have these ready):**
-
-| Problem | Solution |
-|---------|----------|
-| "Permission denied (publickey)" | Key not added correctly. Re-copy `.pub` file, re-add to GitHub |
-| "Connection timed out" | SSH blocked by network. Switch to HTTPS (see backup instructions) |
-| "Could not resolve hostname" | Network/DNS issue. Check internet connection |
-| Students already set up | Have them help a neighbor |
-
-**HTTPS Backup Plan:**
-
-If SSH is blocked by the lab network:
-1. On GitHub, use "HTTPS" clone URLs instead of "SSH"
-2. Create a Personal Access Token: GitHub > Settings > Developer settings > Personal access tokens > Generate new token
-3. Use the token as the password when prompted
-4. This is a workaround --- encourage students to set up SSH at home
-
-**Checkpoint:** "Raise your hand if you see the 'successfully authenticated' message." Aim for 90%+. Help remaining students individually.
-
----
-
-### 1:50--2:00 --- Part 4: Clone & Push + Assignment Intro (10 min)
-
-**Type:** Follow-along + wrap-up
-
-#### 1:50--1:55 --- Push Existing Repository (5 min)
-
-**Demo on projector:**
-
-1. Create a new repo on GitHub (show the web interface)
-2. Name it `my-first-repo`, leave it empty (no README)
-3. In terminal:
-   ```bash
-   cd ~/mhealth-course/my-first-repo
-   git remote add origin git@github.com:YOUR-USERNAME/my-first-repo.git
-   git push -u origin main
+1. Project your screen. Open a folder with files named:
    ```
-4. Refresh the GitHub page --- show files and commits appearing
+   report.docx
+   report_v2.docx
+   report_v2_final.docx
+   report_v2_final_REAL.docx
+   report_v2_final_REAL_submitted.docx
+   report_v2_final_REAL_submitted_fixed.docx
+   ```
+2. Ask: *"How many of you have a folder that looks like this?"* (Laughter, recognition.)
+3. Say: *"By the end of today, you'll never need to do this again."*
 
-**What students should do:** Follow along and push their own `my-first-repo`.
+#### Option B --- "The Time Machine Demo"
 
-**What to watch for:**
-- "remote origin already exists" --- `git remote remove origin` and re-add
-- Branch name mismatch (`master` vs `main`) --- use whichever they have
-- Students who didn't finish Part 2 exercises: that's OK, they can push whatever they have
+1. Open a terminal in a Git repo with 50+ commits (use a real open-source project, or prepare one).
+2. Run `git log --oneline --graph` --- show the branching history.
+3. Run `git show HEAD~20` --- jump back 20 commits. *"This is what your project looked like 3 weeks ago. Git remembers everything."*
+4. Say: *"Today you'll learn to build this."*
 
-#### 1:55--2:00 --- Assignment Introduction (5 min)
+#### Option C --- "The Healthcare Stakes"
 
-**Talking points:**
-- Walk through the individual assignment in the workbook
-- Emphasize: 5 meaningful commits, 3+ files, push to GitHub
-- Deadline: before Week 2 lab
-- "This is individual work. No AI tools. The point is to practice what you learned today."
-- Show the grading rubric briefly
+1. Show a headline about a medical device software bug (e.g., Therac-25, or a recent insulin pump recall).
+2. Ask: *"What if someone changed the code and nobody tracked who, when, or why?"*
+3. Say: *"Version control isn't optional in healthcare software. It's a legal requirement. Let's learn it."*
 
-**Final words:**
-- "You just learned the tools that every software developer uses daily"
-- "It feels awkward now --- that's normal. By week 4, this will be second nature"
-- "If you get stuck on the assignment, re-read the workbook. Everything you need is there."
-- "The lecture will explain the theory behind what you just did. See you there."
+> **Recommendation:** Option A is lightest and gets laughs. Option C is strongest for students. Choose based on your audience's energy at the start of class.
 
 ---
 
-## Instructor Notes: Pacing & Common Issues
+### Part 1: Terminal Basics (0:05--0:30)
 
-### Where Students Typically Get Stuck
+**Teaching mode:** Live coding on projector, students type along.
 
-1. **Terminal is intimidating.** The blank screen with a cursor is scary for students who have only used GUIs. Normalize this: "Everyone feels this way. It's like learning a new language."
+#### Block 1.1: Navigation (0:05--0:15) --- 10 min
 
-2. **Forgetting `git add`.** This is the #1 mistake in Part 2. Every time you demo, always show the full cycle: `git status` -> `git add` -> `git status` -> `git commit` -> `git status`.
+Covers workbook sections 1.1 (`pwd`), 1.2 (`ls`), 1.3 (`cd`).
 
-3. **SSH key setup.** This is the #1 time sink. Budget extra time here. Consider having a TA or advanced student help with troubleshooting.
+| Minute | What happens | Mode |
+|--------|-------------|------|
+| 0:05 | Demo `pwd` on your screen. Ask *"Where am I?"* before showing output | Demo |
+| 0:06 | Students type `pwd` | Type-along |
+| 0:07 | Demo `ls`, then `ls -la`. Point out hidden files (`.bashrc`, `.ssh/`) | Demo |
+| 0:08 | Students type `ls` and `ls -la` | Type-along |
+| 0:09 | Demo `cd Desktop`, `pwd`, `cd ..`, `pwd`. Show the path changing | Demo |
+| 0:10 | Students navigate: `cd Desktop` -> `pwd` -> `cd ..` -> `cd ~` | Type-along |
+| 0:12 | **Teach Tab-completion live:** Type `cd Desk` then press Tab. *"The terminal finishes it for you."* | Demo |
+| 0:13 | **"Try to break it":** Have everyone type `cd NonExistentFolder`. Read the error together. *"The terminal is trying to help you. Read the message."* | Interactive |
+| 0:14 | **Quiz (workbook 1.3):** Run it verbally --- *"What does `cd ..` do? Shout it out."* | Verbal |
 
-4. **Confusing the terminal with a search bar.** Some students will try to type full sentences or questions into the terminal. Gently redirect.
+**Key technique:** Before EVERY new command, ask *"What do you think this will do?"* Wait 3 seconds. Then demonstrate. This predict-then-observe cycle is the strongest learning technique for procedural skills.
 
-5. **Typos.** Students who are not touch-typists will make many typos. Teach them about the **up arrow** (to repeat the last command) and **Tab completion** early.
+#### Block 1.2: Creating & Deleting (0:15--0:22) --- 7 min
 
-### Where to Slow Down
+Covers workbook sections 1.4 (`mkdir`), 1.5 (`cat`, `touch`), 1.6 (`rm`).
 
-- The first `git add` / `git commit` cycle. Do it slowly, explain every output.
-- SSH key generation. Don't rush this --- one mistake means debugging later.
-- The difference between `>` and `>>`.
+| Minute | What happens | Mode |
+|--------|-------------|------|
+| 0:15 | Demo `mkdir mhealth-course`, `cd mhealth-course`, `mkdir -p week-01/exercises` | Demo |
+| 0:16 | Students create the same structure | Type-along |
+| 0:17 | Demo `touch notes.txt`, `echo "Hello" > notes.txt`, `cat notes.txt` | Demo |
+| 0:18 | Students create and write to a file | Type-along |
+| 0:19 | **Critical moment --- `>` vs `>>`:** Demo BOTH. Show that `>` destroys the file. Students gasp. *"This has caused real data loss in clinical trials."* | Demo |
+| 0:20 | Demo `rm notes.txt` --- *"No trash. No undo. Gone."* | Demo |
+| 0:21 | Students practice rm with a test file | Type-along |
+| 0:22 | **Quiz (workbook 1.5):** `>` vs `>>` --- quick show of hands | Verbal |
 
-### Where You Can Speed Up
+#### Block 1.3: Exercise 1.8 --- Build a Project Structure (0:22--0:30) --- 8 min
 
-- `which` command (students don't need to fully grasp PATH today)
-- `rm` / `rmdir` (brief warning is enough)
-- GitHub account creation (most students already have one)
+**Make this a timed pair challenge:**
 
-### If You're Running Out of Time
+1. Say: *"You have 5 minutes. Work in pairs. Build the folder structure from Exercise 1.8. First pair to show me the correct `ls -R` output gets bragging rights."*
+2. Project the expected output on screen
+3. **Walk the room constantly.** Look at screens. If someone is stuck, give ONE hint, then move on
+4. At 5 minutes, ask for a volunteer to show their `ls -R` on the projector
+5. **Pair moment (workbook 1.8):** *"Compare your output with your neighbor."*
 
-Priority order (must complete):
-1. Terminal basics (pwd, ls, cd, mkdir, touch/echo/cat) --- students need these for everything else
-2. Git init, add, commit, status, log --- the core workflow
-3. SSH setup + push to GitHub --- needed for the assignment
+> **Energy management:** This is the first "free swim" moment. Some students will finish in 2 minutes, others will struggle. Have a stretch task ready: *"Done early? Try `man ls` and find a flag you didn't know about."*
 
-Can be shortened:
-- Exercise 1.8 (can be homework)
-- Exercise 2.8 (can reduce from 5 commits to 3)
-- `git diff` explanation (nice to have, not essential)
-- `which` command (skip if pressed for time)
+**Checkpoint announcement:** *"Part 1 done. You now know the 10 commands that replace clicking through Finder. Every developer uses these daily."*
 
-### If You Have Extra Time
+---
 
-- Show `git log --oneline --graph --all` and explain the output
-- Explore the `.git` directory together (`ls .git`, explain objects/refs briefly)
-- Demo `git stash` briefly as a preview
-- Have students clone each other's repositories and look at the commit history
-- Discuss what makes a good vs bad commit history
+### Part 2: Git Basics (0:30--1:05)
+
+**Teaching mode:** Demo first, then guided type-along. The commit exercise is self-paced.
+
+#### Block 2.1: Concepts & First Commit (0:30--0:50) --- 20 min
+
+Covers workbook sections 2.1 (What Is Git?), 2.2 (Configuring Git), 2.3 (`git init`), 2.4 (`git status`), 2.5 (Your First Commit).
+
+| Minute | What happens | Mode |
+|--------|-------------|------|
+| 0:30 | Explain Git in ONE sentence: *"Git is unlimited undo for your entire project."* | Lecture |
+| 0:31 | Students run `git config` commands (workbook 2.2) | Type-along |
+| 0:32 | Demo `git init` in a new folder. Show `.git/` with `ls -la`. *"This hidden folder IS Git."* | Demo |
+| 0:33 | Students create `my-first-repo` and `git init` | Type-along |
+| 0:35 | Demo `git status` on empty repo. *"This is the command you'll type most. It's your dashboard."* | Demo |
+| 0:36 | **"Try to break it" (workbook 2.4):** Have students run `git status` in `/tmp`. Read the error. Navigate back | Interactive |
+| 0:38 | **The Three Areas --- Physical Demo** (see below) | **KEY MOMENT** |
+
+**Physical Demo (optional but powerful):**
+
+Bring three items to class: a folder/tray labeled "Working Directory", a box labeled "Staging Area", and a sealed container labeled "Repository". Have a student come up and physically move paper sheets between them as you narrate:
+
+1. *"You write code"* -> student holds a paper sheet (the file)
+2. *"git add"* -> student puts the sheet in the box
+3. *"git commit"* -> student seals the box and puts it on the shelf
+4. *"Can you unseal that box?"* -> No. That's why commits are permanent.
+
+If you don't want physical props, use the shipping box analogy from the workbook and draw it on the whiteboard.
+
+| Minute | What happens | Mode |
+|--------|-------------|------|
+| 0:42 | Walk through Steps 1--4 of the first commit (workbook 2.5) live on projector | Demo |
+| 0:45 | Students do the same: create README.md, `git add`, `git status`, `git commit` | Type-along |
+| 0:47 | **Critical:** After commit, run `git status` again. Show "nothing to commit, working tree clean." *"That's the green light."* | Demo |
+| 0:48 | Demo `git log` and `git log --oneline` | Demo |
+| 0:49 | **Quiz (workbook 2.5):** *"What does the staging area contain after a commit?"* | Quick verbal |
+
+#### Block 2.2: Diff & Commit History Exercise (0:50--1:05) --- 15 min
+
+Covers workbook sections 2.7 (`git diff`), 2.8 (Exercise: Build a Commit History), 2.9 (`.gitignore`).
+
+| Minute | What happens | Mode |
+|--------|-------------|------|
+| 0:50 | Demo `git diff` --- modify README.md, show the `+`/`-` lines. *"Always diff before add. Always status before commit."* | Demo |
+| 0:52 | **Self-paced exercise:** Students work through Commits 1--5 from workbook 2.8 | Self-paced |
+| 0:58 | **Commit 6 (their own):** *"This one is yours. Pick any topic from their field. No copy-paste."* Give 3--4 minutes | Self-paced |
+| 1:00 | **Pair moment (workbook 2.8):** *"Show your neighbor your `git log --oneline`. Can they understand what you did from the messages alone?"* | Peer review |
+| 1:02 | Quick `.gitignore` demo (workbook 2.9). 2 min, just type along | Type-along |
+| 1:04 | **Checkpoint announcement:** *"Part 2 done. You have a Git repo with 6+ commits. You're version-controlling like a professional."* | Announcement |
+
+> **Walking the room is critical here.** Common issues during self-paced work: forgetting `git add`, running `git commit` without `-m`, being in the wrong directory.
+
+---
+
+### Part 3: SSH Setup (1:05--1:20)
+
+**Teaching mode:** Careful step-by-step. This is where students get stuck most.
+
+Covers workbook sections 3.1 (GitHub Account), 3.2 (Generate SSH Key), 3.3 (Add Key to GitHub), 3.4 (Test Connection).
+
+**Pre-flight check (30 seconds):** *"Raise your hand if you already set up SSH keys in Week 0."* Those students skip to section 3.4 (test connection) and become helpers.
+
+| Minute | What happens | Mode |
+|--------|-------------|------|
+| 1:05 | **GitHub account check:** *"Open github.com. Raise your hand when you're logged in."* Wait for everyone | Sync point |
+| 1:07 | Demo `ssh-keygen` on projector. Explain each prompt. *"Press Enter three times."* | Demo |
+| 1:08 | Students run `ssh-keygen` | Type-along |
+| 1:10 | Demo copying the public key (`cat ~/.ssh/id_ed25519.pub`). Show the OS-specific clipboard commands | Demo |
+| 1:11 | Students copy their public key | Type-along |
+| 1:12 | **Screen walkthrough:** Project GitHub Settings -> SSH Keys -> New SSH Key. Walk through it step by step | Demo |
+| 1:13 | Students add their key to GitHub | Self-paced |
+| 1:15 | **The Reveal:** `ssh -T git@github.com` --- *"Type this and let's see who gets the green light."* | Interactive |
+
+**Handling stuck students:**
+
+- **"Permission denied":** 90% of the time they copied the wrong key or added extra whitespace. Have them `cat ~/.ssh/id_ed25519.pub` again
+- **"Connection timed out":** Campus network may block port 22. Switch to HTTPS fallback (see Appendix)
+- **Designate "SSH helpers":** First 3--4 students who get "Hi username!" become roaming helpers. This gives fast students a role and frees you to handle the hard cases
+
+| Minute | What happens | Mode |
+|--------|-------------|------|
+| 1:18 | **Celebrate:** *"Everyone who sees 'Hi username', make some noise."* | Social |
+| 1:19 | **Quiz (workbook 3.3):** *"Which file did you copy --- public or private?"* Quick verbal | Verbal |
+| 1:20 | **Checkpoint:** *"SSH is done. You'll never set this up again on this computer."* | Announcement |
+
+---
+
+### Part 4: Push & Clone (1:20--1:30)
+
+**Teaching mode:** Guided, fast-paced. Students are tired --- this needs to be rewarding.
+
+Covers workbook sections 4.1 (Push Your Repository to GitHub), 4.2--4.4 (Clone, Make Changes, Push).
+
+| Minute | What happens | Mode |
+|--------|-------------|------|
+| 1:20 | Demo creating a repo on GitHub (projector). Emphasize: Public, NO README checkbox | Demo |
+| 1:21 | Students create their own GitHub repo | Self-paced |
+| 1:22 | Demo `git remote add origin` and `git push -u origin main`. Show the output | Demo |
+| 1:23 | Students push | Type-along |
+| 1:24 | **The Payoff:** *"Open your repo URL in the browser."* Students see their code on GitHub for the first time | **KEY MOMENT** |
+| 1:25 | **Social moment:** *"Paste your GitHub repo URL in the class chat. Visit someone else's repo."* | Social |
+| 1:27 | Quick clone exercise: `git clone` their own repo to a new folder, make a change, push, then `git pull` in the original | Fast demo |
+| 1:29 | **Final Quiz (workbook 4.1):** *"What did git pull do?"* | Verbal |
+
+---
+
+### Closing (1:30--1:35)
+
+1. **Quick verbal poll:** *"Hardest thing today --- raise your hand: Terminal? Git? SSH?"* (Gives you data for next year)
+2. **Preview Week 2:** *"Next week: branches, pull requests, REST APIs. You'll work as a team for the first time."*
+3. **Remind about assignment:** *"Create `bme-knowledge-base` repo with 5+ commits. Due before Week 2 lab."*
+4. **End-of-lab reflection (workbook):** Either do it verbally in class or assign it for home
+
+---
+
+## Classroom Management Techniques
+
+### 1. "Watch Mode" vs "Type Mode"
+
+Explicitly announce transitions: *"Laptops closed / screens off --- watch me for 2 minutes."* Then: *"OK, now you type."* Students who type while you demo miss the concepts. Students who watch while they should type fall behind.
+
+### 2. The "Stuck" Signal
+
+Give each student a way to signal they need help without raising their hand:
+
+- **Option A:** Red/green sticky notes on laptop lid (green = fine, red = help)
+- **Option B:** A Discord/Slack channel where they post screenshots of errors
+- **Option C:** Simply say *"If you're stuck, turn to your neighbor first. If BOTH of you are stuck, raise your hand."*
+
+### 3. Fast Finishers
+
+Students who finish early can:
+
+- Help neighbors (designate them as "experts")
+- Explore the "How does this actually work?" collapsible sections in the workbook
+- Try the stretch tasks: `man ls`, `git log --stat`, explore `.git/` internals
+- Start the individual assignment
+
+### 4. Walking the Room
+
+**This is non-negotiable.** During every self-paced section, walk between desks and look at screens. You'll catch:
+
+- Students in the wrong directory (most common)
+- Students who haven't typed anything (too shy to ask for help)
+- Students typing the wrong command
+- Students who are 3 steps ahead (redirect them to help others)
+
+### 5. Energy Dips
+
+The energy will dip around minute 45--50 (middle of Part 2). This is exactly where the commit history exercise lives --- it's self-paced work, which is the right energy level for mid-session. Don't try to lecture here; let them type.
+
+The energy dips again during SSH setup (~minute 70). The "Hi username!" reveal is the natural energy recovery point.
+
+---
+
+## Common Failure Modes & Mitigations
+
+| Failure | Likelihood | Mitigation |
+|---------|-----------|------------|
+| Students can't install Git (Windows) | HIGH in first offering | Send installation instructions 48h before lab. Have 2--3 USB drives with Git Bash installer |
+| SSH blocked by campus network | MEDIUM | Prepare HTTPS fallback instructions (see Appendix). Test SSH from the classroom beforehand |
+| Students fall behind in Part 2 | HIGH | The commit exercise (2.8) is designed so Commits 1--5 are copy-paste. Students who fall behind can catch up by copying |
+| Student accidentally deletes `.git/` | LOW | Tell them to re-run `git init` and start fresh. Their files are still there |
+| GitHub account verification delayed | MEDIUM | Have students create accounts before class (Week 0 prep guide) |
+| 90 minutes isn't enough | MEDIUM | Part 4 (push/clone) can be assigned as homework if time runs out. Parts 1--3 are the priority |
 
 ---
 

@@ -1,5 +1,5 @@
 name: mood_tracker
-description: "A mood tracking app for the Mobile Apps for Healthcare course."
+description: "A mood tracking app for the Multiplatform Mobile Software Engineering in Practice course."
 publish_to: 'none'
 
 version: 1.0.0+1

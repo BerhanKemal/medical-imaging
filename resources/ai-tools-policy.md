@@ -1,7 +1,6 @@
-# AI Tools Policy — Mobile Apps for Healthcare
+# AI Tools Policy — Multiplatform Mobile Software Engineering in Practice
 
-**Course:** Mobile Apps for Healthcare
-**Program:** Biomedical Engineering, 3rd Year
+**Course:** Multiplatform Mobile Software Engineering in Practice
 **Effective from:** Week 4 of the semester
 
 ---
@@ -14,7 +13,7 @@ During the first three weeks of this course, **the use of AI coding assistants (
 
 The opening weeks focus on terminal commands, Git workflows, and Dart fundamentals. These are foundational skills that require **muscle memory** — the kind of deep familiarity that only comes from typing commands yourself, making mistakes, and debugging them manually.
 
-Research in computing education consistently shows that students who rely on AI tools before building foundational competence develop a fragile understanding: they can produce code but cannot debug, modify, or explain it when something goes wrong. In a healthcare context, where software errors can have real consequences for patients, this fragile understanding is especially dangerous.
+Research in computing education consistently shows that students who rely on AI tools before building foundational competence develop a fragile understanding: they can produce code but cannot debug, modify, or explain it when something goes wrong. In regulated industries like healthcare or finance, where software errors can have real consequences for users, this fragile understanding is especially dangerous.
 
 By the end of Week 3, you will have:
 - Internalized core Git commands and workflows through repetition.
@@ -71,7 +70,7 @@ This is not about punishment — it is about transparency and intellectual hones
 
 > **Use AI to learn faster, not to skip learning.**
 
-There is a critical difference between using AI as a tutor and using AI as a shortcut. The goal of this course is for **you** to become a competent mobile developer with awareness of health-tech considerations. AI should accelerate that journey, not bypass it.
+There is a critical difference between using AI as a tutor and using AI as a shortcut. The goal of this course is for **you** to become a competent mobile developer with awareness of industry-specific considerations. AI should accelerate that journey, not bypass it.
 
 **Good usage — AI as a tutor:**
 - _"Explain the difference between `StatefulWidget` and `StatelessWidget` with an example."_
@@ -89,7 +88,7 @@ There is a critical difference between using AI as a tutor and using AI as a sho
 
 ### Good AI Usage
 
-1. **Debugging assistance.** You write a function to parse JSON from a health data API. It throws a type error. You paste the error and your code into an AI tool and ask it to help you understand the type mismatch. You fix the code yourself based on the explanation.
+1. **Debugging assistance.** You write a function to parse JSON from a data API. It throws a type error. You paste the error and your code into an AI tool and ask it to help you understand the type mismatch. You fix the code yourself based on the explanation.
 
 2. **Learning a new concept.** You need to implement local data persistence but have not used Hive before. You ask the AI to explain how Hive works in Flutter, review the explanation, then write the implementation yourself, referring back to the AI's explanation when you get stuck.
 
@@ -138,7 +137,7 @@ This policy operates on a **two-step** consequence model:
 
 A growing body of research in computing education suggests that premature reliance on AI tools can create an **AI comfort trap**: students feel productive because they are generating code quickly, but they are not building the mental models needed to solve novel problems, debug unfamiliar errors, or make architectural decisions.
 
-In a healthcare context, the stakes are higher. Mobile health applications handle sensitive patient data, may influence clinical decisions, and operate under regulatory frameworks that demand developers understand what their software does and why. A developer who cannot explain their own code is a liability in any domain — in health technology, they are a risk.
+In regulated industries, the stakes are higher. Mobile applications that handle sensitive data — whether health records, financial transactions, or personal information — operate under regulatory frameworks that demand developers understand what their software does and why. A developer who cannot explain their own code is a liability in any domain — in regulated industries, they are a risk.
 
 This policy is not anti-AI. It is pro-learning. AI tools are powerful and will be part of your professional toolkit. The goal is to ensure that when you use them, you are **directing** the tool rather than being **directed by** it. The difference is understanding — and understanding is what this course is designed to build.
 

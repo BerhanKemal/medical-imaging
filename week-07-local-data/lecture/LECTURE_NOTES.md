@@ -1,6 +1,6 @@
 # Week 7 Lecture: SharedPreferences, SQLite, Offline-First & Health Data
 
-**Course:** Mobile Apps for Healthcare
+**Course:** Multiplatform Mobile Software Engineering in Practice
 **Duration:** ~2 hours (including Q&A)
 **Format:** Student-facing notes with presenter cues
 

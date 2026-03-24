@@ -1,7 +1,7 @@
 # Week 2 Lab: Git Branching, REST APIs & curl
 
 <div class="lab-meta" markdown>
-<div class="lab-meta__row"><span class="lab-meta__label">Course</span> Mobile Apps for Healthcare</div>
+<div class="lab-meta__row"><span class="lab-meta__label">Course</span> Multiplatform Mobile Software Engineering in Practice</div>
 <div class="lab-meta__row"><span class="lab-meta__label">Duration</span> ~2 hours</div>
 <div class="lab-meta__row"><span class="lab-meta__label">Prerequisites</span> Week 1 (terminal basics, `git init/add/commit/push`, GitHub account with SSH)</div>
 </div>

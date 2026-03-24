@@ -1,9 +1,9 @@
-# mHealth Regulations Quick Reference
+# Industry Regulations Reference — mHealth Case Study
 
-**Mobile Apps for Healthcare — AGH University of Krakow**
+**Multiplatform Mobile Software Engineering in Practice — AGH University of Krakow**
 
 !!! info "Why this page exists"
-    The project rubric requires *"relevant regulations identified and discussed"* for full marks on mHealth Awareness (15 points). GDPR and HIPAA are covered in Weeks 8-9. This page fills the gaps for **EU MDR**, **US FDA/SaMD**, **IEC 62304**, and **Germany's DiGA** — frameworks that are mentioned in lectures but not taught in depth.
+    This page uses mobile health (mHealth) as a case study for understanding how regulatory frameworks affect software development. Many industries (healthcare, finance, automotive) impose regulatory requirements on software. The mHealth domain is one of the most comprehensive examples, covering data privacy (GDPR, HIPAA), product safety (EU MDR, FDA), and software lifecycle standards (IEC 62304). Understanding these frameworks prepares you for regulatory awareness in any domain.
 
 ---
 
@@ -32,7 +32,7 @@ flowchart TD
 ```
 
 !!! tip "For your student project"
-    Most student projects are **wellness/lifestyle apps** (path F→J). You won't need full MDR/FDA compliance, but you **must** demonstrate awareness of which regulations would apply if the app were commercialized.
+    Most student projects won't need full MDR/FDA compliance. However, if your app handles personal data (especially health data), you **must** demonstrate awareness of which regulations would apply if the app were commercialized. Even non-health apps benefit from understanding GDPR for data privacy.
 
 ---
 
@@ -47,7 +47,7 @@ flowchart TD
 | **What it is** | EU regulation governing the processing of personal data of EU residents |
 | **Who it applies to** | Any app that processes personal data of people in the EU — regardless of where the company is based |
 | **Key requirements** | Lawful basis for processing, data minimization, purpose limitation, storage limitation, right to erasure, breach notification within 72 hours |
-| **For your project** | Document what health data you collect, why, and how you protect it. Implement consent mechanisms and a way to delete user data. |
+| **For your project** | If your app processes personal data, document what data you collect, why, and how you protect it. Implement consent mechanisms and a way to delete user data. If your app handles health data, this is especially critical. |
 
 The 7 GDPR principles are covered in the Week 8 lecture notes — refer there for the detailed implementation checklist.
 
@@ -61,7 +61,7 @@ The 7 GDPR principles are covered in the Week 8 lecture notes — refer there fo
 | **Who it applies to** | Covered entities (healthcare providers, insurers) and their business associates — primarily a US concern |
 | **Key concept** | **Protected Health Information (PHI)** — any individually identifiable health information (name + diagnosis, name + treatment, etc.) |
 | **Three rules** | (1) **Privacy Rule** — who can access PHI, (2) **Security Rule** — technical safeguards for electronic PHI, (3) **Breach Notification Rule** — what to do if PHI is exposed |
-| **For your project** | If your app stores anything that links a person's identity to their health data, treat it as PHI. Encrypt at rest and in transit. |
+| **For your project** | If your app handles health data and targets US users, be aware of HIPAA. If your app stores anything that links a person's identity to their health data, treat it as PHI. Encrypt at rest and in transit. |
 
 ### 3. EU MDR — Medical Device Regulation
 
@@ -154,7 +154,7 @@ The FDA uses a matrix based on two factors:
 | **Class C** | Death or serious injury possible | Comprehensive testing, formal verification, traceability matrix |
 
 !!! note "For your student project"
-    You are already practicing many IEC 62304 activities through the course's emphasis on git workflow, PRs, user stories, and sprint reviews. In your presentation, you can highlight this: *"Our development process aligns with IEC 62304 principles — we maintain traceability from user stories (requirements) through PRs (change control) to testing (verification)."*
+    You are already practicing many IEC 62304 activities through the course's emphasis on git workflow, PRs, user stories, and sprint reviews. If your project handles health data, you can highlight this in your presentation: *"Our development process aligns with IEC 62304 principles — we maintain traceability from user stories (requirements) through PRs (change control) to testing (verification)."* Even if your app is not health-related, these software lifecycle practices are valuable in any regulated industry.
 
 ### 6. Germany DiGA — Digital Health Applications
 
@@ -171,7 +171,7 @@ The FDA uses a matrix based on two factors:
 
 ## For Your Project Proposal
 
-Use these template sentences in the **mHealth Considerations** section of your proposal. Adapt them to your specific app:
+Use these template sentences in the **Industry & Regulatory Considerations** section of your proposal. Adapt them to your specific app:
 
 **Data privacy:**
 > "Our app collects [type of health data] from [users]. This data is subject to **GDPR** because [our users are in the EU / we process health data]. We address privacy by [encrypting data at rest and in transit / minimizing data collection / implementing user consent and data deletion]."
@@ -186,7 +186,7 @@ Use these template sentences in the **mHealth Considerations** section of your p
 
 ## For Your Final Presentation
 
-Here's what "discussed" means at each rubric band for the **mHealth Awareness** criterion:
+Here's what "discussed" means at each rubric band for the **Industry & Regulatory Awareness** criterion:
 
 | Band | What the Rubric Expects | What to Say |
 |------|------------------------|-------------|

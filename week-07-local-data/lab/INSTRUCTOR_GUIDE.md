@@ -1,9 +1,9 @@
 # Week 7 Lab: Instructor Guide
 
-**Course:** Mobile Apps for Healthcare
+**Course:** Multiplatform Mobile Software Engineering in Practice
 **Lab Duration:** 2 hours
 **Topic:** Local Data with SQLite
-**Audience:** 3rd-year Biomedical Engineering students -- familiar with Flutter widgets, Riverpod state management from Weeks 4--6
+**Audience:** Familiar with Flutter widgets, Riverpod state management from Weeks 4--6
 
 > This document is for the **instructor only**. Students use the separate `README.md` workbook.
 

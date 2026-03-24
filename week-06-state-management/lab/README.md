@@ -1,7 +1,7 @@
 # Week 6 Lab: State Management with Riverpod
 
 <div class="lab-meta" markdown>
-<div class="lab-meta__row"><span class="lab-meta__label">Course</span> Mobile Apps for Healthcare</div>
+<div class="lab-meta__row"><span class="lab-meta__label">Course</span> Multiplatform Mobile Software Engineering in Practice</div>
 <div class="lab-meta__row"><span class="lab-meta__label">Duration</span> ~2 hours</div>
 <div class="lab-meta__row"><span class="lab-meta__label">Prerequisites</span> Week 4 Flutter fundamentals (widgets, StatefulWidget, setState)</div>
 </div>
@@ -909,7 +909,7 @@ If all 8 steps work correctly, you have completed the lab.
 ## Part 8: Accessibility Quick-Win (Bonus, ~15 min)
 
 !!! info "Why this matters"
-    The final project rubric awards up to **15 points for mHealth Awareness**, which includes accessibility. This short exercise teaches you the highest-impact accessibility improvements you can apply to any Flutter app. Apply these patterns to your team project as you build it.
+    The final project rubric awards up to **15 points for Industry & Regulatory Awareness**, which includes accessibility. This short exercise teaches you the highest-impact accessibility improvements you can apply to any Flutter app. Apply these patterns to your team project as you build it.
 
 ### 8.1 Add Semantic Labels
 

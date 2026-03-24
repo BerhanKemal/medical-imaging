@@ -2,7 +2,7 @@
 
 A minimal REST API for recording and retrieving mood entries, built with [FastAPI](https://fastapi.tiangolo.com/).
 
-This project is the starting point for the **Week 2 Individual Assignment** in the *Mobile Apps for Healthcare* course.
+This project is the starting point for the **Week 2 Individual Assignment** in the *Multiplatform Mobile Software Engineering in Practice* course.
 
 ## Setup
 

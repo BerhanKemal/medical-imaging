@@ -1,9 +1,9 @@
 # Week 2 Lab: Instructor Guide
 
-**Course:** Mobile Apps for Healthcare
+**Course:** Multiplatform Mobile Software Engineering in Practice
 **Lab Duration:** 2 hours
 **Topic:** Git Branching, REST APIs & curl
-**Audience:** 3rd-year Biomedical Engineering students --- comfortable with basic terminal and git from Week 1
+**Audience:** Comfortable with basic terminal and git from Week 1
 
 > This document is for the **instructor only**. Students use the separate `README.md` workbook.
 

@@ -1,4 +1,4 @@
-# Sprint Review Rubric — Mobile Apps for Healthcare
+# Sprint Review Rubric — Multiplatform Mobile Software Engineering in Practice
 
 > **Weight:** 3 sprint reviews x equal weight = **25% of the total course grade.**
 > Each sprint review is scored out of **100 points**.

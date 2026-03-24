@@ -1,6 +1,6 @@
-# Week 5 Lecture: Layouts, Forms, Material Design & mHealth Introduction
+# Week 5 Lecture: Layouts, Forms, Material Design & Industry Context
 
-**Course:** Mobile Apps for Healthcare
+**Course:** Multiplatform Mobile Software Engineering in Practice
 **Duration:** ~2 hours (including Q&A)
 **Format:** Student-facing notes with presenter cues
 
@@ -13,8 +13,8 @@
 
 1. [Flutter Layout System -- How Widgets Arrange Themselves](#1-flutter-layout-system-how-widgets-arrange-themselves-25-min) (25 min)
 2. [Forms and Validation -- Getting Data from Users](#2-forms-and-validation-getting-data-from-users-20-min) (20 min)
-3. [Material Design 3 -- A Design Language for Health Apps](#3-material-design-3-a-design-language-for-health-apps-15-min) (15 min)
-4. [mHealth Introduction -- Mobile Health in Practice](#4-mhealth-introduction-mobile-health-in-practice-20-min) (20 min)
+3. [Material Design 3 -- A Design Language for Mobile Apps](#3-material-design-3-a-design-language-for-mobile-apps-15-min) (15 min)
+4. [Industry Regulatory Context -- Mobile Health as a Case Study](#4-industry-regulatory-context-mobile-health-as-a-case-study-20-min) (20 min)
 5. [Agile and Scrum in a Nutshell](#5-agile-and-scrum-in-a-nutshell-10-min) (10 min)
 6. [Key Takeaways](#6-key-takeaways-5-min) (5 min)
 
@@ -269,7 +269,7 @@ Good form validation is the first line of defense. It does not replace server-si
 
 ---
 
-## 3. Material Design 3 -- A Design Language for Health Apps (15 min)
+## 3. Material Design 3 -- A Design Language for Mobile Apps (15 min)
 
 ### What is Material Design?
 
@@ -335,11 +335,11 @@ In healthcare, accessibility is not a nice-to-have feature -- it is a core requi
 Material Design's accessibility features -- contrast ratios, touch targets, screen reader support -- help you build inclusive apps. And in many jurisdictions, accessibility in healthcare software is not just good practice but a legal requirement.
 
 !!! tip "Reference: Accessibility Quick Guide"
-    For a practical checklist of accessibility implementations you should apply to your team project (semantic labels, contrast ratios, scalable text, touch targets), see the [Accessibility Guide](../../resources/ACCESSIBILITY_GUIDE.md). This guide maps directly to the mHealth Awareness rubric criteria in the final project grading.
+    For a practical checklist of accessibility implementations you should apply to your team project (semantic labels, contrast ratios, scalable text, touch targets), see the [Accessibility Guide](../../resources/ACCESSIBILITY_GUIDE.md). This guide maps directly to the Industry & Regulatory Awareness rubric criteria in the final project grading.
 
 ---
 
-## 4. mHealth Introduction -- Mobile Health in Practice (20 min)
+## 4. Industry Regulatory Context -- Mobile Health as a Case Study (20 min)
 
 ### What is mHealth?
 

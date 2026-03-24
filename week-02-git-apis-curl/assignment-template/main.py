@@ -1,7 +1,7 @@
 """
 Mood Tracking API
 =================
-Mobile Apps for Healthcare, Week 2
+Multiplatform Mobile Software Engineering in Practice, Week 2
 
 A minimal REST API that stores and retrieves mood entries.
 

@@ -1,6 +1,6 @@
-site_name: Mobile Apps for Healthcare
-site_description: Course materials for AGH BME students
-site_url: https://MDaniolAGH.github.io/mhealth/
+site_name: Multiplatform Mobile Software Engineering in Practice
+site_description: Course materials for AGH students
+site_url: https://MDaniolAGH.github.io/multiplatform/
 
 docs_dir: docs
 site_dir: _site
@@ -97,7 +97,7 @@ nav:
   #   - Lecture Notes: week-09-authentication/lecture/LECTURE_NOTES.md
   # - Resources:
   #   - Accessibility Guide: resources/ACCESSIBILITY_GUIDE.md
-  #   - mHealth Regulations: resources/MHEALTH_REGULATIONS.md
+  #   - Industry Regulations Reference: resources/MHEALTH_REGULATIONS.md
 
 extra_javascript:
   - assets/javascripts/mermaid-lightbox.js
