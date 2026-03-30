@@ -1,0 +1,4 @@
+# Magnetic Resonance Imaging
+
+MRI is a medical imaging technique used to generate pictures of the anatomy.
+It is used in radiology, the scanners use strong magnetic fields
