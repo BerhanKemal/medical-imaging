@@ -29,6 +29,7 @@
     | Part 3: ProviderScope setup | ~10 min |
     | Part 4-6: ConsumerWidgets | ~35 min |
     | Part 7: Stats screen | ~15 min |
+    | Part 8: Accessibility | ~15 min |
     | Self-check & reflection | ~10 min |
 
 </div>
@@ -66,28 +67,42 @@ Before you begin, make sure you have the following ready:
   All checks should pass (or show only minor warnings unrelated to your target platform).
 - **An IDE** with Flutter support (VS Code recommended, or Android Studio).
 - **A running device** -- emulator, simulator, or physical device.
-- **The starter project** loaded in your IDE. Download it from the course materials:
-  ```
-  week-06-state-management/lab/starter/mood_tracker/
-  ```
-  Copy the entire `mood_tracker` folder to your local machine, open it in your IDE, and run:
-  ```bash
-  cd mood_tracker
-  flutter pub get
-  flutter run
-  ```
-  Verify the app builds and launches before starting the exercises.
+- **The starter project.** Copy it from the course materials repo to a working directory, then regenerate the platform files (they aren't committed to keep the repo small — same as the Week 4 exercises):
 
-> **Tip:** If the starter project does not compile, check that `flutter_riverpod` and `uuid` appear in `pubspec.yaml` and that `flutter pub get` completed without errors. Ask the instructor for help if needed.
+    ```bash
+    cp -r course-materials/week-06-state-management/lab/starter/mood_tracker ~/flutter-work/
+    cd ~/flutter-work/mood_tracker
+    flutter create --platforms=android,ios .   # regenerates android/ ios/ test/
+    flutter pub get
+    flutter run
+    ```
+
+    Verify the app builds and launches before starting the exercises. Open the folder in your IDE — the `lib/` directory is where all your work happens.
+
+!!! warning "Common mistake"
+    If you skip `flutter create --platforms=android,ios .`, you'll get an error like *"No Android/iOS project configuration found"* when you try to run the app. The starter folder only ships with `lib/` and `pubspec.yaml`; you generate the rest locally. This is the same pattern you used in Week 4.
+
+!!! tip "If the starter project does not compile"
+    Check that `flutter_riverpod` and `uuid` appear in `pubspec.yaml` and that `flutter pub get` completed without errors. Ask the instructor for help if needed.
 
 ---
 
 ## Part 0: Project Skeleton Setup (~20 min)
 
+!!! warning "Two projects this week — don't mix them up"
+    This week you'll work with ==two separate Flutter projects==. It's easy for beginners to confuse them, so read this carefully:
+
+    | Project | Purpose | Location |
+    |---------|---------|----------|
+    | **Mood Tracker** (Parts 1–8) | A ==teaching vehicle== — you learn Riverpod by completing TODOs in a pre-built app. You do NOT submit this. | `course-materials/week-06-state-management/lab/starter/mood_tracker/` |
+    | **Your team project** (Part 0) | Your own team's app that you'll build across all remaining sprints. This is what you submit. | Your team's GitHub repo |
+
+    Part 0 creates the **team project** (a fresh Flutter project in your team's repo). Parts 1–8 modify the **Mood Tracker teaching vehicle**. The Mood Tracker is *not* your team project — it's a training exercise.
+
 !!! tip "This part can be done as homework"
     Part 0 sets up your team project and does not depend on the Mood Tracker starter. If you are short on time during the lab session, you may complete it before or after class.
 
-In the sprint planning workshop (Week 5), you learned *why* `setState()` doesn't scale and how centralized state management solves the prop drilling problem. Now you'll start by setting up your team's Flutter project, then implement the solution hands-on.
+In the sprint planning workshop (Week 5), you learned *why* `setState()` doesn't scale and how centralized state management solves the prop drilling problem. Now you'll start by setting up your team's Flutter project, then implement the solution hands-on in the Mood Tracker.
 
 ### 0.1 Create the Flutter Project
 
@@ -906,10 +921,13 @@ If all 8 steps work correctly, you have completed the lab.
 
 ---
 
-## Part 8: Accessibility Quick-Win (Bonus, ~15 min)
+## Part 8: Accessibility Quick-Win (~15 min)
+
+!!! warning "This is a required part — not bonus"
+    The final project rubric awards up to **15 points for Industry & Regulatory Awareness**, and accessibility is graded explicitly. Every team project must demonstrate semantic labels, safe text scaling, and 48×48 touch targets. Complete this part during the lab — don't save it for later.
 
 !!! info "Why this matters"
-    The final project rubric awards up to **15 points for Industry & Regulatory Awareness**, which includes accessibility. This short exercise teaches you the highest-impact accessibility improvements you can apply to any Flutter app. Apply these patterns to your team project as you build it.
+    In healthcare apps, accessibility is not optional. Patients with low vision, motor impairments, or cognitive load (stressed, elderly, in pain) must be able to use your app safely. A medication reminder that a blind patient cannot navigate is a patient-safety failure, not a UX polish issue. This short exercise teaches you the highest-impact accessibility improvements — apply these patterns to your team project as you build it.
 
 ### 8.1 Add Semantic Labels
 
