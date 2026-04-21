@@ -60,6 +60,22 @@
     | **In Review** | PR open, awaiting review |
     | **Done** | Merged and verified |
 
+- :material-sitemap: **State Management Preview (Week 6)**
+
+    ---
+
+    | Term | In one line |
+    |------|-------------|
+    | `setState()` | Local state for ONE widget — doesn't scale to multiple screens |
+    | **Provider** | A global-ish container holding state that any widget can read |
+    | **StateNotifier** | The class with methods (`addMood`, `deleteMood`) that update state |
+    | `ref.watch(x)` | Subscribe to `x` inside `build()` — widget rebuilds when `x` changes |
+    | `ref.read(x)` | Read `x` once inside an event handler — no subscription |
+    | `ProviderScope` | Root widget wrapping `runApp()` — required for Riverpod to work |
+    | **Prop drilling** | Passing state through many widgets — the problem Riverpod solves |
+
+    **Mental shortcut:** `watch` = "display this value"; `read` = "do something once."
+
 </div>
 
 ## Writing Good User Stories

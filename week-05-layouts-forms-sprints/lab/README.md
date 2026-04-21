@@ -358,7 +358,53 @@ You'll encounter these terms in Week 6. Don't memorize definitions — just ==re
 
 ~~State management is too complicated for beginners~~ — you already understand the core idea. `setState()` is state management for one widget. Riverpod is `setState()` for your entire app. The concepts are the same — you're just moving the state to a shared location.
 
-### 3.4 What You'll Build Next Week
+### 3.4 What Riverpod Code Looks Like
+
+==You don't need to write this today== — just read it and get a feel for the shape. Every line maps to a term from the table above. Next week you'll implement exactly this pattern in the Mood Tracker lab.
+
+```dart
+// 1. The state holder — a class with methods that change state
+class MoodNotifier extends StateNotifier<List<MoodEntry>> {
+  MoodNotifier() : super([]); // starts with an empty list
+
+  void addMood(int score, String? note) {
+    // Note the pattern: build a new list, assign to state.
+    // We don't modify the old list — we replace it.
+    state = [MoodEntry(score: score, note: note), ...state];
+  }
+}
+
+// 2. The provider — exposes the notifier to the whole app
+final moodProvider =
+    StateNotifierProvider<MoodNotifier, List<MoodEntry>>((ref) {
+  return MoodNotifier();
+});
+
+// 3. The widget — reads the state and rebuilds when it changes
+class HomeScreen extends ConsumerWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final moods = ref.watch(moodProvider); // ← subscribe here
+    return Text('You have ${moods.length} entries.');
+  }
+}
+
+// 4. A button handler — uses ref.read() to call a method once
+onPressed: () {
+  ref.read(moodProvider.notifier).addMood(7, 'Feeling okay');
+},
+```
+
+!!! abstract "Three things to notice"
+    1. ==`extends ConsumerWidget`== replaces `StatelessWidget` — the only code change needed to subscribe to providers.
+    2. ==`ref.watch(moodProvider)`== inside `build()` means "rebuild this widget whenever the list changes." When `addMood` is called, every `ref.watch` caller rebuilds automatically — no `setState()` needed anywhere.
+    3. ==`ref.read(moodProvider.notifier)`== in an event handler gives you the methods (`addMood`, etc.) without subscribing. Use `read` for actions, `watch` for display.
+
+If the code looks mysterious, that's expected — **you're not supposed to understand every detail yet**. Focus on the *shape*: there's a class, there's a provider, there's a widget that watches it. That three-part pattern is all of Riverpod.
+
+### 3.5 What You'll Build Next Week
 
 In Week 6, you'll take the Mood Tracker starter project and replace its hardcoded data with Riverpod state management. You'll implement:
 
