@@ -4,6 +4,17 @@
 
 A 14-week project-based course combining multiplatform mobile development (Flutter), backend APIs (FastAPI), and industry-aware software engineering practices. Students build real mobile apps in teams while learning professional development workflows. Mobile health (mHealth) serves as a recurring case study for understanding regulatory requirements in the industry.
 
+!!! tip "Course materials repository"
+    All lab exercises, starter projects, and templates live in the course GitHub repository:
+
+    **<https://github.com/MDaniolAGH/multiplatform>**
+
+    Clone it once, then `git pull` before each lab:
+
+    ```bash
+    git clone https://github.com/MDaniolAGH/multiplatform.git course-materials
+    ```
+
 ## Course Structure
 
 | Week | Topic | Lab Focus | Lecture Focus |

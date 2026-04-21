@@ -1,6 +1,8 @@
 site_name: Multiplatform Mobile Software Engineering in Practice
 site_description: Course materials for AGH students
 site_url: https://MDaniolAGH.github.io/multiplatform/
+repo_url: https://github.com/MDaniolAGH/multiplatform
+repo_name: MDaniolAGH/multiplatform
 
 docs_dir: docs
 site_dir: _site
@@ -69,11 +71,11 @@ nav:
     - Lab Workbook: week-03-dart-fundamentals/lab/README.md
     - Cheatsheet: week-03-dart-fundamentals/lab/CHEATSHEET.md
     - Lecture Notes: week-03-dart-fundamentals/lecture/LECTURE_NOTES.md
+  - Week 4 — Flutter Fundamentals:
+    - Lab Workbook: week-04-flutter-fundamentals/lab/README.md
+    - Cheatsheet: week-04-flutter-fundamentals/lab/CHEATSHEET.md
+    - Lecture Notes: week-04-flutter-fundamentals/lecture/LECTURE_NOTES.md
   # --- Unreleased weeks (uncomment as course progresses) ---
-  # - Week 4 — Flutter Fundamentals:
-  #   - Lab Workbook: week-04-flutter-fundamentals/lab/README.md
-  #   - Cheatsheet: week-04-flutter-fundamentals/lab/CHEATSHEET.md
-  #   - Lecture Notes: week-04-flutter-fundamentals/lecture/LECTURE_NOTES.md
   # - Week 5 — Layouts & Sprints:
   #   - Lab Workbook: week-05-layouts-forms-sprints/lab/README.md
   #   - Cheatsheet: week-05-layouts-forms-sprints/lab/CHEATSHEET.md

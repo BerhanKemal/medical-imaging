@@ -211,7 +211,33 @@ week-04-flutter-fundamentals/lab/exercises/
 └── exercise_4_health_checkin/   # Exercise 4: Health Check-In Screen
 ```
 
-Each exercise is a complete Flutter project. Find them in the course materials repository you cloned in Week 0 (see [Getting Ready](../../resources/GETTING_READY.md#step-8-clone-the-course-materials-repository)). Copy the exercise folder to a working directory, open it in your IDE, and run `flutter pub get` before starting.
+Each exercise is a complete Flutter project. Grab them from the course materials repository — if you haven't cloned it yet, do it now:
+
+```bash
+git clone https://github.com/MDaniolAGH/multiplatform.git course-materials
+cd course-materials
+```
+
+If you cloned earlier, pull the latest changes:
+
+```bash
+cd course-materials
+git pull
+```
+
+Then, for each exercise you're about to work on, copy the folder to a working directory and regenerate the platform-specific files (they're intentionally not committed to keep the repo small):
+
+```bash
+cp -r course-materials/week-04-flutter-fundamentals/lab/exercises/exercise_1_hello_flutter ~/flutter-work/
+cd ~/flutter-work/exercise_1_hello_flutter
+flutter create --platforms=android,ios .   # regenerates android/ ios/ test/
+flutter pub get
+```
+
+Open the folder in your IDE and you're ready to run `flutter run`.
+
+!!! warning "Common mistake"
+    If you skip `flutter create --platforms=android,ios .`, you'll get an error like *"No Android/iOS project configuration found"* when you try to run the app. The exercise folders only ship with `lib/` and `pubspec.yaml` — you generate the rest locally.
 
 ### 2.4 Exercise 1: Modify the Default Counter App
 
