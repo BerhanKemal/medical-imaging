@@ -72,3 +72,12 @@ def create_mood(entry: MoodEntry) -> MoodEntry:
 def get_moods() -> list[MoodEntry]:
     """Retrieve all mood entries."""
     return mood_entries
+
+@app.get("/moods/average")
+def get_average_mood():
+    if not mood_entries:
+        return {"average": 0}
+    total = sum(m.score for m in mood_entries) 
+    avg = total / len(mood_entries)
+    
+    return {"average": round(avg, 2)}
