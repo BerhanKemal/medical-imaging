@@ -1,0 +1,4 @@
+# Ultrasound
+
+Ultrasound is sound with frequencies greater than 20 kilohertz
+This frequency is the approximate upper audible limit of human hearing
