@@ -1,0 +1,5 @@
+kdf_iterations: 100000
+obfuscate: {}
+password:
+  AMM2025agh: 61cca3b7e3d76c0a90150b98f0575c7277bcaba2bfe285d2235e24848b629a6e;a98ae2bb56ecf12b847e828034bc2fb5;65fd52cfe254efd490f8733ea16e6b14945ac9cb8b87185bdd78fa703712a045
+userpass: {}
